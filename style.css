@@ -1,0 +1,254 @@
+/* =================================================================== */
+/* GLOBAL & DESKTOP STYLES                                             */
+/* =================================================================== */
+
+/* * FIX #1: Universal Box Sizing
+ * This ensures that padding and borders are included in the element's
+ * total width and height, preventing unexpected layout wrapping.
+ */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Calibri, sans-serif;
+    background: white;
+    color: #000;
+    /* Creates space at the bottom for the fixed desktop navigation bar */
+    padding-bottom: 60px; 
+}
+
+/* --- General Slide Styles --- */
+.slide {
+    display: none; /* Hide all slides by default */
+    width: 100%;
+    height: 100vh;
+    padding: 1.5em 2em;
+    position: relative;
+    background: white;
+    overflow: hidden;
+    font-size: var(--slide-font-size, 1em);
+}
+
+.slide.active {
+    display: block; /* Show the active slide */
+}
+
+/* Faded background for all regular slides */
+.slide::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url("./campanile.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.10;
+    z-index: 0;
+}
+
+/* Ensure all slide content is above the faded background */
+.slide > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Header and Content Styles --- */
+.slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+}
+
+.left-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    font-weight: bold;
+}
+
+.left-header img { height: 50px; }
+.right-header { font-size: 1.2em; font-weight: 500; }
+.slide-body.one-column { font-size: 1.25em; }
+
+/*
+ * FIX #2: Correct Two-Column Layout
+ * The parent is a flex container.
+ */
+.slide-body.two-column {
+    display: flex;
+    gap: 2em;
+    align-items: flex-start;
+}
+
+.highlight {
+  background-color: rgba(255, 229, 100, 0.7); /* A pleasant yellow highlight */
+  border-radius: 4px;
+  padding: 0.1em 0.3em;
+  margin: -0.1em -0.3em; /* Prevents the padding from shifting the layout */
+  transition: background-color 0.3s ease;
+}
+
+/*
+ * Instead of a rigid "width: 50%", "flex: 1" tells each panel to
+ * grow and take up equal amounts of the available space. This
+ * automatically accounts for the "gap" and is the correct way to do this.
+ */
+.left-panel, .right-panel {
+    flex: 1; 
+    min-width: 0; /* Prevents flex items from overflowing if content is too wide */
+}
+
+.left-panel {
+    font-size: 1.15em;
+}
+
+
+/* --- Code Block and Syntax Highlighting Styles --- */
+pre[class*="language-"] {
+    background: #ffffff;
+    color: #333333;
+    font-family: Consolas, 'Source Code Pro', monospace;
+    font-size: var(--code-font-size, 0.95em);
+    text-align: left;
+    white-space: pre-wrap;
+    word-spacing: normal;
+    word-break: break-word;
+    word-wrap: break-word;
+    line-height: 1.5;
+    padding: 1em;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: auto;
+    max-height: 80vh; 
+}
+
+/* PrismJS token styling (Quiet Light theme) */
+.token.comment, .token.prolog, .token.doctype, .token.cdata { color: #008000; font-style: italic; }
+.token.punctuation { color: #393A34; }
+.token.namespace { opacity: .7; }
+.token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted { color: #098658; }
+.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a31515; }
+.token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #393A34; }
+.token.atrule, .token.attr-value, .token.keyword { color: #0000ff; }
+.token.function, .token.class-name { color: #795e26; }
+.token.regex, .token.important, .token.variable { color: #e90; }
+.token.important, .token.bold { font-weight: bold; }
+.token.italic { font-style: italic; }
+.token.entity { cursor: help; }
+
+
+/* --- Title Slide Styles --- */
+.title-slide {
+    padding: 0;
+    background: url("./campanile.png") no-repeat center center;
+    background-size: cover;
+}
+.title-slide::before { display: none; }
+.title-left, .title-right { position: absolute; top: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 3em; }
+.title-left { left: 0; width: 60%; background: rgba(255, 255, 255, 0.85); }
+.title-right { right: 0; width: 40%; background-color: #3a5032; color: white; align-items: flex-start; }
+.title-left h2 { font-size: 1.5em; color: #000; font-weight: bold; margin: 0; }
+.title-left h1 { font-size: 2.8em; color: #00733e; font-weight: bold; margin: 0; line-height: 1.1; }
+.uc-seal { height: 100px; margin-top: 1.5em; }
+.title-right .info p { font-size: 1.1em; margin: 0.5em 0; }
+.title-right .info strong { font-weight: bold; }
+.msse-logo { position: absolute; top: 1.5em; right: 1.5em; height: 70px; }
+
+
+/* --- Navigation Styles (Desktop First) --- */
+.nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    border-top: 1px solid #ccc;
+    z-index: 100;
+}
+
+button { font-size: 1em; padding: 8px 16px; border-radius: 20px; border: none; background: #003262; color: white; cursor: pointer; transition: background-color 0.2s ease; }
+button:hover { background: #1a4680; }
+
+.jump-container { display: flex; }
+#slide-jumper { width: 50px; text-align: center; border: 1px solid #ccc; border-right: none; border-radius: 20px 0 0 20px; padding: 8px; font-size: 1em; }
+#jump-btn { border-radius: 0 20px 20px 0; }
+
+
+/* --- Code Annotation Styling --- */
+.code-container { position: relative; }
+.code-annotation { position: absolute; background-color: #003262; color: #ffffff; padding: 8px 12px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); font-family: sans-serif; font-size: 0.9em; border: 1px solid #fff; z-index: 10; opacity: 0; pointer-events: none; transition: opacity 0.4s ease-in-out; }
+.code-annotation.show { opacity: 1; pointer-events: auto; }
+.code-annotation::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-width: 5px; border-style: solid; border-color: #003262 transparent transparent transparent; }
+
+
+/* =================================================================== */
+/* MOBILE & RESPONSIVE STYLES                                          */
+/* =================================================================== */
+@media (max-width: 800px) {
+    body {
+        /* On mobile, remove bottom padding and add top padding for the nav bar */
+        padding-bottom: 0;
+        padding-top: 60px;
+    }
+
+    /* 1. Move Nav to Top */
+    .nav {
+        top: 0;
+        bottom: auto;
+        border-top: none;
+        border-bottom: 1px solid #ccc;
+        gap: 0.5em;
+        padding: 0 0.5em;
+        justify-content: space-evenly;
+    }
+    
+    .nav #counter { display: none; }
+    
+    /* 2. Adjust Slide Layout */
+    .slide {
+        height: auto;
+        min-height: calc(100vh - 60px);
+        padding: 1em;
+    }
+    
+    .slide-body.two-column {
+        flex-direction: column;
+        gap: 1.5em;
+    }
+
+    .left-panel, .right-panel {
+        width: 100%; /* In a column layout, each panel takes full width */
+        flex: none;    /* Unset the flex-grow property from desktop */
+    }
+
+    /* 3. Simplify Nav Controls */
+    .desktop-only, .jump-container {
+        display: none;
+    }
+    
+    button { padding: 6px 12px; border-radius: 8px; }
+    
+    /* 4. Adjust Title Slide for Mobile */
+    .title-left, .title-right {
+        position: relative;
+        width: 100%;
+        height: 50%;
+        padding: 1.5em;
+    }
+    .title-left h1 { font-size: 2em; }
+}
+
+/* --- Print Styles --- */
+@media print {
+    body { padding: 0 !important; }
+    .nav { display: none; }
+    .slide { display: block !important; page-break-after: always; height: auto; }
+}
