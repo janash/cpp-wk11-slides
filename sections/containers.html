@@ -68,6 +68,33 @@ int main(void)
   </div>
 </section>
 
+<script>
+class ReviewSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-c-array-limitations';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('c-array-code', 'int arr[5] = {10, 20, 30, 40, 50};');
+                positionAnnotation('c-array-code', 'int arr[5]', 'array-annotation');
+            },
+            () => {
+                highlightCode('c-array-code', 'i < 5');
+                positionAnnotation('c-array-code', 'i < 5', 'loop-annotation');
+            },
+            () => {
+                showElement('limitations-box');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new ReviewSlideAnimation();
+</script>
+
 <section class="slide two-column" id="containers-std-array-intro">
   <div class="slide-header">
     <div class="left-header">
@@ -122,6 +149,34 @@ int main() {
   </div>
 </section>
 
+<script>
+class ArrayIntroSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-std-array-intro';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('std-array-code', '#include <array>');
+                positionAnnotation('std-array-code', '#include <array>', 'include-annotation');
+            },
+            () => {
+                highlightCode('std-array-code', 'std::array<int, 5>');
+                positionAnnotation('std-array-code', 'std::array<int, 5>', 'template-annotation');
+            },
+            () => {
+                highlightCode('std-array-code', '.size()');
+                positionAnnotation('std-array-code', '.size()', 'methods-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new ArrayIntroSlideAnimation();
+</script>
+
 <section class="slide two-column" id="containers-array-access-methods">
   <div class="slide-header">
     <div class="left-header">
@@ -150,7 +205,7 @@ int main() {
             <li><span style="color: #2e7d32;">Bounds checking</span></li>
             <li>Throws exception if out of bounds</li>
             <li>Safer but slightly slower</li>
-            <li><strong>This is the preffered method for accessing elements in std::array</strong></strong>
+            <li><strong>This is the preferred method for accessing elements in std::array</strong></li>
           </ul>
         </div>
       </div>
@@ -182,6 +237,32 @@ int main() {
   </div>
 </section>
 
+<script>
+class ArrayAccessSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-array-access-methods';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightBackground('bracket-method', '#ffebee');
+                highlightCode('access-code', 'safe_array[0]');
+                positionAnnotation('access-code', 'safe_array[0]', 'unsafe-annotation');
+            },
+            () => {
+                highlightBackground('at-method', '#e8f5e8');
+                highlightCode('access-code', 'safe_array.at(0)');
+                positionAnnotation('access-code', 'safe_array.at(0)', 'safe-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new ArrayAccessSlideAnimation();
+</script>
+
 <section class="slide two-column" id="containers-vector-intro">
   <div class="slide-header">
     <div class="left-header">
@@ -200,7 +281,6 @@ int main() {
         <li><span>#include &lt;vector&gt;</span></li>
         <li><span>Manages its own memory</span></li>
       </ul>
-      
     </div>
     <div class="right-panel">
       <div class="code-container">
@@ -232,6 +312,33 @@ int main() {
     </div>
   </div>
 </section>
+
+<script>
+class VectorIntroSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-vector-intro';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('vector-code', '#include <vector>');
+            },
+            () => {
+                highlightCode('vector-code', 'std::vector<int> numbers;');
+                positionAnnotation('vector-code', 'std::vector<int> numbers;', 'empty-annotation');
+            },
+            () => {
+                highlightCode('vector-code', 'numbers.push_back(42);');
+                positionAnnotation('vector-code', 'numbers.push_back(42);', 'pushback-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new VectorIntroSlideAnimation();
+</script>
 
 <section class="slide two-column" id="containers-vector-initialization">
   <div class="slide-header">
@@ -295,6 +402,43 @@ for(<span id="size-t-target">size_t i</span> = 0; i &lt; temps.size(); i++) {
   </div>
 </section>
 
+<script>
+class VectorInitSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-vector-initialization';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightListItem('init-methods', 0);
+                highlightCode('init-code', 'std::vector<int> empty_vec;');
+                positionAnnotation('init-code', 'std::vector<int> empty_vec;', 'empty-vec-annotation');
+            },
+            () => {
+                highlightListItem('init-methods', 1);
+                highlightCode('init-code', '{98.6, 99.1, 97.8}');
+                positionAnnotation('init-code', '{98.6, 99.1, 97.8}', 'init-list-annotation');
+            },
+            () => {
+                highlightListItem('init-methods', 2);
+                highlightCode('init-code', '(10, 0)');
+                positionAnnotation('init-code', '(10, 0)', 'size-default-annotation');
+            },
+            () => {
+                highlightListItem('init-methods', 3);
+                showElement('size-info');
+                highlightCode('init-code', 'size_t i');
+                positionAnnotation('init-code', 'size_t i', 'size-t-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new VectorInitSlideAnimation();
+</script>
+
 <section class="slide two-column" id="containers-vector-push-back">
   <div class="slide-header">
     <div class="left-header">
@@ -319,6 +463,9 @@ for(<span id="size-t-target">size_t i</span> = 0; i &lt; temps.size(); i++) {
         <div id="vector-state">
           <p>Vector: <span id="vector-contents">[]</span></p>
           <p>Size: <span id="vector-size">0</span></p>
+        </div>
+        <div id="vector-visualization" style="display: flex; gap: 4px; margin: 10px 0; min-height: 40px; align-items: center;">
+          <div id="vector-boxes" style="display: flex; gap: 4px;"></div>
         </div>
         <button id="demo-pushback" style="padding: 5px 10px; background: #2e7d32; color: white; border: none; border-radius: 4px; margin: 5px;">
           push_back(42)
@@ -360,6 +507,101 @@ std::cout &lt;&lt; "After adding more: " &lt;&lt; numbers.size() &lt;&lt; std::e
     </div>
   </div>
 </section>
+
+<script>
+class PushBackSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-vector-push-back';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightListItem('pushback-features', 0);
+                highlightCode('pushback-code', 'numbers.push_back(10);');
+                positionAnnotation('pushback-code', 'numbers.push_back(10);', 'grow-annotation');
+            },
+            () => {
+                highlightListItem('pushback-features', 1);
+            },
+            () => {
+                highlightListItem('pushback-features', 2);
+            },
+            () => {
+                highlightCode('pushback-code', 'numbers.size()');
+                positionAnnotation('pushback-code', 'numbers.size()', 'initial-annotation');
+            },
+            () => {
+                highlightCode('pushback-code', 'for(int i = 0; i < numbers.size(); i++)');
+                positionAnnotation('pushback-code', 'for(int i = 0; i < numbers.size(); i++)', 'range-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+// Interactive demo setup
+let vectorDemoElements = [];
+let nextValue = 42;
+
+function setupPushBackDemo() {
+    const pushButton = document.getElementById('demo-pushback');
+    const resetButton = document.getElementById('demo-reset');
+    const vectorBoxes = document.getElementById('vector-boxes');
+    const vectorContents = document.getElementById('vector-contents');
+    const vectorSize = document.getElementById('vector-size');
+    
+    if (pushButton && resetButton && vectorBoxes && vectorContents && vectorSize) {
+        pushButton.onclick = function() {
+            vectorDemoElements.push(nextValue);
+            
+            const box = document.createElement('div');
+            box.style.cssText = `
+                width: 40px; height: 40px; background: #4299e1; color: white;
+                display: flex; align-items: center; justify-content: center;
+                border-radius: 4px; font-weight: bold; animation: slideIn 0.3s ease;
+                border: 1px solid #2c5aa0;
+            `;
+            box.textContent = nextValue;
+            vectorBoxes.appendChild(box);
+            
+            vectorContents.textContent = '[' + vectorDemoElements.join(', ') + ']';
+            vectorSize.textContent = vectorDemoElements.length;
+            
+            nextValue += 10;
+            pushButton.textContent = `push_back(${nextValue})`;
+        };
+        
+        resetButton.onclick = function() {
+            vectorDemoElements = [];
+            nextValue = 42;
+            vectorBoxes.innerHTML = '';
+            vectorContents.textContent = '[]';
+            vectorSize.textContent = '0';
+            pushButton.textContent = 'push_back(42)';
+        };
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateX(-20px) scale(0.8); }
+                to { opacity: 1; transform: translateX(0) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+new PushBackSlideAnimation();
+
+// Simple repeated setup attempts
+setInterval(function() {
+    if (document.getElementById('demo-pushback') && !window.demoSetup) {
+        setupPushBackDemo();
+        window.demoSetup = true;
+    }
+}, 500);
+</script>
 
 <section class="slide two-column" id="containers-vector-access">
   <div class="slide-header">
@@ -418,6 +660,40 @@ if(!data.empty()) {
     </div>
   </div>
 </section>
+
+<script>
+class VectorAccessSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-vector-access';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightListItem('vector-access', 0);
+                highlightCode('vector-access-code', 'data[0]');
+                positionAnnotation('vector-access-code', 'data[0]', 'unsafe-vec-annotation');
+            },
+            () => {
+                highlightListItem('vector-access', 1);
+                highlightCode('vector-access-code', 'data.at(0)');
+                positionAnnotation('vector-access-code', 'data.at(0)', 'safe-vec-annotation');
+            },
+            () => {
+                highlightListItem('vector-access', 2);
+                highlightCode('vector-access-code', 'data.front()');
+                positionAnnotation('vector-access-code', 'data.front()', 'convenience-annotation');
+            },
+            () => {
+                showElement('access-warning');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new VectorAccessSlideAnimation();
+</script>
 
 <section class="slide two-column" id="containers-vector-loops">
   <div class="slide-header">
@@ -478,6 +754,42 @@ for(int i = 0; i &lt; numbers.size(); i++) {
     </div>
   </div>
 </section>
+
+<script>
+class VectorLoopSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-vector-loops';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightListItem('loop-methods', 0);
+                highlightCode('loop-code', 'for(int i = 0; i < numbers.size(); i++)');
+                positionAnnotation('loop-code', 'for(int i = 0; i < numbers.size(); i++)', 'traditional-annotation');
+            },
+            () => {
+                highlightListItem('loop-methods', 1);
+            },
+            () => {
+                highlightListItem('loop-methods', 2);
+                highlightCode('loop-code', 'size_t i');
+                positionAnnotation('loop-code', 'size_t i', 'sizet-annotation');
+            },
+            () => {
+                highlightCode('loop-code', 'numbers[i] *= 2;');
+                positionAnnotation('loop-code', 'numbers[i] *= 2;', 'modify-annotation');
+            },
+            () => {
+                showElement('python-comparison');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new VectorLoopSlideAnimation();
+</script>
 
 <section class="slide two-column" id="containers-array-vs-vector">
   <div class="slide-header">
@@ -547,6 +859,34 @@ std::vector&lt;int&gt; user_data(n);  // Size from user
   </div>
 </section>
 
+<script>
+class ComparisonSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-array-vs-vector';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('comparison-code', 'std::array<double, 3>');
+                positionAnnotation('comparison-code', 'std::array<double, 3>', 'fixed-annotation');
+            },
+            () => {
+                highlightCode('comparison-code', 'measurements.push_back(next_value);');
+                positionAnnotation('comparison-code', 'measurements.push_back(next_value);', 'dynamic-annotation');
+            },
+            () => {
+                highlightCode('comparison-code', 'std::cin >> n;');
+                positionAnnotation('comparison-code', 'std::cin >> n;', 'runtime-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new ComparisonSlideAnimation();
+</script>
+
 <section class="slide two-column" id="containers-map-intro">
   <div class="slide-header">
     <div class="left-header">
@@ -570,7 +910,7 @@ std::vector&lt;int&gt; user_data(n);  // Size from user
       <div id="map-visualization" style="margin-top: 2em;">
         <h4>Key → Value Mapping:</h4>
         <div id="map-pairs" style="font-family: monospace; background: #f5f5f5; padding: 1em; border-radius: 8px;">
-          </div>
+        </div>
       </div>
     </div>
     <div class="right-panel">
@@ -608,6 +948,47 @@ int main() {
     </div>
   </div>
 </section>
+
+<script>
+class MapIntroSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-map-intro';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightListItem('map-features', 0);
+            },
+            () => {
+                highlightListItem('map-features', 1);
+            },
+            () => {
+                highlightListItem('map-features', 2);
+            },
+            () => {
+                highlightListItem('map-features', 3);
+                highlightCode('map-code', '#include <map>');
+            },
+            () => {
+                highlightCode('map-code', 'std::map<std::string, int>');
+                positionAnnotation('map-code', 'std::map<std::string, int>', 'map-template-annotation');
+            },
+            () => {
+                highlightCode('map-code', 'ages["Alice"] = 25;');
+                positionAnnotation('map-code', 'ages["Alice"] = 25;', 'map-insert-annotation');
+            },
+            () => {
+                highlightCode('map-code', 'ages["Alice"]');
+                positionAnnotation('map-code', 'ages["Alice"]', 'map-access-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new MapIntroSlideAnimation();
+</script>
 
 <section class="slide two-column" id="containers-map-safety">
   <div class="slide-header">
@@ -670,6 +1051,40 @@ try {
     </div>
   </div>
 </section>
+
+<script>
+class MapSafetySlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-map-safety';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightListItem('map-operations', 0);
+                highlightCode('map-safety-code', 'scores.find("test3")');
+                positionAnnotation('map-safety-code', 'scores.find("test3")', 'find-annotation');
+            },
+            () => {
+                highlightListItem('map-operations', 1);
+                highlightCode('map-safety-code', 'scores.at("test4")');
+                positionAnnotation('map-safety-code', 'scores.at("test4")', 'at-safe-annotation');
+            },
+            () => {
+                highlightListItem('map-operations', 2);
+                highlightCode('map-safety-code', 'scores["test3"]');
+                positionAnnotation('map-safety-code', 'scores["test3"]', 'create-annotation');
+            },
+            () => {
+                showElement('map-warning');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new MapSafetySlideAnimation();
+</script>
 
 <section class="slide two-column" id="containers-summary">
   <div class="slide-header">
@@ -748,333 +1163,33 @@ std::cout &lt;&lt; inventory.at("apples") &lt;&lt; std::endl;
 </section>
 
 <script>
-// ID-based animation registration - order independent!
-const containerSlideAnimations = {
-    'containers-c-array-limitations': animateReviewSlide,
-    'containers-std-array-intro': animateArrayIntroSlide,
-    'containers-array-access-methods': animateArrayAccessSlide,
-    'containers-vector-intro': animateVectorIntroSlide,
-    'containers-vector-initialization': animateVectorInitSlide,
-    'containers-vector-push-back': animatePushBackSlide,
-    'containers-vector-access': animateVectorAccessSlide,
-    'containers-vector-loops': animateVectorLoopSlide,
-    'containers-array-vs-vector': animateComparisonSlide,
-    'containers-map-intro': animateMapIntroSlide,
-    'containers-map-safety': animateMapSafetySlide,
-    'containers-summary': animateSummarySlide
-};
-
-// Merge into global slideAnimations object
-if (typeof window.slideAnimations === 'undefined') {
-    window.slideAnimations = {};
-}
-Object.assign(window.slideAnimations, containerSlideAnimations);
-
-// Animation functions - unchanged, just cleaner registration
-function animateReviewSlide() {
-    const steps = [
-        () => {
-            highlightCode('c-array-code', 'int arr[5] = {10, 20, 30, 40, 50};');
-            positionAnnotation('c-array-code', 'int arr[5]', 'array-annotation');
-        },
-        () => {
-            highlightCode('c-array-code', 'i < 5');
-            positionAnnotation('c-array-code', 'i < 5', 'loop-annotation');
-        },
-        () => {
-            showElement('limitations-box');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateArrayIntroSlide() {
-    const steps = [
-        () => {
-            highlightCode('std-array-code', '#include <array>');
-            positionAnnotation('std-array-code', '#include <array>', 'include-annotation');
-        },
-        () => {
-            highlightCode('std-array-code', 'std::array<int, 5>');
-            positionAnnotation('std-array-code', 'std::array<int, 5>', 'template-annotation');
-        },
-        () => {
-            highlightCode('std-array-code', '.size()');
-            positionAnnotation('std-array-code', '.size()', 'methods-annotation');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateArrayAccessSlide() {
-    const steps = [
-        () => {
-            highlightBackground('bracket-method', '#ffebee');
-            highlightCode('access-code', 'safe_array[0]');
-            positionAnnotation('access-code', 'safe_array[0]', 'unsafe-annotation');
-        },
-        () => {
-            highlightBackground('at-method', '#e8f5e8');
-            highlightCode('access-code', 'safe_array.at(0)');
-            positionAnnotation('access-code', 'safe_array.at(0)', 'safe-annotation');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateVectorIntroSlide() {
-    const steps = [
-        () => {
-            highlightCode('vector-code', '#include <vector>');
-        },
-        () => {
-            highlightCode('vector-code', 'std::vector<int> numbers;');
-            positionAnnotation('vector-code', 'std::vector<int> numbers;', 'empty-annotation');
-        },
-        () => {
-            highlightCode('vector-code', 'numbers.push_back(42);');
-            positionAnnotation('vector-code', 'numbers.push_back(42);', 'pushback-annotation');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateVectorInitSlide() {
-    const steps = [
-        () => {
-            highlightListItem('init-methods', 0);
-            highlightCode('init-code', 'std::vector<int> empty_vec;');
-            positionAnnotation('init-code', 'std::vector<int> empty_vec;', 'empty-vec-annotation');
-        },
-        () => {
-            highlightListItem('init-methods', 1);
-            highlightCode('init-code', '{98.6, 99.1, 97.8}');
-            positionAnnotation('init-code', '{98.6, 99.1, 97.8}', 'init-list-annotation');
-        },
-        () => {
-            highlightListItem('init-methods', 2);
-            highlightCode('init-code', '(10, 0)');
-            positionAnnotation('init-code', '(10, 0)', 'size-default-annotation');
-        },
-        () => {
-            highlightListItem('init-methods', 3);
-            showElement('size-info');
-            highlightCode('init-code', 'size_t i');
-            positionAnnotation('init-code', 'size_t i', 'size-t-annotation');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animatePushBackSlide() {
-    const steps = [
-        () => {
-            highlightListItem('pushback-features', 0);
-            highlightCode('pushback-code', 'numbers.push_back(10);');
-            positionAnnotation('pushback-code', 'numbers.push_back(10);', 'grow-annotation');
-        },
-        () => {
-            highlightListItem('pushback-features', 1);
-        },
-        () => {
-            highlightListItem('pushback-features', 2);
-        },
-        () => {
-            highlightCode('pushback-code', 'numbers.size()');
-            positionAnnotation('pushback-code', 'numbers.size()', 'initial-annotation');
-        },
-        () => {
-            highlightCode('pushback-code', 'for(int i = 0; i < numbers.size(); i++)');
-            positionAnnotation('pushback-code', 'for(int i = 0; i < numbers.size(); i++)', 'range-annotation');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateVectorAccessSlide() {
-    const steps = [
-        () => {
-            highlightListItem('vector-access', 0);
-            highlightCode('vector-access-code', 'data[0]');
-            positionAnnotation('vector-access-code', 'data[0]', 'unsafe-vec-annotation');
-        },
-        () => {
-            highlightListItem('vector-access', 1);
-            highlightCode('vector-access-code', 'data.at(0)');
-            positionAnnotation('vector-access-code', 'data.at(0)', 'safe-vec-annotation');
-        },
-        () => {
-            highlightListItem('vector-access', 2);
-            highlightCode('vector-access-code', 'data.front()');
-            positionAnnotation('vector-access-code', 'data.front()', 'convenience-annotation');
-        },
-        () => {
-            showElement('access-warning');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateVectorLoopSlide() {
-    const steps = [
-        () => {
-            highlightListItem('loop-methods', 0);
-            highlightCode('loop-code', 'for(int i = 0; i < numbers.size(); i++)');
-            positionAnnotation('loop-code', 'for(int i = 0; i < numbers.size(); i++)', 'traditional-annotation');
-        },
-        () => {
-            highlightListItem('loop-methods', 1);
-        },
-        () => {
-            highlightListItem('loop-methods', 2);
-            highlightCode('loop-code', 'size_t i');
-            positionAnnotation('loop-code', 'size_t i', 'sizet-annotation');
-        },
-        () => {
-            highlightCode('loop-code', 'numbers[i] *= 2;');
-            positionAnnotation('loop-code', 'numbers[i] *= 2;', 'modify-annotation');
-        },
-        () => {
-            showElement('python-comparison');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateComparisonSlide() {
-    const steps = [
-        () => {
-            highlightCode('comparison-code', 'std::array<double, 3>');
-            positionAnnotation('comparison-code', 'std::array<double, 3>', 'fixed-annotation');
-        },
-        () => {
-            highlightCode('comparison-code', 'measurements.push_back(next_value);');
-            positionAnnotation('comparison-code', 'measurements.push_back(next_value);', 'dynamic-annotation');
-        },
-        () => {
-            highlightCode('comparison-code', 'std::cin >> n;');
-            positionAnnotation('comparison-code', 'std::cin >> n;', 'runtime-annotation');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateMapIntroSlide() {
-    const steps = [
-        () => {
-            highlightListItem('map-features', 0);
-        },
-        () => {
-            highlightListItem('map-features', 1);
-        },
-        () => {
-            highlightListItem('map-features', 2);
-        },
-        () => {
-            highlightListItem('map-features', 3);
-            highlightCode('map-code', '#include <map>');
-        },
-        () => {
-            highlightCode('map-code', 'std::map<std::string, int>');
-            positionAnnotation('map-code', 'std::map<std::string, int>', 'map-template-annotation');
-        },
-        () => {
-            highlightCode('map-code', 'ages["Alice"] = 25;');
-            positionAnnotation('map-code', 'ages["Alice"] = 25;', 'map-insert-annotation');
-        },
-        () => {
-            highlightCode('map-code', 'ages["Alice"]');
-            positionAnnotation('map-code', 'ages["Alice"]', 'map-access-annotation');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateMapSafetySlide() {
-    const steps = [
-        () => {
-            highlightListItem('map-operations', 0);
-            highlightCode('map-safety-code', 'scores.find("test3")');
-            positionAnnotation('map-safety-code', 'scores.find("test3")', 'find-annotation');
-        },
-        () => {
-            highlightListItem('map-operations', 1);
-            highlightCode('map-safety-code', 'scores.at("test4")');
-            positionAnnotation('map-safety-code', 'scores.at("test4")', 'at-safe-annotation');
-        },
-        () => {
-            highlightListItem('map-operations', 2);
-            highlightCode('map-safety-code', 'scores["test3"]');
-            positionAnnotation('map-safety-code', 'scores["test3"]', 'create-annotation');
-        },
-        () => {
-            showElement('map-warning');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateSummarySlide() {
-    const steps = [
-        () => {
-            highlightCode('summary-code', 'std::array<int, 3>');
-            positionAnnotation('summary-code', 'std::array<int, 3>', 'fixed-final-annotation');
-        },
-        () => {
-            highlightCode('summary-code', 'measurements.push_back(temp);');
-            positionAnnotation('summary-code', 'measurements.push_back(temp);', 'dynamic-final-annotation');
-        },
-        () => {
-            highlightCode('summary-code', 'inventory["apples"] = 42;');
-            positionAnnotation('summary-code', 'inventory["apples"] = 42;', 'keyvalue-final-annotation');
-        },
-        () => {
-            highlightCode('summary-code', '.size()');
-            positionAnnotation('summary-code', '.size()', 'common-final-annotation');
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-// Interactive demo functionality
-let vectorDemoElements = [];
-
-function setupVectorDemo() {
-    const addButton = document.getElementById('add-element');
-    const vectorBoxes = document.getElementById('vector-boxes');
+class SummarySlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-summary';
+    }
     
-    if (addButton && vectorBoxes) {
-        addButton.onclick = function() {
-            const newValue = Math.floor(Math.random() * 99) + 1;
-            vectorDemoElements.push(newValue);
-            
-            const box = document.createElement('div');
-            box.style.cssText = `
-                width: 40px; height: 40px; background: #4299e1; color: white;
-                display: flex; align-items: center; justify-content: center;
-                border-radius: 4px; font-weight: bold; animation: slideIn 0.3s ease;
-            `;
-            box.textContent = newValue;
-            vectorBoxes.appendChild(box);
-            
-            const sizeDisplay = document.getElementById('vector-size');
-            if (sizeDisplay) {
-                sizeDisplay.textContent = vectorDemoElements.length;
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('summary-code', 'std::array<int, 3>');
+                positionAnnotation('summary-code', 'std::array<int, 3>', 'fixed-final-annotation');
+            },
+            () => {
+                highlightCode('summary-code', 'measurements.push_back(temp);');
+                positionAnnotation('summary-code', 'measurements.push_back(temp);', 'dynamic-final-annotation');
+            },
+            () => {
+                highlightCode('summary-code', 'inventory["apples"] = 42;');
+                positionAnnotation('summary-code', 'inventory["apples"] = 42;', 'keyvalue-final-annotation');
+            },
+            () => {
+                highlightCode('summary-code', '.size()');
+                positionAnnotation('summary-code', '.size()', 'common-final-annotation');
             }
-        };
-        
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { opacity: 0; transform: translateX(-20px); }
-                to { opacity: 1; transform: translateX(0); }
-            }
-        `;
-        document.head.appendChild(style);
+        ];
+        return runAnimationSteps(steps);
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(setupVectorDemo, 500);
-});
+new SummarySlideAnimation();
 </script>

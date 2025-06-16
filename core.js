@@ -199,3 +199,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateTextSize();
 });
+
+// Base class - add this to animations.js or core.js
+class SlideAnimation {
+    constructor() {
+        if (this.slideId === undefined) {
+            throw new Error('slideId getter must be defined in subclass');
+        }
+        this.register();
+    }
+    
+    get slideId() {
+        throw new Error('slideId getter must be implemented in subclass');
+    }
+    
+    register() {
+        if (typeof window.slideAnimations === 'undefined') {
+            window.slideAnimations = {};
+        }
+        window.slideAnimations[this.slideId] = () => this.animate();
+    }
+    
+    animate() {
+        throw new Error('animate() method must be implemented in subclass');
+    }
+}
+
