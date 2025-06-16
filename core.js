@@ -30,9 +30,26 @@ async function loadSections(sectionNames) {
       const html = await response.text();
       slidesContainer.insertAdjacentHTML('beforeend', html);
       
+      // Execute any scripts in the loaded content
+      const scripts = slidesContainer.querySelectorAll('script');
+      scripts.forEach(script => {
+        if (script.src) {
+          // External script
+          const newScript = document.createElement('script');
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else {
+          // Inline script - execute the code
+          try {
+            eval(script.textContent);
+          } catch (error) {
+            console.error(`Error executing script in ${section}:`, error);
+          }
+        }
+      });
+      
     } catch (error) {
       console.error(`Failed to load section: ${section}`, error);
-      // You could add a placeholder slide for missing sections
       slidesContainer.insertAdjacentHTML('beforeend', 
         `<section class="slide">
           <div class="slide-body">
@@ -44,8 +61,10 @@ async function loadSections(sectionNames) {
     }
   }
   
-  // Initialize slides after all sections are loaded
-  initializeSlides();
+  // Wait a bit longer for everything to settle, then initialize
+  setTimeout(() => {
+    initializeSlides();
+  }, 200);
 }
 
 function initializeSlides() {
@@ -62,10 +81,15 @@ function initializeSlides() {
   // Update counter
   updateSlideCounter();
   
-  // Re-run Prism syntax highlighting if it exists
-  if (typeof Prism !== 'undefined') {
-    Prism.highlightAll();
-  }
+  // Run Prism syntax highlighting AFTER everything is loaded
+  setTimeout(() => {
+    if (typeof Prism !== 'undefined') {
+      console.log('Running Prism.highlightAll()');
+      Prism.highlightAll();
+    } else {
+      console.log('Prism not found');
+    }
+  }, 100);
   
   console.log(`Loaded ${slides.length} slides total`);
 }
@@ -95,7 +119,7 @@ function updateTextSize() {
 }
 
 function showSlide(index) {
-  const slides = getSlides(); // Get slides dynamically
+  const slides = getSlides();
   slides.forEach((s, i) => s.style.display = i === index ? 'block' : 'none');
   const counter = document.getElementById('counter');
   if (counter) {
@@ -114,11 +138,21 @@ function showSlide(index) {
 }
 
 function nextSlide() { 
-  const slides = getSlides(); // Get slides dynamically
+  const slides = getSlides();
   
-  if (typeof slideAnimations !== 'undefined' && slideAnimations[current]) {
-    if (slideAnimations[current]()) {
-      return; 
+  if (typeof slideAnimations !== 'undefined') {
+    const currentSlide = slides[current];
+    const slideId = currentSlide ? currentSlide.id : null;
+    
+    if (slideId && slideAnimations[slideId]) {
+      if (slideAnimations[slideId]()) {
+        return;
+      }
+    }
+    else if (slideAnimations[current]) {
+      if (slideAnimations[current]()) {
+        return;
+      }
     }
   }
   
@@ -129,7 +163,7 @@ function nextSlide() {
 }
 
 function prevSlide() { 
-  const slides = getSlides(); // Get slides dynamically
+  const slides = getSlides();
   
   if (current > 0) { 
     current--; 
@@ -141,12 +175,7 @@ function printAllSlides() {
   window.print();
 }
 
-// --- Initial Setup ---
-// This event listener ensures that all code inside it only runs AFTER the entire
-// HTML document has been loaded and is ready to be interacted with.
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Attach all event listeners to the navigation buttons
   document.getElementById('bigger-text').onclick = () => {
     currentTextSize += 0.05;
     updateTextSize();
@@ -161,18 +190,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('prev').onclick = prevSlide;
   document.getElementById('print').onclick = printAllSlides;
   
-  // Add annotation toggle button listener
   document.getElementById('annotationToggle').onclick = toggleAllAnnotations;
 
-  // Set up keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') prevSlide();
     else if (e.key === 'ArrowRight') nextSlide();
   });
 
-  // Apply initial sizes
   updateTextSize();
-  
-  // Note: Don't call showSlide(current) here since slides aren't loaded yet
-  // The loadSections() call in index.html will handle initialization
 });

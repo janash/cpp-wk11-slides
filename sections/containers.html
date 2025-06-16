@@ -16,7 +16,7 @@
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-c-array-limitations">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -68,7 +68,7 @@ int main(void)
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-std-array-intro">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -122,7 +122,7 @@ int main() {
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-array-access-methods">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -182,7 +182,7 @@ int main() {
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-vector-intro">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -233,7 +233,7 @@ int main() {
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-vector-initialization">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -295,7 +295,7 @@ for(<span id="size-t-target">size_t i</span> = 0; i &lt; temps.size(); i++) {
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-vector-push-back">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -361,7 +361,7 @@ std::cout &lt;&lt; "After adding more: " &lt;&lt; numbers.size() &lt;&lt; std::e
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-vector-access">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -419,7 +419,7 @@ if(!data.empty()) {
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-vector-loops">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -479,7 +479,7 @@ for(int i = 0; i &lt; numbers.size(); i++) {
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-array-vs-vector">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -547,7 +547,7 @@ std::vector&lt;int&gt; user_data(n);  // Size from user
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-map-intro">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -609,7 +609,7 @@ int main() {
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-map-safety">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -671,7 +671,7 @@ try {
   </div>
 </section>
 
-<section class="slide two-column">
+<section class="slide two-column" id="containers-summary">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
@@ -748,20 +748,20 @@ std::cout &lt;&lt; inventory.at("apples") &lt;&lt; std::endl;
 </section>
 
 <script>
-// Container section specific animations with improved pedagogical flow
+// ID-based animation registration - order independent!
 const containerSlideAnimations = {
-    1: animateReviewSlide,           // Review C-style arrays
-    2: animateArrayIntroSlide,       // Introduce std::array  
-    3: animateArrayAccessSlide,      // Array access methods
-    4: animateVectorIntroSlide,      // Introduce std::vector
-    5: animateVectorInitSlide,       // Vector initialization
-    6: animatePushBackSlide,         // Vector growth
-    7: animateVectorAccessSlide,     // Vector access methods
-    8: animateVectorLoopSlide,       // Looping through vectors
-    9: animateComparisonSlide,       // Array vs Vector comparison
-    10: animateMapIntroSlide,        // Introduce std::map
-    11: animateMapSafetySlide,       // Map safety and operations
-    12: animateSummarySlide          // Final summary
+    'containers-c-array-limitations': animateReviewSlide,
+    'containers-std-array-intro': animateArrayIntroSlide,
+    'containers-array-access-methods': animateArrayAccessSlide,
+    'containers-vector-intro': animateVectorIntroSlide,
+    'containers-vector-initialization': animateVectorInitSlide,
+    'containers-vector-push-back': animatePushBackSlide,
+    'containers-vector-access': animateVectorAccessSlide,
+    'containers-vector-loops': animateVectorLoopSlide,
+    'containers-array-vs-vector': animateComparisonSlide,
+    'containers-map-intro': animateMapIntroSlide,
+    'containers-map-safety': animateMapSafetySlide,
+    'containers-summary': animateSummarySlide
 };
 
 // Merge into global slideAnimations object
@@ -770,22 +770,18 @@ if (typeof window.slideAnimations === 'undefined') {
 }
 Object.assign(window.slideAnimations, containerSlideAnimations);
 
-// --- IMPROVED ANIMATION FUNCTIONS ---
-
+// Animation functions - unchanged, just cleaner registration
 function animateReviewSlide() {
     const steps = [
         () => {
-            // First highlight the array declaration to show fixed size
             highlightCode('c-array-code', 'int arr[5] = {10, 20, 30, 40, 50};');
             positionAnnotation('c-array-code', 'int arr[5]', 'array-annotation');
         },
         () => {
-            // Then highlight the manual loop condition to show size tracking issue
             highlightCode('c-array-code', 'i < 5');
             positionAnnotation('c-array-code', 'i < 5', 'loop-annotation');
         },
         () => {
-            // Finally show the problems this creates
             showElement('limitations-box');
         }
     ];
@@ -795,17 +791,14 @@ function animateReviewSlide() {
 function animateArrayIntroSlide() {
     const steps = [
         () => {
-            // Show you need to include the header
             highlightCode('std-array-code', '#include <array>');
             positionAnnotation('std-array-code', '#include <array>', 'include-annotation');
         },
         () => {
-            // Demonstrate the template syntax
             highlightCode('std-array-code', 'std::array<int, 5>');
             positionAnnotation('std-array-code', 'std::array<int, 5>', 'template-annotation');
         },
         () => {
-            // Show the array knows its size
             highlightCode('std-array-code', '.size()');
             positionAnnotation('std-array-code', '.size()', 'methods-annotation');
         }
@@ -816,13 +809,11 @@ function animateArrayIntroSlide() {
 function animateArrayAccessSlide() {
     const steps = [
         () => {
-            // First explain the unsafe method
             highlightBackground('bracket-method', '#ffebee');
             highlightCode('access-code', 'safe_array[0]');
             positionAnnotation('access-code', 'safe_array[0]', 'unsafe-annotation');
         },
         () => {
-            // Then show the safe alternative  
             highlightBackground('at-method', '#e8f5e8');
             highlightCode('access-code', 'safe_array.at(0)');
             positionAnnotation('access-code', 'safe_array.at(0)', 'safe-annotation');
@@ -834,31 +825,15 @@ function animateArrayAccessSlide() {
 function animateVectorIntroSlide() {
     const steps = [
         () => {
-            // Start with the key advantage - dynamic sizing
-            highlightListItem('vector-features', 0);
-        },
-        () => {
-            // Show the header requirement
-            highlightListItem('vector-features', 1);
             highlightCode('vector-code', '#include <vector>');
         },
         () => {
-            // Show memory management benefit
-            highlightListItem('vector-features', 2);
-        },
-        () => {
-            // Demonstrate empty vector creation
             highlightCode('vector-code', 'std::vector<int> numbers;');
             positionAnnotation('vector-code', 'std::vector<int> numbers;', 'empty-annotation');
         },
         () => {
-            // Show dynamic growth
             highlightCode('vector-code', 'numbers.push_back(42);');
             positionAnnotation('vector-code', 'numbers.push_back(42);', 'pushback-annotation');
-        },
-        () => {
-            // Show interactive demo
-            showElement('vector-demo');
         }
     ];
     return runAnimationSteps(steps);
@@ -867,25 +842,21 @@ function animateVectorIntroSlide() {
 function animateVectorInitSlide() {
     const steps = [
         () => {
-            // Empty vector
             highlightListItem('init-methods', 0);
             highlightCode('init-code', 'std::vector<int> empty_vec;');
             positionAnnotation('init-code', 'std::vector<int> empty_vec;', 'empty-vec-annotation');
         },
         () => {
-            // Initialize with values
             highlightListItem('init-methods', 1);
             highlightCode('init-code', '{98.6, 99.1, 97.8}');
             positionAnnotation('init-code', '{98.6, 99.1, 97.8}', 'init-list-annotation');
         },
         () => {
-            // Initialize with size and default value
             highlightListItem('init-methods', 2);
             highlightCode('init-code', '(10, 0)');
             positionAnnotation('init-code', '(10, 0)', 'size-default-annotation');
         },
         () => {
-            // Explain size_t type
             highlightListItem('init-methods', 3);
             showElement('size-info');
             highlightCode('init-code', 'size_t i');
@@ -898,26 +869,21 @@ function animateVectorInitSlide() {
 function animatePushBackSlide() {
     const steps = [
         () => {
-            // Explain push_back adds to end
             highlightListItem('pushback-features', 0);
             highlightCode('pushback-code', 'numbers.push_back(10);');
             positionAnnotation('pushback-code', 'numbers.push_back(10);', 'grow-annotation');
         },
         () => {
-            // Show automatic resizing
             highlightListItem('pushback-features', 1);
         },
         () => {
-            // Compare to Python
             highlightListItem('pushback-features', 2);
         },
         () => {
-            // Show size tracking
             highlightCode('pushback-code', 'numbers.size()');
             positionAnnotation('pushback-code', 'numbers.size()', 'initial-annotation');
         },
         () => {
-            // Show looping pattern
             highlightCode('pushback-code', 'for(int i = 0; i < numbers.size(); i++)');
             positionAnnotation('pushback-code', 'for(int i = 0; i < numbers.size(); i++)', 'range-annotation');
         }
@@ -928,25 +894,21 @@ function animatePushBackSlide() {
 function animateVectorAccessSlide() {
     const steps = [
         () => {
-            // Show bracket operator
             highlightListItem('vector-access', 0);
             highlightCode('vector-access-code', 'data[0]');
             positionAnnotation('vector-access-code', 'data[0]', 'unsafe-vec-annotation');
         },
         () => {
-            // Show at() method
             highlightListItem('vector-access', 1);
             highlightCode('vector-access-code', 'data.at(0)');
             positionAnnotation('vector-access-code', 'data.at(0)', 'safe-vec-annotation');
         },
         () => {
-            // Show convenience methods
             highlightListItem('vector-access', 2);
             highlightCode('vector-access-code', 'data.front()');
             positionAnnotation('vector-access-code', 'data.front()', 'convenience-annotation');
         },
         () => {
-            // Show safety warning
             showElement('access-warning');
         }
     ];
@@ -956,28 +918,23 @@ function animateVectorAccessSlide() {
 function animateVectorLoopSlide() {
     const steps = [
         () => {
-            // Show basic loop pattern
             highlightListItem('loop-methods', 0);
             highlightCode('loop-code', 'for(int i = 0; i < numbers.size(); i++)');
             positionAnnotation('loop-code', 'for(int i = 0; i < numbers.size(); i++)', 'traditional-annotation');
         },
         () => {
-            // Show size() method benefit
             highlightListItem('loop-methods', 1);
         },
         () => {
-            // Show size_t type matching
+            highlightListItem('loop-methods', 2);
             highlightCode('loop-code', 'size_t i');
             positionAnnotation('loop-code', 'size_t i', 'sizet-annotation');
         },
         () => {
-            // Show element modification
-            highlightListItem('loop-methods', 2);
             highlightCode('loop-code', 'numbers[i] *= 2;');
             positionAnnotation('loop-code', 'numbers[i] *= 2;', 'modify-annotation');
         },
         () => {
-            // Show comparison to C arrays
             showElement('python-comparison');
         }
     ];
@@ -987,17 +944,14 @@ function animateVectorLoopSlide() {
 function animateComparisonSlide() {
     const steps = [
         () => {
-            // Fixed size example
             highlightCode('comparison-code', 'std::array<double, 3>');
             positionAnnotation('comparison-code', 'std::array<double, 3>', 'fixed-annotation');
         },
         () => {
-            // Dynamic size example
             highlightCode('comparison-code', 'measurements.push_back(next_value);');
             positionAnnotation('comparison-code', 'measurements.push_back(next_value);', 'dynamic-annotation');
         },
         () => {
-            // Runtime size determination
             highlightCode('comparison-code', 'std::cin >> n;');
             positionAnnotation('comparison-code', 'std::cin >> n;', 'runtime-annotation');
         }
@@ -1008,34 +962,27 @@ function animateComparisonSlide() {
 function animateMapIntroSlide() {
     const steps = [
         () => {
-            // Compare to Python dictionaries
             highlightListItem('map-features', 0);
         },
         () => {
-            // Show unique keys requirement
             highlightListItem('map-features', 1);
         },
         () => {
-            // Show automatic sorting
             highlightListItem('map-features', 2);
         },
         () => {
-            // Show header requirement
             highlightListItem('map-features', 3);
             highlightCode('map-code', '#include <map>');
         },
         () => {
-            // Show template syntax
             highlightCode('map-code', 'std::map<std::string, int>');
             positionAnnotation('map-code', 'std::map<std::string, int>', 'map-template-annotation');
         },
         () => {
-            // Show insertion
             highlightCode('map-code', 'ages["Alice"] = 25;');
             positionAnnotation('map-code', 'ages["Alice"] = 25;', 'map-insert-annotation');
         },
         () => {
-            // Show access
             highlightCode('map-code', 'ages["Alice"]');
             positionAnnotation('map-code', 'ages["Alice"]', 'map-access-annotation');
         }
@@ -1046,25 +993,21 @@ function animateMapIntroSlide() {
 function animateMapSafetySlide() {
     const steps = [
         () => {
-            // Safe key checking
             highlightListItem('map-operations', 0);
             highlightCode('map-safety-code', 'scores.find("test3")');
             positionAnnotation('map-safety-code', 'scores.find("test3")', 'find-annotation');
         },
         () => {
-            // Safe access method
             highlightListItem('map-operations', 1);
             highlightCode('map-safety-code', 'scores.at("test4")');
             positionAnnotation('map-safety-code', 'scores.at("test4")', 'at-safe-annotation');
         },
         () => {
-            // Dangerous bracket operator
             highlightListItem('map-operations', 2);
             highlightCode('map-safety-code', 'scores["test3"]');
             positionAnnotation('map-safety-code', 'scores["test3"]', 'create-annotation');
         },
         () => {
-            // Show warning about silent key creation
             showElement('map-warning');
         }
     ];
@@ -1074,22 +1017,18 @@ function animateMapSafetySlide() {
 function animateSummarySlide() {
     const steps = [
         () => {
-            // Fixed size containers
             highlightCode('summary-code', 'std::array<int, 3>');
             positionAnnotation('summary-code', 'std::array<int, 3>', 'fixed-final-annotation');
         },
         () => {
-            // Dynamic containers
             highlightCode('summary-code', 'measurements.push_back(temp);');
             positionAnnotation('summary-code', 'measurements.push_back(temp);', 'dynamic-final-annotation');
         },
         () => {
-            // Key-value containers
             highlightCode('summary-code', 'inventory["apples"] = 42;');
             positionAnnotation('summary-code', 'inventory["apples"] = 42;', 'keyvalue-final-annotation');
         },
         () => {
-            // Common safety features
             highlightCode('summary-code', '.size()');
             positionAnnotation('summary-code', '.size()', 'common-final-annotation');
         }
@@ -1097,7 +1036,7 @@ function animateSummarySlide() {
     return runAnimationSteps(steps);
 }
 
-// Interactive demo functionality for vector slide
+// Interactive demo functionality
 let vectorDemoElements = [];
 
 function setupVectorDemo() {
@@ -1106,57 +1045,36 @@ function setupVectorDemo() {
     
     if (addButton && vectorBoxes) {
         addButton.onclick = function() {
-            // Add a new element (random number 1-99)
             const newValue = Math.floor(Math.random() * 99) + 1;
             vectorDemoElements.push(newValue);
             
-            // Create visual box for the element
             const box = document.createElement('div');
             box.style.cssText = `
-                width: 40px;
-                height: 40px;
-                background: #4299e1;
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 4px;
-                font-weight: bold;
-                animation: slideIn 0.3s ease;
+                width: 40px; height: 40px; background: #4299e1; color: white;
+                display: flex; align-items: center; justify-content: center;
+                border-radius: 4px; font-weight: bold; animation: slideIn 0.3s ease;
             `;
             box.textContent = newValue;
-            
-            // Add to container
             vectorBoxes.appendChild(box);
             
-            // Update size display if it exists
             const sizeDisplay = document.getElementById('vector-size');
             if (sizeDisplay) {
                 sizeDisplay.textContent = vectorDemoElements.length;
             }
         };
         
-        // Add CSS animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
-                from {
-                    opacity: 0;
-                    transform: translateX(-20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
+                from { opacity: 0; transform: translateX(-20px); }
+                to { opacity: 1; transform: translateX(0); }
             }
         `;
         document.head.appendChild(style);
     }
 }
 
-// Initialize the demo when the DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    // Small delay to ensure slides are loaded
     setTimeout(setupVectorDemo, 500);
 });
 </script>
