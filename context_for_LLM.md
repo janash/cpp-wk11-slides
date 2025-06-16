@@ -1,169 +1,68 @@
-# Complete Guide to the Modular Educational Slide System
 
-## Introduction: Your Role as Content Creator
+# LLM Guide to the Modular Slide System
 
-### What You're Being Asked to Do
-You are helping create educational slide presentations for programming courses. Your job is to:
-- **Create new slide topics** that follow established patterns
-- **Improve existing slide content** for clarity and engagement
-- **Design interactive animations** that enhance learning
-- **Build on the existing educational framework** while maintaining consistency
+## 1. Your Task: Content Creation
 
-### What This Document Provides
-This guide contains everything you need to understand and work with a custom web-based slide system specifically designed for programming education. Unlike traditional presentation tools, this system enables:
-- Precise code highlighting and annotations
-- Interactive demonstrations and simulations  
-- Progressive disclosure of complex concepts
-- Integration with visualization libraries
+Your primary role is to create and modify educational slide presentations for programming courses. All slides and animations are defined in **modular topic files**.
 
-### How to Use This Guide
-1. **Read the philosophy section** to understand the educational goals
-2. **Study the technical structure** to understand how slides are built
-3. **Review the animation system** to understand interactive elements
-4. **Use the examples and templates** as starting points for new content
-5. **Follow the best practices** to create effective educational experiences
+**Your output must be a single, complete HTML file containing:**
+* **HTML Structure:** All `<section>` slides with descriptive IDs.
+* **Content:** Text, lists, and code blocks.
+* **JavaScript Animations:** Class-based animations within a final `<script>` tag to control the progressive disclosure of information.
 
-### Your Output Should Be
-When asked to create or modify slides, provide:
-- **Complete HTML slide files** with proper structure and descriptive IDs
-- **JavaScript animation functions** that enhance the educational flow
-- **Suggestions for interactive elements** where they would aid learning
-- **Recommendations for external libraries** (Plotly, Cytoscape, etc.) when appropriate
+**Key Success Criteria:**
+* **Educational Effectiveness:** The slide logically explains a concept.
+* **Technical Correctness:** The HTML is well-formed and the JavaScript is correct.
+* **Consistency:** The output matches the patterns and templates in this guide.
+* **Progressivity:** Information builds from simple to complex.
 
-### Key Success Criteria
-- **Educational effectiveness** - Does this help students understand the concept?
-- **Technical correctness** - Does the code work within the system constraints?
-- **Consistency** - Does this match the established patterns and style?
-- **Progressivity** - Does information build logically from simple to complex?
+## 2. System Philosophy
 
----
+This is a custom web-based system designed for teaching programming. It uses progressive disclosure and interactivity to manage cognitive load and engage students. Unlike PowerPoint, it offers precise control over code, real syntax highlighting, and a robust animation system. You will be creating **modular topic files** that operate within this larger system.
 
-## System Philosophy and Goals
+## 3. File and Topic Structure
 
-### Why This System Exists
-This is a **custom web-based presentation system specifically designed for programming education**. It was built to solve the limitations of traditional presentation tools like PowerPoint when teaching code-heavy subjects.
+The project has a defined structure with shared core files and a directory for topic modules.
 
-### Core Educational Principles
-1. **Progressive Disclosure** - Reveal information step-by-step to manage cognitive load
-2. **Interactive Learning** - Students actively engage with concepts rather than passively reading
-3. **Multi-Modal Teaching** - Visual (highlighting), auditory (narration), and kinesthetic (interaction) 
-4. **Authentic Context** - Use real syntax highlighting and actual code environments
-5. **Immediate Feedback** - Interactive elements provide instant understanding
-
-### Key Advantages Over PowerPoint
-- **Precise Code Control** - Highlight exact code snippets with pixel-perfect positioning
-- **Real Syntax Highlighting** - Uses Prism.js for authentic IDE-like appearance
-- **Dynamic Interactivity** - Build working demos and simulations within slides
-- **Version Control Friendly** - Text-based format works with git, enables collaboration
-- **AI-Friendly** - Structured format perfect for LLM collaboration and content generation
-- **Extensible** - Can integrate any web technology (visualizations, libraries, etc.)
-- **Robust Animation System** - ID-based animations that don't break when slides are reordered
-
-### Educational Goals
-- **Build Understanding, Not Memorization** - Show *why* concepts matter, not just syntax
-- **Bridge Theory and Practice** - Connect abstract concepts to concrete implementations
-- **Encourage Exploration** - Interactive elements let students discover concepts
-- **Support Different Learning Styles** - Visual, textual, and hands-on approaches
-- **Reduce Cognitive Overload** - Information revealed when students are ready
-
-## System Overview
-This is a web-based presentation system designed for programming education that combines HTML slides with interactive JavaScript animations. Each topic is self-contained in a single file that includes both slide content and animation logic.
-
-## File Structure and Architecture
 ```
 project/
-├── index.html              # Main template with navigation
-├── style.css               # All styling
-├── core.js                 # Navigation and section loading
-├── animations.js           # Animation system and annotation toggles
+├── index.html          # Main template that loads topics
+├── style.css           # All shared styling
+├── core.js             # Core navigation and SlideAnimation base class
 └── sections/
-    ├── title.html          # Title slide
-    ├── containers.html     # Self-contained topic with animations
-    ├── functions.html      # Another topic (example)
-    └── memory.html         # Another topic (example)
+    ├── topic-a.html    # A modular topic file
+    └── topic-b.html    # Another modular topic file
 ```
 
-## Creating a New Topic File
+Each topic is a single `.html` file containing all its slides and animation logic.
 
-### Basic Structure
-Each topic file should follow this pattern with **descriptive slide IDs**:
+**Note: Each topic file is a module and requires the shared `core.js` and `style.css` files from the project root to render and function correctly.**
+
+### Topic File Template
+A new topic file must contain one or more `<section>` elements (slides) and a `<script>` tag at the end for the animation logic.
+
 ```html
-<!-- Section header slide (optional) -->
-<section class="slide section-header">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo">Cal</div>
-      <span>Course Name:</span>
-    </div>
-    <div class="right-header">
-      <span>Topic Area</span>
-    </div>
-  </div>
-  <div class="slide-body section-header">
-    <div class="section-content">
-      <h1 class="section-title">Topic Title</h1>
-      <p class="section-subtitle">Brief description</p>
-    </div>
-  </div>
-</section>
+<section class="slide two-column" id="section-concept-detail">
+  </section>
 
-<!-- Content slides with descriptive IDs -->
-<section class="slide two-column" id="topic-concept-introduction">
-  <!-- Slide content here -->
-</section>
-
-<section class="slide two-column" id="topic-advanced-examples">
-  <!-- More slide content here -->
-</section>
-
-<!-- More slides... -->
+<section class="slide two-column" id="section-concept-example">
+  </section>
 
 <script>
-// ID-based animation registration
-const topicSlideAnimations = {
-    'topic-concept-introduction': animateConceptIntro,
-    'topic-advanced-examples': animateAdvancedExamples
-};
-
-// Merge into global system
-if (typeof window.slideAnimations === 'undefined') {
-    window.slideAnimations = {};
-}
-Object.assign(window.slideAnimations, topicSlideAnimations);
-
-// Animation functions here
+  // Animation classes (JavaScript)
 </script>
 ```
 
 ### Slide ID Naming Convention
-Use descriptive, hierarchical IDs that follow this pattern:
-- **`section-concept-detail`** format
-- **Section prefix** (e.g., `containers`, `functions`, `memory`)
-- **Concept description** (e.g., `std-array-intro`, `vector-loops`)
-- **Specific detail** if needed (e.g., `access-methods`, `safety-features`)
+Slide IDs are critical for linking animations to slides. They **must** be unique and follow the `section-concept-detail` pattern.
+* **Correct:** `containers-vector-initialization`, `memory-stack-vs-heap`
+* **Incorrect:** `slide1`, `intro`, `example-slide`
 
-**Examples:**
-- `containers-std-array-intro`
-- `containers-vector-initialization`
-- `functions-parameter-passing`
-- `memory-stack-vs-heap`
+## 4. Slide Layouts & Content
 
-## Slide Layouts
+### Two-Column Layout (Most Common)
+This is the standard layout for content slides.
 
-### 1. Section Header
-```html
-<section class="slide section-header">
-  <div class="slide-header"><!-- standard header --></div>
-  <div class="slide-body section-header">
-    <div class="section-content">
-      <h1 class="section-title">Main Topic</h1>
-      <p class="section-subtitle">Optional subtitle</p>
-    </div>
-  </div>
-</section>
-```
-
-### 2. Two-Column Layout (most common)
 ```html
 <section class="slide two-column" id="descriptive-slide-id">
   <div class="slide-header">
@@ -177,929 +76,410 @@ Use descriptive, hierarchical IDs that follow this pattern:
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
-      <!-- Text content, explanations, lists -->
-    </div>
+      </div>
     <div class="right-panel">
-      <!-- Code examples, diagrams -->
-    </div>
+      </div>
   </div>
 </section>
 ```
 
-### 3. Title Slide
+### Section Header Layout
+Use this as the first slide of a new topic section.
+
 ```html
-<section class="slide title-slide">
-  <div class="title-left">
-    <h2>Lecture XX:</h2>
-    <h1>Topic Title</h1>
-    <img src="UC_SEAL_PLACEHOLDER" alt="UC Seal" class="uc-seal"/>
-  </div>
-  <div class="title-right">
-    <div class="info">
-      <p>Instructor Name</p>
-      <p>University</p>
-      <p><strong>Course Name</strong></p>
-      <p>Course Code</p>
+<section class="slide section-header">
+  <div class="slide-header"></div>
+  <div class="slide-body section-header">
+    <div class="section-content">
+      <h1 class="section-title">Main Topic Title</h1>
+      <p class="section-subtitle">Optional brief description</p>
     </div>
-    <img src="LOGO_PLACEHOLDER" alt="Logo" class="course-logo"/>
   </div>
 </section>
 ```
 
-## Code Blocks and Syntax Highlighting
+### Code Blocks
+Use a `code-container` to wrap a `<pre><code class="language-cpp">` block. To make text highlightable by animations, wrap it in a `<span>` with a unique `id`.
 
-### Basic Code Block
 ```html
 <div class="code-container">
-  <pre><code class="language-cpp" id="unique-code-id">
-#include <iostream>
+  <pre><code class="language-cpp" id="main-code-block">
+#include &lt;vector>
 
 int main() {
-    <span id="target-span">std::cout << "Hello";</span>
+    <span id="code-vector-declaration">std::vector&lt;int> numbers;</span>
     return 0;
 }
   </code></pre>
   
-  <!-- Static annotations -->
-  <div class="code-annotation" id="annotation-id" style="top: 20px; left: 50px;">
-    Explanation text here
+  <div class="code-annotation" id="anno-vector-decl" style="opacity:0;">
+    This is a dynamic vector.
   </div>
 </div>
 ```
 
-### Supported Languages
-- `language-cpp` - C++
-- `language-python` - Python  
-- `language-javascript` - JavaScript
-- `language-bash` - Shell/Terminal
-- `language-json` - JSON
-- Any language supported by Prism.js
+### Highlightable List Items
+To make items in a list highlightable, wrap the text in a `<span>` with the class `.highlight-item`.
 
-### Code Targeting for Animations
-- Wrap targetable code in `<span id="unique-id">content</span>`
-- Use semantic IDs: `array-declaration`, `loop-condition`, `function-call`
-- Keep spans minimal - just the code you want to highlight
-
-## CSS Classes and Styling System
-
-### Slide Layout Classes
-- **`.slide`** - Base class for all slides, provides fundamental slide styling
-- **`.title-slide`** - Special layout for course title/intro slides
-- **`.section-header`** - Layout for topic introduction slides (centered title)
-- **`.two-column`** - Most common layout, splits slide into left text/right code panels
-
-### Header Classes  
-- **`.slide-header`** - Container for slide header area
-- **`.left-header`** - Left side of header (course info)
-- **`.right-header`** - Right side of header (slide title)
-- **`.berkeley-logo`** - Styled university logo element
-
-### Content Area Classes
-- **`.slide-body`** - Main content area of slide
-- **`.left-panel`** - Left column content (explanations, lists)
-- **`.right-panel`** - Right column content (code, diagrams)
-- **`.section-content`** - Content wrapper for section header slides
-
-### Interactive Element Classes
-- **`.highlight-item`** - **IMPORTANT**: Add this class to `<span>` elements you want to be highlightable by animations
-  ```html
-  <!-- Highlightable list item -->
-  <li><span class="highlight-item">This can be highlighted</span></li>
-  
-  <!-- Non-highlightable list item -->
-  <li>This cannot be highlighted by animations</li>
-  ```
-- **`.highlight`** - Applied by JavaScript when an item is currently highlighted
-- **`.code-annotation`** - Positioning class for code annotations/callouts
-- **`.code-container`** - Wrapper for code blocks to enable relative positioning
-
-### Animation Classes (Applied by JavaScript)
-- **`.show`** - Applied to `.code-annotation` elements to make them visible
-- **`.highlight`** - Applied to `.highlight-item` elements during animations
-- **`.highlight-overlay`** - Dynamically created overlays for code highlighting
-
-### How to Make Elements Highlightable
-To make text highlightable by the animation system, you need **both HTML structure AND JavaScript calls**:
-
-#### Step 1: HTML Structure (Required)
 ```html
-<!-- ✅ CORRECT - Can be highlighted -->
-<ul id="my-list">
-  <li><span class="highlight-item">Point 1</span></li>
-  <li><span class="highlight-item">Point 2</span></li>
+<ul id="my-feature-list">
+  <li><span class="highlight-item">This is the first feature.</span></li>
+  <li><span class="highlight-item">This is the second feature.</span></li>
 </ul>
 
-<!-- ❌ INCORRECT - Cannot be highlighted -->
-<ul id="my-list">
-  <li>Point 1</li>
-  <li>Point 2</li>
+<ul>
+  <li>This item cannot be animated.</li>
 </ul>
 ```
 
-#### Step 2: JavaScript Animation Call (Required)
+## 5. Animation System
+
+The system uses a class-based, auto-registering architecture. For each slide that needs animation, you define a JavaScript class.
+
+### The `SlideAnimation` Base Class
+All animation classes must extend the `SlideAnimation` base class. It requires you to implement a `slideId` getter and an `animate` method. Registration is handled automatically when you instantiate the class.
+
 ```javascript
-function animateSlide() {
-    const steps = [
-        () => highlightListItem('my-list', 0), // Highlights "Point 1"
-        () => highlightListItem('my-list', 1)  // Highlights "Point 2"
-    ];
-    return runAnimationSteps(steps);
+// Base class defined in core.js for reference
+class SlideAnimation {
+    constructor() { /* ... auto-registration logic ... */ }
+    get slideId() { throw new Error('slideId getter must be implemented'); }
+    register() { /* ... auto-registration logic ... */ }
+    animate() { throw new Error('animate() method must be implemented'); }
 }
 ```
 
-#### Step 3: CSS Styling (Automatic)
-The system automatically applies the `.highlight` class when highlighting occurs. This class should be defined in your CSS to show the visual effect.
+### Animation Class Pattern
+This is the required pattern for all animations.
 
-### Complete Highlighting Flow
-1. **Element must have `highlight-item` class** - This makes it discoverable by the animation system
-2. **Animation function must call `highlightListItem()`** - This triggers the highlighting
-3. **CSS `.highlight` class provides visual feedback** - This shows the actual highlighting effect
-
-### Removing Highlighting
-To prevent an element from being highlighted:
-- **Remove** the `highlight-item` class from the HTML
-- The animation system will ignore that element even if JavaScript tries to highlight it
-- Keep the text content and structure unchanged
-
-### Typography Classes
-- **`.section-title`** - Large title text for section headers
-- **`.section-subtitle`** - Smaller subtitle text for section headers
-
-### Utility Classes
-- **`.annotation-element`** - Mark elements as annotation-related for global toggle
-- **`.uc-seal`**, **`.msse-logo`** - Image sizing for institutional logos
-
-### Code Highlighting Classes
-- **`.language-cpp`**, **`.language-python`**, etc. - Language-specific syntax highlighting
-- **`#unique-id`** - Unique IDs on code elements for precise targeting
-
-### Example Class Usage
-```html
-<section class="slide two-column" id="arrays-memory-layout">
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <!-- Highlightable list -->
-      <ul id="benefits">
-        <li><span class="highlight-item">Fast access</span></li>
-        <li><span class="highlight-item">Memory efficient</span></li>
-      </ul>
-      
-      <!-- Non-highlightable explanatory text -->
-      <p>These are the main advantages of arrays.</p>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-        <pre><code class="language-cpp" id="array-code">
-int arr[5] = {1, 2, 3, 4, 5};
-        </code></pre>
-        <div class="code-annotation" id="arr-note">
-          Fixed size array
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-```
-
-### Annotation Boxes (appear/disappear)
-```html
-<div id="info-box" style="background: #e3f2fd; padding: 1em; border-radius: 8px; margin-top: 1em; opacity: 0; transition: opacity 0.5s;">
-  <h4>Title:</h4>
-  <p>Content that appears during animation</p>
-</div>
-```
-
-### Interactive Buttons
-```html
-<button id="demo-button" style="padding: 5px 10px; background: #2e7d32; color: white; border: none; border-radius: 4px;">
-  Click Me
-</button>
-```
-
-## Animation System Deep Dive
-
-### How the Animation Engine Works
-
-#### Global Animation State
-The system uses a global `animationStep` counter to track progress through each slide's animation sequence:
+1.  **Define a class** that extends `SlideAnimation`.
+2.  **Implement `slideId`** to return the target slide's ID.
+3.  **Implement `animate`** to define the sequence of animation steps.
+4.  **Instantiate the class** at the end of the script with `new`.
 
 ```javascript
-let animationStep = 0;  // Tracks current step in animation sequence
-
-function resetAnimations() {
-    animationStep = 0;  // Reset when changing slides
-    // Clear all highlights and annotations
-    document.querySelectorAll('.highlight-overlay').forEach(el => el.remove());
-    document.querySelectorAll('.code-annotation.show').forEach(el => el.classList.remove('show'));
-    // ... more cleanup
-}
-```
-
-#### Animation Execution Flow
-1. **User presses next/right arrow**
-2. **System checks if current slide has animations** via slide ID lookup
-3. **If animations exist**, calls the animation function instead of advancing slide
-4. **Animation function returns `true`** if more steps remain, `false` if complete
-5. **When animation complete**, next press advances to next slide
-
-#### Core Animation Functions
-
-##### `runAnimationSteps(steps)`
-The heart of the animation system:
-```javascript
-function runAnimationSteps(steps) {
-    if (animationStep < steps.length) {
-        if (typeof steps[animationStep] === 'function') {
-            steps[animationStep]();  // Execute current step
-        }
-        animationStep++;  // Move to next step
-        return true;   // More steps remaining
+// Class definition
+class VectorIntroAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-vector-intro';
     }
-    return false;  // Animation complete
-}
-```
 
-##### Animation Function Pattern
-Every slide animation follows this pattern:
-```javascript
-function animateMySlide() {
-    const steps = [
-        () => {
-            // Step 1: Do something
-            highlightCode('code-id', 'target-text');
-        },
-        () => {
-            // Step 2: Do something else  
-            showElement('info-box');
-        },
-        () => {
-            // Step 3: Final step
-            highlightListItem('list-id', 0);
-        }
-    ];
-    return runAnimationSteps(steps);  // MUST return this
-}
-```
-
-#### Integration with Navigation
-In `core.js`, the navigation system uses ID-based animation lookup:
-```javascript
-function nextSlide() { 
-    const slides = getSlides();
-    
-    // Check for animations using slide ID (NEW ROBUST SYSTEM)
-    if (typeof slideAnimations !== 'undefined') {
-        const currentSlide = slides[current];
-        const slideId = currentSlide ? currentSlide.id : null;
-        
-        // Try ID-based lookup first (new system)
-        if (slideId && slideAnimations[slideId]) {
-            if (slideAnimations[slideId]()) {
-                return; // Animation has more steps, don't advance slide
-            }
-        }
-        // Fallback to numeric index (old system) for backwards compatibility
-        else if (slideAnimations[current]) {
-            if (slideAnimations[current]()) {
-                return; // Animation has more steps, don't advance slide
-            }
-        }
-    }
-    
-    // No animations or animation complete - advance to next slide
-    if (current < slides.length - 1) { 
-        current++; 
-        showSlide(current); 
-    }
-}
-```
-
-#### Animation Registration (ID-Based System)
-Each topic must register its animations using descriptive slide IDs:
-
-```javascript
-// ID-based animations (RECOMMENDED - robust and maintainable)
-const topicSlideAnimations = {
-    'containers-std-array-intro': animateArrayIntroSlide,
-    'containers-vector-initialization': animateVectorInitSlide,
-    'containers-map-safety': animateMapSafetySlide
-};
-
-// Merge into global system (REQUIRED)
-if (typeof window.slideAnimations === 'undefined') {
-    window.slideAnimations = {};
-}
-Object.assign(window.slideAnimations, topicSlideAnimations);
-```
-
-**Key Benefits of ID-Based System:**
-- **Order Independent** - Slides can be reordered without breaking animations
-- **Self-Documenting** - Animation names clearly indicate which slide they target
-- **Maintainable** - Easy to find and update specific slide animations
-- **Collision Resistant** - Unique IDs prevent animation conflicts between sections
-- **Future-Proof** - Adding new slides or sections won't affect existing animations
-
-#### Legacy Numeric Index System (Deprecated)
-The old system is still supported for backwards compatibility but **not recommended**:
-```javascript
-// OLD SYSTEM - fragile, breaks when slides are reordered
-const topicSlideAnimations = {
-    1: animateFirstSlide,    // What if a new slide is inserted before this?
-    2: animateSecondSlide,   // Indices become incorrect
-    3: animateThirdSlide     // Hard to maintain
-};
-```
-
-**Problems with Numeric System:**
-- Breaks when slides are reordered
-- Hard to determine which animation belongs to which slide
-- Index calculation errors are common
-- Difficult to maintain across multiple sections
-
-#### Annotation System Integration
-Animations work closely with the annotation toggle system:
-```javascript
-// resetAnimations() respects annotation visibility
-function resetAnimations() {
-    animationStep = 0;
-    
-    if (annotationsVisible) {
-        // Reset but keep annotations available
-        document.querySelectorAll('.code-annotation').forEach(el => el.classList.remove('show'));
-    } else {
-        // Keep annotations hidden
-        hideAllAnnotations();
-    }
-}
-```
-
-## Available Animation Functions
-
-### Core Functions
-- `runAnimationSteps(steps)` - Execute array of animation steps
-- `resetAnimations()` - Reset all animations (called on slide change)
-
-### Code Highlighting
-- `highlightCode('codeBlockId', 'textToFind', 'className')` - Highlight specific text in code
-- `positionAnnotation('codeBlockId', 'textToFind', 'annotationId')` - Position annotation near code
-
-### List Highlighting  
-- `highlightListItem('listId', index)` - Highlight specific list item (0-based)
-
-### Element Control
-- `showElement('elementId')` - Fade in element (sets opacity: 1)
-- `highlightBackground('elementId', 'color')` - Change background color
-
-### Code Examples
-```javascript
-// Highlight a function call and show annotation
-() => {
-    highlightCode('main-code', 'std::vector<int>');
-    positionAnnotation('main-code', 'std::vector<int>', 'vector-annotation');
-}
-
-// Highlight second list item
-() => highlightListItem('benefits-list', 1),
-
-// Show explanation box
-() => showElement('explanation-box'),
-
-// Change background color of element
-() => highlightBackground('unsafe-method', '#ffebee')
-```
-
-## Interactive Demo Setup
-```javascript
-// Add interactive functionality
-function setupInteractiveDemo() {
-    const button = document.getElementById('demo-button');
-    if (button) {
-        button.onclick = function() {
-            // Your interactive logic here
-            console.log('Button clicked!');
-        };
+    animate() {
+        const steps = [
+            () => highlightListItem('features-list', 0), // Highlight first list item
+            () => highlightCode('vector-code', 'std::vector'), // Highlight code
+            () => showElement('vector-annotation') // Show an annotation
+        ];
+        return runAnimationSteps(steps);
     }
 }
 
-// Initialize after DOM loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(setupInteractiveDemo, 500);
-});
+// Instantiation (this makes the animation live)
+new VectorIntroAnimation();
 ```
 
-## External Libraries
+### Available Animation Functions
+Use these helper functions inside your `animate` method's `steps` array.
 
-### Available Libraries
-The system supports importing additional JavaScript libraries for enhanced visualizations:
+* `runAnimationSteps(steps)`: The function that executes the animation sequence. Your `animate` method must return its result.
+* `highlightListItem('listId', index)`: Highlights a specific item in a list (0-indexed).
+* `highlightCode('codeBlockId', 'textToFind')`: Highlights a string within a code block.
+* `positionAnnotation('codeBlockId', 'textToFind', 'annotationId')`: Positions an annotation element next to a string in a code block.
+* `showElement('elementId')`: Fades in a hidden element (like an annotation).
+* `highlightBackground('elementId', 'color')`: Changes the background color of an element.
 
-#### Data Visualization
-```javascript
-// Plotly.js for complex charts
-// Add to your script section:
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"></script>
+## 6. Best Practices & Troubleshooting
 
-// Create interactive plots
-function createPlotlyChart() {
-    const data = [{
-        x: ['Array', 'Vector', 'Map'],
-        y: [1, 3, 2],
-        type: 'bar'
-    }];
-    Plotly.newPlot('chart-div', data);
-}
-```
+### Best Practices
+* **One concept per slide.** Don't overload a single slide.
+* **Link text to code.** When discussing a concept in the left panel, highlight the corresponding code in the right panel.
+* **Progressive Reveal:** Introduce concepts one by one. Each step in an animation should reveal only one new piece of information.
+* **Naming Conventions:**
+    * Slide IDs: `section-concept-detail` (e.g., `containers-vector-methods`).
+    * Animation Classes: `[Concept]Animation` (e.g., `VectorMethodsAnimation`).
 
-#### Network Diagrams
-```javascript
-// Cytoscape.js for graphs and networks
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+### Troubleshooting
+If an animation is not working, check the following:
+1.  **Was the class instantiated?** Ensure `new YourAnimationClass();` is at the end of your script.
+2.  **Is the Slide ID correct?** The string from the `slideId` getter must *exactly* match the `<section>` ID in the HTML.
+3.  **Are the element IDs correct?** Check that IDs used in functions like `highlightListItem` and `highlightCode` match the HTML element IDs.
+4.  **Check the browser console.** Look for errors like `slideId getter must be defined` or other JavaScript exceptions.
 
-function createNetworkDiagram() {
-    const cy = cytoscape({
-        container: document.getElementById('network-container'),
-        elements: [
-            { data: { id: 'a' } },
-            { data: { id: 'b' } },
-            { data: { id: 'ab', source: 'a', target: 'b' } }
-        ]
-    });
-}
-```
+## 7. Complete Example Topic File
 
-#### Mathematical Visualization
-```javascript
-// D3.js for custom visualizations
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-
-// Chart.js for simpler charts
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
-```
-
-#### 3D Graphics
-```javascript
-// Three.js for 3D visualizations
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-function create3DVisualization() {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    // ... Three.js setup
-}
-```
-
-### When to Use External Libraries
-- **Plotly**: Complex charts, statistical plots, 3D data visualization
-- **Cytoscape**: Network graphs, tree structures, algorithm visualization  
-- **D3.js**: Custom interactive visualizations, data binding
-- **Chart.js**: Simple charts and graphs
-- **Three.js**: 3D graphics, spatial concepts, complex animations
-- **Anime.js**: Advanced animations beyond CSS transitions
-
-## Best Practices
-
-### Content Organization
-1. **Start with conceptual overview** (bullet points, explanations)
-2. **Show concrete examples** (code demonstrations)
-3. **Build complexity gradually** (simple → complex examples)
-4. **Include interactive elements** where beneficial
-5. **End with practical applications** or comparisons
-
-### Animation Guidelines
-1. **Reveal information progressively** - don't show everything at once
-2. **Match animations to pedagogical flow** - highlight what you're discussing
-3. **Use consistent timing** - not too fast, not too slow
-4. **Provide visual feedback** - animations should feel responsive
-5. **Support the narrative** - animations should enhance, not distract
-
-### Code Examples
-1. **Use realistic examples** - not just toy code
-2. **Include common pitfalls** - show what can go wrong
-3. **Demonstrate best practices** - show the right way
-4. **Progressive complexity** - start simple, add features
-5. **Consistent formatting** - use same style throughout
-
-### Slide ID Guidelines
-1. **Use descriptive names** - `containers-vector-intro` not `slide-5`
-2. **Follow naming convention** - `section-concept-detail`
-3. **Be consistent** - same pattern across all sections
-4. **Avoid generic names** - `intro`, `overview`, `example` are too vague
-5. **Make them unique** - prefix with section name to avoid collisions
-
-### Accessibility
-1. **Semantic HTML** - proper heading structure, alt text
-2. **High contrast** - ensure readability
-3. **Keyboard navigation** - don't rely only on mouse
-4. **Screen reader friendly** - meaningful element names
-5. **Responsive design** - works on different screen sizes
-
-## Troubleshooting
-
-### Common Issues
-1. **Animation not working**: 
-   - Check slide ID matches animation registration exactly
-   - Ensure slide has a unique, descriptive ID
-   - Verify animation function is properly defined
-2. **Code highlighting fails**: 
-   - Verify text matches exactly, check for HTML entities
-   - Ensure Prism.js is loading after slide content
-   - Check for timing issues with dynamic content
-3. **Annotation positioning**: 
-   - Ensure target text exists in code block
-   - Check annotation element has correct ID
-   - Verify timing - annotations may need delays
-4. **Interactive elements not responding**: 
-   - Check element IDs are unique and correct
-   - Verify event listeners are properly attached
-   - Ensure elements exist when script runs
-
-### Debugging Tips
-1. **Use browser console** - check for JavaScript errors and console logs
-2. **Inspect elements** - verify IDs and classes are correct
-3. **Test step by step** - comment out animation steps to isolate issues
-4. **Check timing** - some elements may need delays to be ready
-5. **Verify slide IDs** - ensure they match animation registration exactly
-
-### Migration from Numeric to ID-Based System
-If updating old slides:
-1. **Add descriptive IDs** to all animated slides
-2. **Update animation registration** to use slide IDs
-3. **Test each slide** to ensure animations work correctly
-4. **Remove old numeric registrations** once ID-based system is working
-
-## Example Topic Template
+This is a complete, working example of a single-slide topic file. Use this as your template.
 
 ```html
-<section class="slide section-header">
+<section class="slide two-column" id="containers-vector-intro">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo">Cal</div>
-      <span>Python for Molecular Sciences:</span>
+      <span>C++ Fundamentals:</span>
     </div>
     <div class="right-header">
-      <span>Advanced Topic</span>
-    </div>
-  </div>
-  <div class="slide-body section-header">
-    <div class="section-content">
-      <h1 class="section-title">New Topic</h1>
-      <p class="section-subtitle">Subtitle description</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide two-column" id="newtopic-concept-introduction">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo">Cal</div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>First Concept</span>
+      <span>Introduction to std::vector</span>
     </div>
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
-      <ul id="concept-list">
-        <li><span class="highlight-item">First point</span></li>
-        <li><span class="highlight-item">Second point</span></li>
-        <li><span class="highlight-item">Third point</span></li>
+      <h4>std::vector</h4>
+      <p>A dynamic array with key features:</p>
+      <ul id="vector-features">
+        <li><span class="highlight-item">Automatically manages its own memory.</span></li>
+        <li><span class="highlight-item">Can grow or shrink in size.</span></li>
+        <li><span class="highlight-item">Provides fast, random access to elements.</span></li>
       </ul>
     </div>
     <div class="right-panel">
       <div class="code-container">
-        <pre><code class="language-cpp" id="example-code">
-#include <iostream>
+        <pre><code class="language-cpp" id="vector-example-code">
+#include &lt;vector>
+#include &lt;iostream>
 
 int main() {
-    <span id="example-target">// Example code here</span>
+    <span id="v-decl">std::vector&lt;int> numbers;</span>
+    <span id="v-push">numbers.push_back(10);</span>
+    <span id="v-push-2">numbers.push_back(20);</span>
+
+    <span id="v-access">std::cout &lt;&lt; numbers[0];</span>
     return 0;
 }
         </code></pre>
-        <div class="code-annotation" id="example-annotation" style="top: 60px; left: 100px;">
-          Explanation of the code
+        <div class="code-annotation" id="anno-decl" style="opacity:0;">
+          Declaration of a vector of integers.
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide two-column" id="newtopic-advanced-examples">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo">Cal</div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Advanced Examples</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <ul id="advanced-concepts">
-        <li><span class="highlight-item">Advanced concept 1</span></li>
-        <li><span class="highlight-item">Advanced concept 2</span></li>
-      </ul>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-        <pre><code class="language-cpp" id="advanced-code">
-// More complex example
-class Example {
-    <span id="method-target">void method() { }</span>
-};
-        </code></pre>
+        <div class="code-annotation" id="anno-push" style="opacity:0;">
+          Adds an element to the end.
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <script>
-// ID-based animation registration (RECOMMENDED)
-const newTopicAnimations = {
-    'newtopic-concept-introduction': animateConceptIntroduction,
-    'newtopic-advanced-examples': animateAdvancedExamples
-};
+class VectorIntroAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-vector-intro';
+    }
 
-// Merge into global system
-if (typeof window.slideAnimations === 'undefined') {
-    window.slideAnimations = {};
+    animate() {
+        const steps = [
+            () => {
+                highlightListItem('vector-features', 0);
+                highlightCode('vector-example-code', 'std::vector<int> numbers;');
+                positionAnnotation('vector-example-code', 'std::vector<int> numbers;', 'anno-decl');
+                showElement('anno-decl');
+            },
+            () => {
+                highlightListItem('vector-features', 1);
+                highlightCode('vector-example-code', 'numbers.push_back(10);');
+                positionAnnotation('vector-example-code', 'numbers.push_back(10);', 'anno-push');
+                showElement('anno-push');
+            },
+            () => {
+                highlightCode('vector-example-code', 'numbers.push_back(20);');
+            },
+            () => {
+                highlightListItem('vector-features', 2);
+                highlightCode('vector-example-code', 'std::cout << numbers[0];');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
 }
-Object.assign(window.slideAnimations, newTopicAnimations);
 
-function animateConceptIntroduction() {
-    const steps = [
-        () => {
-            highlightListItem('concept-list', 0);
-            highlightCode('example-code', '// Example code here');
-            positionAnnotation('example-code', '// Example code here', 'example-annotation');
-        },
-        () => {
-            highlightListItem('concept-list', 1);
-        },
-        () => {
-            highlightListItem('concept-list', 2);
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function animateAdvancedExamples() {
-    const steps = [
-        () => {
-            highlightListItem('advanced-concepts', 0);
-            highlightCode('advanced-code', 'void method() { }');
-        },
-        () => {
-            highlightListItem('advanced-concepts', 1);
-        }
-    ];
-    return runAnimationSteps(steps);
-}
+// IMPORTANT: Instantiate the class to register the animation
+new VectorIntroAnimation();
 </script>
 ```
 
-## System Benefits Summary
+## 8. Additional Animation Functions & Patterns
 
-This educational slide system provides:
-
-### For Educators
-- **Robust animation system** that doesn't break when content is reordered
-- **Real syntax highlighting** for authentic code presentation
-- **Progressive disclosure** to manage cognitive load effectively
-- **Interactive demonstrations** that engage students actively
-- **Version control compatibility** for collaborative development
-- **AI-friendly structure** for automated content generation and updates
-
-### For Students
-- **Multi-modal learning** through visual, textual, and interactive elements
-- **Self-paced exploration** with clickable animations and demos
-- **Authentic code examples** with proper IDE-like syntax highlighting
-- **Immediate feedback** through interactive elements
-- **Reduced cognitive overload** with step-by-step information revelation
-
-### For Developers
-- **Maintainable codebase** with descriptive IDs and clear structure
-- **Modular architecture** allowing independent topic development
-- **Extensible framework** supporting external libraries and custom interactions
-- **Robust animation system** using ID-based registration instead of fragile indices
-- **Consistent patterns** that make creating new content straightforward
-
-## Advanced Features
-
-### Custom Animation Timing
-For more complex animations, you can add delays and custom timing:
+### Code Highlighting with Annotations
+To highlight code and show annotations, target specific spans in your code blocks:
 
 ```javascript
-function animateComplexSlide() {
-    const steps = [
-        () => {
-            highlightCode('code-block', 'first-line');
-        },
-        () => {
-            // Custom delay before next step
-            setTimeout(() => {
-                showElement('explanation-box');
-            }, 500);
-        },
-        () => {
-            highlightListItem('feature-list', 0);
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-```
-### Integration with External Libraries
-You can combine the animation system with external libraries for enhanced visualizations:
-
-```javascript
-function animateWithVisualization() {
-    const steps = [
-        () => {
-            // Standard slide animation
-            highlightCode('algorithm-code', 'sort-function');
-        },
-        () => {
-            // Trigger external library visualization
-            createSortingVisualization();
-            showElement('visualization-container');
-        },
-        () => {
-            // Continue with slide content
-            highlightListItem('algorithm-steps', 0);
-        }
-    ];
-    return runAnimationSteps(steps);
-}
-
-function createSortingVisualization() {
-    // Use D3.js, Plotly, or other library
-    const data = [64, 34, 25, 12, 22, 11, 90];
-    // ... visualization code
+() => {
+    highlightCode('code-block-id', 'text-to-find');
+    positionAnnotation('code-block-id', 'text-to-find', 'annotation-id');
+    showElement('annotation-id');
 }
 ```
 
-### Multi-Step Interactive Demos
-Create sophisticated interactive demonstrations:
+The `positionAnnotation` function automatically positions an annotation next to the highlighted text.
+
+### Background Highlighting
+Change element background colors for emphasis:
 
 ```javascript
-function animateInteractiveDemo() {
-    let demoState = { step: 0 };
+() => highlightBackground('element-id', '#ffebee') // Light red background
+() => highlightBackground('safe-method', '#e8f5e8') // Light green background
+```
+
+### Hidden Elements Pattern
+Elements that will be shown during animation should start hidden:
+
+```html
+<div id="info-box" style="opacity: 0; transition: opacity 0.5s;">
+  <h4>Additional Info:</h4>
+  <p>This appears during animation</p>
+</div>
+```
+
+## 9. Interactive Demo Setup
+
+For slides with interactive elements (buttons, clickable demos), add setup functions:
+
+```javascript
+class MySlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'my-slide-id';
+    }
     
-    const steps = [
-        () => {
-            setupInteractiveDemo(demoState);
-            showElement('demo-container');
-        },
-        () => {
-            highlightCode('demo-code', 'user-interaction');
-            enableDemoInteraction(demoState);
-        },
-        () => {
-            showElement('results-explanation');
-        }
-    ];
-    return runAnimationSteps(steps);
+    animate() {
+        const steps = [
+            () => highlightListItem('features', 0),
+            // ... other steps
+        ];
+        return runAnimationSteps(steps);
+    }
 }
 
-function setupInteractiveDemo(state) {
+// Interactive demo variables (if needed)
+let demoState = [];
+let currentValue = 42;
+
+function setupInteractiveDemo() {
     const button = document.getElementById('demo-button');
-    button.onclick = () => {
-        // Update demo state
-        state.step++;
-        updateDemoVisualization(state);
-    };
+    const resetButton = document.getElementById('reset-button');
+    
+    if (button && resetButton) {
+        button.onclick = function() {
+            // Demo interaction logic
+            demoState.push(currentValue);
+            currentValue += 10;
+            updateDemoDisplay();
+        };
+        
+        resetButton.onclick = function() {
+            demoState = [];
+            currentValue = 42;
+            updateDemoDisplay();
+        };
+    }
+}
+
+function updateDemoDisplay() {
+    const display = document.getElementById('demo-display');
+    if (display) {
+        display.textContent = '[' + demoState.join(', ') + ']';
+    }
+}
+
+// Register animation
+new MySlideAnimation();
+
+// Setup demo after DOM loads
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(setupInteractiveDemo, 500);
+});
+```
+
+## 10. Code Block Targeting Requirements
+
+For animations to work with code blocks, wrap targetable text in `<span>` elements with unique IDs:
+
+```html
+<div class="code-container">
+  <pre><code class="language-cpp" id="example-code">
+#include &lt;iostream>
+
+int main() {
+    <span id="var-declaration">int x = 10;</span>
+    <span id="output-statement">std::cout &lt;&lt; x;</span>
+    return 0;
+}
+  </code></pre>
+</div>
+```
+
+Then target these spans in animations:
+```javascript
+() => highlightCode('example-code', 'int x = 10;')
+() => highlightCode('example-code', 'std::cout << x;')
+```
+
+## 11. Multiple Animation Classes Per File
+
+A single topic file can have multiple animated slides. Create one class per slide:
+
+```javascript
+class FirstSlideAnimation extends SlideAnimation {
+    get slideId() { return 'topic-first-slide'; }
+    animate() { /* ... */ }
+}
+
+class SecondSlideAnimation extends SlideAnimation {
+    get slideId() { return 'topic-second-slide'; }
+    animate() { /* ... */ }
+}
+
+class ThirdSlideAnimation extends SlideAnimation {
+    get slideId() { return 'topic-third-slide'; }
+    animate() { /* ... */ }
+}
+
+// Register all animations
+new FirstSlideAnimation();
+new SecondSlideAnimation();
+new ThirdSlideAnimation();
+```
+
+## 12. Common Animation Patterns
+
+### Progressive List Highlighting
+```javascript
+animate() {
+    const steps = [
+        () => highlightListItem('my-list', 0),
+        () => highlightListItem('my-list', 1),
+        () => highlightListItem('my-list', 2)
+    ];
+    return runAnimationSteps(steps);
 }
 ```
 
-### Conditional Animations
-Create animations that adapt based on content or user interaction:
-
+### Code + Explanation Pattern
 ```javascript
-function animateConditionalSlide() {
-    const codeType = document.getElementById('code-selector').value;
-    
+animate() {
     const steps = [
         () => {
-            if (codeType === 'cpp') {
-                highlightCode('cpp-code', 'std::vector');
-            } else {
-                highlightCode('python-code', 'list()');
-            }
+            highlightCode('code-block', 'function_name()');
+            showElement('function-explanation');
         },
         () => {
-            // Common animation regardless of condition
-            showElement('explanation-box');
+            highlightCode('code-block', 'variable = value');
+            showElement('variable-explanation');
         }
     ];
     return runAnimationSteps(steps);
 }
 ```
 
-## Performance Considerations
-
-### Efficient Animation Management
-- **Minimal DOM manipulation** - animations reuse existing elements when possible
-- **Cleanup on slide change** - `resetAnimations()` prevents memory leaks
-- **Lazy loading** - external libraries loaded only when needed
-- **Optimized highlighting** - reuse highlight overlays rather than creating new ones
-
-### Memory Management
+### Combined Code and List Pattern
 ```javascript
-// Good: Reuse elements
-function highlightCode(codeId, text) {
-    let overlay = document.getElementById(`${codeId}-overlay`);
-    if (!overlay) {
-        overlay = createHighlightOverlay(codeId);
-    }
-    positionOverlay(overlay, text);
-}
-
-// Avoid: Creating new elements every time
-function highlightCode(codeId, text) {
-    const overlay = document.createElement('div'); // Creates new element each time
-    // ... rest of function
-}
-```
-
-### Responsive Design Considerations
-Ensure animations work across different screen sizes:
-
-```css
-/* Responsive annotation positioning */
-.code-annotation {
-    position: absolute;
-    /* Use relative units when possible */
-    font-size: 0.8em;
-}
-
-@media (max-width: 768px) {
-    .code-annotation {
-        font-size: 0.7em;
-        /* Adjust positioning for smaller screens */
-    }
+animate() {
+    const steps = [
+        () => {
+            highlightListItem('features', 0);
+            highlightCode('example-code', 'std::vector<int>');
+            positionAnnotation('example-code', 'std::vector<int>', 'vector-annotation');
+        },
+        () => {
+            highlightListItem('features', 1);
+            highlightCode('example-code', 'push_back(value)');
+        }
+    ];
+    return runAnimationSteps(steps);
 }
 ```
-
-## Content Creation Workflow
-
-### 1. Planning Phase
-- **Define learning objectives** for the topic
-- **Identify key concepts** that need emphasis
-- **Plan animation sequence** to support pedagogical flow
-- **Choose appropriate interactions** (demos, visualizations, etc.)
-
-### 2. Structure Creation
-- **Create section header slide** with topic overview
-- **Design content slides** with descriptive IDs
-- **Plan code examples** that build complexity progressively
-- **Identify highlightable elements** for animations
-
-### 3. Animation Development
-- **Write animation functions** following established patterns
-- **Test each animation step** individually
-- **Ensure smooth transitions** between concepts
-- **Add interactive elements** where they enhance learning
-
-### 4. Testing and Refinement
-- **Test on different screen sizes** and devices
-- **Verify accessibility** with keyboard navigation
-- **Check animation timing** for optimal pacing
-- **Gather feedback** from students or colleagues
-
-## Getting Started Checklist
-
-When creating a new topic, follow this checklist:
-
-### HTML Structure
-- [ ] Add descriptive ID to each animated slide (`section-concept-detail` format)
-- [ ] Use `highlight-item` class for text that should be highlightable
-- [ ] Include unique IDs for code blocks and interactive elements
-- [ ] Add semantic HTML structure with proper headings
-
-### Animation Setup
-- [ ] Create animation functions following the established pattern
-- [ ] Register animations using slide IDs (not numeric indices)
-- [ ] Test each animation step individually
-- [ ] Ensure `runAnimationSteps()` is properly returned
-
-### Content Quality
-- [ ] Start with conceptual overview before diving into code
-- [ ] Use realistic, practical code examples
-- [ ] Build complexity progressively
-- [ ] Include interactive elements where they enhance learning
-
-### Testing
-- [ ] Test on different screen sizes
-- [ ] Verify keyboard navigation works
-- [ ] Check that Prism syntax highlighting is working
-- [ ] Ensure animations don't break when slides are reordered
-
-## Conclusion
-
-This educational slide system represents a significant advancement over traditional presentation tools for programming education. By combining the flexibility of web technologies with a robust, ID-based animation system, it enables educators to create truly engaging, interactive learning experiences.
-
-The system's strength lies in its balance of power and maintainability. While it provides sophisticated animation capabilities and supports complex interactive demonstrations, it maintains a clear, consistent structure that makes content creation and maintenance straightforward.
-
-As you create content with this system, remember that the technology serves the pedagogy—every animation, interaction, and visual element should have a clear educational purpose. The goal is not just to impress students with flashy effects, but to genuinely enhance their understanding of complex programming concepts.
-
-The ID-based animation system ensures that your educational content will remain robust and maintainable as it grows and evolves, allowing you to focus on what matters most: creating effective learning experiences for your students.
