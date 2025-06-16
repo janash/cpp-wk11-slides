@@ -2,28 +2,145 @@
 
 let animationStep = 0;
 
+// Global state for annotations
+let annotationsVisible = true;
+
+// Toggle function
+function toggleAllAnnotations() {
+    const toggleButton = document.getElementById('annotationToggle');
+    const toggleText = toggleButton.querySelector('.toggle-text');
+    const toggleIcon = toggleButton.querySelector('.toggle-icon');
+    
+    annotationsVisible = !annotationsVisible;
+    
+    if (annotationsVisible) {
+        // Show all annotations
+        showAllAnnotations();
+        toggleButton.classList.remove('annotations-hidden');
+        toggleText.textContent = 'Hide Annotations';
+        toggleIcon.textContent = '👁️';
+    } else {
+        // Hide all annotations
+        hideAllAnnotations();
+        toggleButton.classList.add('annotations-hidden');
+        toggleText.textContent = 'Show Annotations';
+        toggleIcon.textContent = '🙈';
+    }
+}
+
+function showAllAnnotations() {
+    // Show all code annotations
+    document.querySelectorAll('.code-annotation').forEach(annotation => {
+        annotation.classList.add('show');
+    });
+    
+    // Show all highlight overlays
+    document.querySelectorAll('.highlight-overlay').forEach(overlay => {
+        overlay.style.opacity = '1';
+    });
+    
+    // Show other annotation elements if they exist
+    const annotationElements = [
+        '#limitations-box', 
+        '#size-info', 
+        '#python-comparison', 
+        '#access-warning', 
+        '#map-warning'
+    ];
+    
+    annotationElements.forEach(selector => {
+        const el = document.querySelector(selector);
+        if (el && el.classList.contains('annotation-element')) {
+            el.style.opacity = '1';
+        }
+    });
+}
+
+function hideAllAnnotations() {
+    // Hide all code annotations
+    document.querySelectorAll('.code-annotation').forEach(annotation => {
+        annotation.classList.remove('show');
+    });
+    
+    // Hide all highlight overlays
+    document.querySelectorAll('.highlight-overlay').forEach(overlay => {
+        overlay.style.opacity = '0';
+    });
+    
+    // Hide other annotation elements if they exist
+    const annotationElements = [
+        '#limitations-box', 
+        '#size-info', 
+        '#python-comparison', 
+        '#access-warning', 
+        '#map-warning'
+    ];
+    
+    annotationElements.forEach(selector => {
+        const el = document.querySelector(selector);
+        if (el && el.classList.contains('annotation-element')) {
+            el.style.opacity = '0';
+        }
+    });
+}
+
+// Enhanced resetAnimations function that respects the toggle state
 function resetAnimations() {
     animationStep = 0;
     
-    // Remove any highlight overlays created by the new highlightCode function
+    // Remove highlight overlays
     document.querySelectorAll('.highlight-overlay').forEach(el => el.remove());
 
-    // Reset other states
-    document.querySelectorAll('.code-annotation.show').forEach(el => el.classList.remove('show'));
-    document.querySelectorAll('.highlight').forEach(el => el.classList.remove('highlight'));
-    
-    const elementsToReset = ['#limitations-box', '#size-info', '#python-comparison', '#access-warning', '#map-warning'];
-    elementsToReset.forEach(selector => {
-        const el = document.querySelector(selector);
-        if (el) el.style.opacity = '0';
-    });
+    // Reset states based on current toggle state
+    if (annotationsVisible) {
+        // If annotations should be visible, reset to show state
+        document.querySelectorAll('.code-annotation').forEach(el => el.classList.remove('show'));
+        document.querySelectorAll('.highlight').forEach(el => el.classList.remove('highlight'));
+        
+        const elementsToReset = ['#limitations-box', '#size-info', '#python-comparison', '#access-warning', '#map-warning'];
+        elementsToReset.forEach(selector => {
+            const el = document.querySelector(selector);
+            if (el) el.style.opacity = '0';
+        });
+    } else {
+        // If annotations should be hidden, keep them hidden
+        hideAllAnnotations();
+    }
 
-     const bgToReset = ['#bracket-method', '#at-method'];
-     bgToReset.forEach(selector => {
+    const bgToReset = ['#bracket-method', '#at-method'];
+    bgToReset.forEach(selector => {
         const el = document.querySelector(selector);
         if(el) el.style.background = '';
-     });
+    });
 }
+
+// Robust event listener attachment for annotation toggle button
+function attachAnnotationToggle() {
+    const toggleButton = document.getElementById('annotationToggle');
+    if (toggleButton) {
+        toggleButton.onclick = toggleAllAnnotations;
+        console.log('Annotation toggle button attached');
+    } else {
+        console.log('Annotation toggle button not found');
+    }
+}
+
+// Try to attach the button event listener
+document.addEventListener('DOMContentLoaded', function() {
+    // Try immediately
+    attachAnnotationToggle();
+    
+    // Also try after a short delay in case button loads later
+    setTimeout(attachAnnotationToggle, 100);
+});
+
+// Optional keyboard shortcut
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'a' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        toggleAllAnnotations();
+    }
+});
 
 /**
  * NEW ROBUST VERSION: Highlights code by creating an absolutely positioned
@@ -84,7 +201,6 @@ function highlightCode(codeBlockId, textToFind, className = 'highlight-overlay')
 
     container.appendChild(overlay);
 }
-
 
 function positionAnnotation(codeBlockId, textToFind, annotationId) {
     // FIX: Changed 'codeId' to 'codeBlockId' to match the argument name.

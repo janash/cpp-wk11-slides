@@ -2,12 +2,92 @@
 // Manages the fundamental slide deck system.
 
 // --- State and Variables ---
-const slides = document.querySelectorAll('.slide');
 let current = 0;
 let currentTextSize = parseFloat(localStorage.getItem('slideTextSize') || '1');
-// NOTE: The code-size logic is removed as the buttons were removed.
+
+// --- Helper function to always get current slides ---
+function getSlides() {
+  return document.querySelectorAll('.slide');
+}
 
 // --- Core Functions ---
+
+async function loadSections(sectionNames) {
+  const slidesContainer = document.getElementById('slides');
+  
+  // Clear any existing content
+  slidesContainer.innerHTML = '';
+  
+  for (const section of sectionNames) {
+    try {
+      console.log(`Loading section: ${section}`);
+      const response = await fetch(`sections/${section}.html`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const html = await response.text();
+      slidesContainer.insertAdjacentHTML('beforeend', html);
+      
+    } catch (error) {
+      console.error(`Failed to load section: ${section}`, error);
+      // You could add a placeholder slide for missing sections
+      slidesContainer.insertAdjacentHTML('beforeend', 
+        `<section class="slide">
+          <div class="slide-body">
+            <h2>Error loading section: ${section}</h2>
+            <p>Check that sections/${section}.html exists</p>
+          </div>
+        </section>`
+      );
+    }
+  }
+  
+  // Initialize slides after all sections are loaded
+  initializeSlides();
+}
+
+function initializeSlides() {
+  const slides = getSlides();
+  
+  // Hide all slides except the first
+  slides.forEach((slide, index) => {
+    slide.style.display = index === 0 ? 'block' : 'none';
+  });
+  
+  // Reset current slide to 0
+  current = 0;
+  
+  // Update counter
+  updateSlideCounter();
+  
+  // Re-run Prism syntax highlighting if it exists
+  if (typeof Prism !== 'undefined') {
+    Prism.highlightAll();
+  }
+  
+  console.log(`Loaded ${slides.length} slides total`);
+}
+
+function updateSlideCounter() {
+  const counter = document.getElementById('counter');
+  const totalSlides = getSlides().length;
+  if (counter) {
+    const currentSlide = getCurrentSlideIndex() + 1;
+    counter.textContent = `${currentSlide} / ${totalSlides}`;
+  }
+}
+
+function getCurrentSlideIndex() {
+  const slides = getSlides();
+  for (let i = 0; i < slides.length; i++) {
+    if (slides[i].style.display !== 'none') {
+      return i;
+    }
+  }
+  return 0;
+}
 
 function updateTextSize() {
   document.documentElement.style.setProperty('--slide-font-size', `${currentTextSize}em`);
@@ -15,6 +95,7 @@ function updateTextSize() {
 }
 
 function showSlide(index) {
+  const slides = getSlides(); // Get slides dynamically
   slides.forEach((s, i) => s.style.display = i === index ? 'block' : 'none');
   const counter = document.getElementById('counter');
   if (counter) {
@@ -33,6 +114,8 @@ function showSlide(index) {
 }
 
 function nextSlide() { 
+  const slides = getSlides(); // Get slides dynamically
+  
   if (typeof slideAnimations !== 'undefined' && slideAnimations[current]) {
     if (slideAnimations[current]()) {
       return; 
@@ -46,6 +129,8 @@ function nextSlide() {
 }
 
 function prevSlide() { 
+  const slides = getSlides(); // Get slides dynamically
+  
   if (current > 0) { 
     current--; 
     showSlide(current); 
@@ -75,6 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('next').onclick = nextSlide;
   document.getElementById('prev').onclick = prevSlide;
   document.getElementById('print').onclick = printAllSlides;
+  
+  // Add annotation toggle button listener
+  document.getElementById('annotationToggle').onclick = toggleAllAnnotations;
 
   // Set up keyboard navigation
   document.addEventListener('keydown', (e) => {
@@ -82,7 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (e.key === 'ArrowRight') nextSlide();
   });
 
-  // Apply initial sizes and show the first slide
+  // Apply initial sizes
   updateTextSize();
-  showSlide(current);
+  
+  // Note: Don't call showSlide(current) here since slides aren't loaded yet
+  // The loadSections() call in index.html will handle initialization
 });
