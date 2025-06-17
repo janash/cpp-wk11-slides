@@ -212,7 +212,7 @@ new VectorIntroAnimation();
 Use these helper functions inside your `animate` method's `steps` array.
 
 * `runAnimationSteps(steps)`: The function that executes the animation sequence. Your `animate` method must return its result.
-* `highlightCode('codeBlockId', 'textToFind')`: Highlights a string within a code block.
+* `highlightCode('codeBlockId', 'textToFind', 'colorToHighlight')`: Highlights a string within a code block. Default color is yellow.
 * `positionAnnotation('codeBlockId', 'textToFind', 'annotationId')`: Positions an annotation element next to a string in a code block.
 * `showElement('elementId')`: Fades in a hidden element (like an annotation).
 * `highlightBackground('elementId', 'color')`: Changes the background color of an element.
