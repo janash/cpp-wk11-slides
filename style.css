@@ -28,7 +28,7 @@ body {
     position: relative;
     background: white;
     overflow: hidden;
-    font-size: var(--slide-font-size, 1em);
+    font-size: var(--slide-font-size, 1.25em);
 }
 
 .slide.active {
