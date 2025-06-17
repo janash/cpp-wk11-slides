@@ -143,10 +143,12 @@ document.addEventListener('keydown', function(e) {
 });
 
 /**
- * NEW ROBUST VERSION: Highlights code by creating an absolutely positioned
- * overlay that sits BEHIND the text, avoiding any conflicts with PrismJS.
+ * Enhanced version: Highlights code only if annotations are visible
  */
 function highlightCode(codeBlockId, textToFind, className = 'highlight-overlay') {
+    // Only highlight if annotations are visible
+    if (!annotationsVisible) return;
+    
     const codeBlock = document.getElementById(codeBlockId);
     if (!codeBlock || !textToFind) return;
 
@@ -203,7 +205,9 @@ function highlightCode(codeBlockId, textToFind, className = 'highlight-overlay')
 }
 
 function positionAnnotation(codeBlockId, textToFind, annotationId) {
-    // FIX: Changed 'codeId' to 'codeBlockId' to match the argument name.
+    // Only show annotations if they're supposed to be visible
+    if (!annotationsVisible) return;
+    
     const codeBlock = document.getElementById(codeBlockId);
     const annotation = document.getElementById(annotationId);
     if (!codeBlock || !annotation || !textToFind) return;
@@ -248,7 +252,7 @@ function positionAnnotation(codeBlockId, textToFind, annotationId) {
     annotation.classList.add('show');
 }
 
-// --- Other Helper Functions (Unchanged) ---
+// --- Other Helper Functions (Enhanced) ---
 
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -262,9 +266,13 @@ function highlightListItem(listId, index) {
     }
 }
 
+// Enhanced showElement function that respects annotation visibility
 function showElement(elementId) {
     const element = document.getElementById(elementId);
-    if (element) element.style.opacity = '1';
+    if (element && annotationsVisible) {
+        element.style.opacity = '1';
+    }
+    // If annotations are hidden, don't show the element
 }
 
 function runAnimationSteps(steps) {

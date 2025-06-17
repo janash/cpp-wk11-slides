@@ -5,6 +5,7 @@
 let current = 0;
 let currentTextSize = parseFloat(localStorage.getItem('slideTextSize') || '1');
 let isInputMode = false;
+let skipAnimations = false;
 
 // --- Helper function to always get current slides ---
 function getSlides() {
@@ -30,7 +31,6 @@ async function loadSections(sectionNames) {
       
       const html = await response.text();
       slidesContainer.insertAdjacentHTML('beforeend', html);
-      
       
       // Execute any scripts in the loaded content
       const scripts = slidesContainer.querySelectorAll('script');
@@ -136,25 +136,31 @@ function showSlide(index) {
   }, 50);
 }
 
+// Enhanced nextSlide function with improved navigation
 function nextSlide() { 
   const slides = getSlides();
   
-  if (typeof slideAnimations !== 'undefined') {
+  // Check if we should skip animations
+  const shouldSkipAnimations = !annotationsVisible || skipAnimations;
+  
+  if (!shouldSkipAnimations && typeof slideAnimations !== 'undefined') {
     const currentSlide = slides[current];
     const slideId = currentSlide ? currentSlide.id : null;
     
+    // Try to run animation for this slide
     if (slideId && slideAnimations[slideId]) {
       if (slideAnimations[slideId]()) {
-        return;
+        return; // Animation step executed, stay on current slide
       }
     }
     else if (slideAnimations[current]) {
       if (slideAnimations[current]()) {
-        return;
+        return; // Animation step executed, stay on current slide
       }
     }
   }
   
+  // No more animations or skipping animations, go to next slide
   if (current < slides.length - 1) { 
     current++; 
     showSlide(current); 
@@ -170,7 +176,7 @@ function prevSlide() {
   }
 }
 
-// Replace the printAllSlides function in core.js
+// Enhanced print function
 function printAllSlides() {
   console.log('Print function called');
   
@@ -222,7 +228,6 @@ function printAllSlides() {
     window.print();
     
     // Restore original state after print
-    // Use a longer timeout to ensure print dialog has time to open
     setTimeout(() => {
       console.log('Restoring original slide visibility...');
       
@@ -243,7 +248,7 @@ function printAllSlides() {
       document.body.classList.remove('printing-all-slides');
       
       console.log('Print state restored');
-    }, 2000); // Longer timeout to ensure print dialog has opened
+    }, 2000);
   }, 300);
 }
 
@@ -371,6 +376,33 @@ function jumpToSlide(slideIndex) {
     showSlide(current);
 }
 
+// Enhanced keyboard navigation
+function handleKeyPress(e) {
+    if (isInputMode) return; // Don't interfere with input mode
+    
+    if (e.key === 'ArrowLeft') {
+        prevSlide();
+    } else if (e.key === 'ArrowRight') {
+        if (e.shiftKey) {
+            // Shift + Right Arrow: Skip animations and go to next slide
+            const originalSkip = skipAnimations;
+            skipAnimations = true;
+            nextSlide();
+            skipAnimations = originalSkip;
+        } else {
+            // Regular Right Arrow: Normal navigation (with animations)
+            nextSlide();
+        }
+    } else if (e.key === ' ') {
+        // Spacebar: Skip animations and go to next slide
+        e.preventDefault();
+        const originalSkip = skipAnimations;
+        skipAnimations = true;
+        nextSlide();
+        skipAnimations = originalSkip;
+    }
+}
+
 // --- Event Listeners ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -390,10 +422,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   document.getElementById('annotationToggle').onclick = toggleAllAnnotations;
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') prevSlide();
-    else if (e.key === 'ArrowRight') nextSlide();
-  });
+  // Enhanced keyboard navigation
+  document.addEventListener('keydown', handleKeyPress);
 
   updateTextSize();
 });

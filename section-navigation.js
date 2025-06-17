@@ -31,11 +31,18 @@ class SectionNavigator {
         }
         
         const html = await response.text();
-        slidesContainer.insertAdjacentHTML('beforeend', html);
+        
+        // Fix image paths for GitHub Pages if needed
+        let fixedHtml = html;
+        if (window.location.hostname !== 'localhost' && window.location.protocol !== 'file:') {
+          fixedHtml = html.replace(/\.\.\/images\//g, 'images/');
+        }
+        
+        slidesContainer.insertAdjacentHTML('beforeend', fixedHtml);
         
         // Count slides in this section
         const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
+        tempDiv.innerHTML = fixedHtml;
         const slidesInSection = tempDiv.querySelectorAll('.slide').length;
         
         // Store section information
@@ -132,36 +139,240 @@ class SectionNavigator {
   }
 
   initializeUI() {
-    // Add hamburger button to nav
-    this.addHamburgerButton();
+    // Create the enhanced navigation
+    this.createEnhancedNavigation();
     
     // Create sidebar
     this.createSidebar();
     
     // Track current section when navigating
     this.trackCurrentSection();
+    
+    // Add help guide
+    this.createHelpGuide();
   }
 
-  addHamburgerButton() {
+  createEnhancedNavigation() {
     const nav = document.querySelector('.nav');
     
-    // Wrap existing nav content in nav-right
-    const existingContent = nav.innerHTML;
+    // Replace the entire nav content with enhanced navigation
     nav.innerHTML = `
       <div class="nav-left">
         <button class="hamburger-menu" id="hamburgerBtn" title="Section Navigation">
-          ☰
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
         </button>
       </div>
-      <div class="nav-right" style="display: flex; align-items: center; gap: 10px;">
-        ${existingContent}
+      
+      <div class="nav-center">
+        <!-- Slide Navigation -->
+        <div class="slide-nav-group">
+          <button id="first-slide" title="First Slide">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="19,20 9,12 19,4"></polygon>
+              <line x1="5" y1="19" x2="5" y2="5"></line>
+            </svg>
+          </button>
+          <button id="prev-slide" title="Previous Slide">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="15,18 9,12 15,6"></polygon>
+            </svg>
+          </button>
+          <span id="counter" onclick="toggleSlideInput()" title="Click to jump to slide">1 / ?</span>
+          <button id="next-slide" title="Next Slide">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="9,18 15,12 9,6"></polygon>
+            </svg>
+          </button>
+          <button id="last-slide" title="Last Slide">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5,4 15,12 5,20"></polygon>
+              <line x1="19" y1="5" x2="19" y2="19"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Animation Controls -->
+        <div class="animation-nav-group">
+          <span class="nav-label">Animations:</span>
+          <button id="prev-animation" class="animation-btn" title="Previous Animation Step">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15,18 9,12 15,6"></polyline>
+            </svg>
+          </button>
+          <button id="next-animation" class="animation-btn" title="Next Animation Step">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+          </button>
+          <button id="skip-animations" class="animation-btn" title="Skip All Animations">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5,4 15,12 5,20"></polygon>
+              <polygon points="19,4 29,12 19,20" transform="translate(-10,0)"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="nav-right">
+        <button id="help-guide" title="Keyboard Shortcuts">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+        <button id="bigger-text">Bigger Text</button>
+        <button id="smaller-text">Smaller Text</button>
+        <button id="print">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6,9 6,2 18,2 18,9"></polyline>
+            <path d="M6,18H4a2,2,0,0,1-2-2V11a2,2,0,0,1,2-2H20a2,2,0,0,1,2,2v5a2,2,0,0,1-2,2H18"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          Print PDF
+        </button>
+        <button class="annotation-toggle" id="annotationToggle">
+          <span class="toggle-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </span>
+          <span class="toggle-text">Hide Annotations</span>
+        </button>
       </div>
     `;
     
-    // Add click handler
+    // Add navigation event listeners
+    this.addNavigationEventListeners();
+  }
+
+  addNavigationEventListeners() {
+    // Hamburger menu
     document.getElementById('hamburgerBtn').addEventListener('click', () => {
       this.toggleSidebar();
     });
+    
+    // Enhanced navigation buttons - bind 'this' context
+    document.getElementById('prev-slide').onclick = () => this.prevSlideOnly();
+    document.getElementById('next-slide').onclick = () => this.nextSlideOnly();
+    document.getElementById('first-slide').onclick = () => this.goToFirstSlide();
+    document.getElementById('last-slide').onclick = () => this.goToLastSlide();
+    
+    // Animation controls
+    document.getElementById('prev-animation').onclick = () => prevSlide();
+    document.getElementById('next-animation').onclick = () => nextSlide();
+    document.getElementById('skip-animations').onclick = () => this.skipAllAnimationsOnSlide();
+    
+    // Existing buttons
+    document.getElementById('bigger-text').onclick = () => {
+      currentTextSize += 0.05;
+      updateTextSize();
+    };
+    
+    document.getElementById('smaller-text').onclick = () => {
+      currentTextSize -= 0.05;
+      updateTextSize();
+    };
+    
+    document.getElementById('print').onclick = printAllSlides;
+    document.getElementById('annotationToggle').onclick = toggleAllAnnotations;
+    document.getElementById('help-guide').onclick = () => this.showControlGuide();
+    
+    // Enhanced keyboard navigation
+    document.addEventListener('keydown', (e) => this.handleEnhancedKeyPress(e));
+  }
+
+  // Navigation functions
+  goToFirstSlide() {
+    current = 0;
+    showSlide(current);
+  }
+
+  goToLastSlide() {
+    const slides = getSlides();
+    current = slides.length - 1;
+    showSlide(current);
+  }
+
+  nextSlideOnly() {
+    const slides = getSlides();
+    if (current < slides.length - 1) {
+      current++;
+      showSlide(current);
+    }
+  }
+
+  prevSlideOnly() {
+    const slides = getSlides();
+    if (current > 0) {
+      current--;
+      showSlide(current);
+    }
+  }
+
+  skipAllAnimationsOnSlide() {
+    // Skip all remaining animation steps on current slide
+    if (typeof slideAnimations !== 'undefined') {
+      const slides = getSlides();
+      const currentSlide = slides[current];
+      const slideId = currentSlide ? currentSlide.id : null;
+      
+      if (slideId && slideAnimations[slideId]) {
+        // Keep running animation steps until no more
+        while (slideAnimations[slideId]()) {
+          // Continue until function returns false
+        }
+      }
+    }
+  }
+
+  // Enhanced keyboard navigation
+  handleEnhancedKeyPress(e) {
+    if (isInputMode) return;
+    
+    switch(e.key) {
+      case 'ArrowLeft':
+        if (e.shiftKey) {
+          this.prevSlideOnly();
+        } else {
+          prevSlide(); // With animations
+        }
+        break;
+        
+      case 'ArrowRight':
+        if (e.shiftKey) {
+          this.nextSlideOnly();
+        } else {
+          nextSlide(); // With animations
+        }
+        break;
+        
+      case ' ':
+        e.preventDefault();
+        this.nextSlideOnly();
+        break;
+        
+      case 'Home':
+        this.goToFirstSlide();
+        break;
+        
+      case 'End':
+        this.goToLastSlide();
+        break;
+        
+      case '?':
+        this.showControlGuide();
+        break;
+        
+      case 'Escape':
+        this.hideControlGuide();
+        break;
+    }
   }
 
   createSidebar() {
@@ -189,11 +400,172 @@ class SectionNavigator {
     document.getElementById('sidebarOverlay').addEventListener('click', () => {
       this.closeSidebar();
     });
+  }
+
+  createHelpGuide() {
+    // Create help guide HTML
+    const helpGuideHTML = `
+      <div class="control-guide-overlay" id="controlGuideOverlay">
+        <div class="control-guide-modal" id="controlGuideModal">
+          <div class="control-guide-header">
+            <h3>Navigation Controls</h3>
+            <button class="close-guide" id="closeGuide">✕</button>
+          </div>
+          <div class="control-guide-content">
+            
+            <div class="control-section">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                  <path d="M3 3h6l6 18h6"></path>
+                  <path d="M14 9h6"></path>
+                </svg>
+                Mouse Controls
+              </h4>
+              <div class="control-grid">
+                <div class="control-item">
+                  <span class="control-key">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="19,20 9,12 19,4"></polygon>
+                      <line x1="5" y1="19" x2="5" y2="5"></line>
+                    </svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="5,4 15,12 5,20"></polygon>
+                      <line x1="19" y1="5" x2="19" y2="19"></line>
+                    </svg>
+                  </span>
+                  <span class="control-desc">Jump to first/last slide</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="15,18 9,12 15,6"></polygon>
+                    </svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="9,18 15,12 9,6"></polygon>
+                    </svg>
+                  </span>
+                  <span class="control-desc">Previous/next slide</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="15,18 9,12 15,6"></polyline>
+                    </svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                  </span>
+                  <span class="control-desc">Animation steps</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="5,4 15,12 5,20"></polygon>
+                      <polygon points="19,4 29,12 19,20" transform="translate(-10,0)"></polygon>
+                    </svg>
+                  </span>
+                  <span class="control-desc">Skip animations on current slide</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">1 / 45</span>
+                  <span class="control-desc">Click to jump to specific slide</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="3" y1="6" x2="21" y2="6"></line>
+                      <line x1="3" y1="12" x2="21" y2="12"></line>
+                      <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                  </span>
+                  <span class="control-desc">Section navigation menu</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-section">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <polyline points="8,21 16,21"></polyline>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+                Keyboard Shortcuts
+              </h4>
+              <div class="control-grid">
+                <div class="control-item">
+                  <span class="control-key">← →</span>
+                  <span class="control-desc">Navigate with animations</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">Shift + →</span>
+                  <span class="control-desc">Skip animations, next slide</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">Space</span>
+                  <span class="control-desc">Skip animations, next slide</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">Home</span>
+                  <span class="control-desc">Go to first slide</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">End</span>
+                  <span class="control-desc">Go to last slide</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">Ctrl/Cmd + A</span>
+                  <span class="control-desc">Toggle annotations</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">Escape</span>
+                  <span class="control-desc">Close menus/input</span>
+                </div>
+                <div class="control-item">
+                  <span class="control-key">?</span>
+                  <span class="control-desc">Show this help guide</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-section">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                  <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                  <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                </svg>
+                Tips
+              </h4>
+              <ul class="tips-list">
+                <li><strong>Teaching mode:</strong> Keep annotations visible, use arrow keys for step-by-step</li>
+                <li><strong>Review mode:</strong> Hide annotations or use spacebar for quick navigation</li>
+                <li><strong>Presentation tip:</strong> Use section menu (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                  </svg>
+                  ) to jump between topics</li>
+                <li><strong>Print friendly:</strong> Print button shows all slides in one document</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
     
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.isOpen) {
-        this.closeSidebar();
+    document.body.insertAdjacentHTML('beforeend', helpGuideHTML);
+    
+    // Add event listeners
+    document.getElementById('closeGuide').addEventListener('click', () => {
+      this.hideControlGuide();
+    });
+    
+    document.getElementById('controlGuideOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        this.hideControlGuide();
       }
     });
   }
@@ -296,7 +668,48 @@ class SectionNavigator {
     overlay.classList.remove('show');
     this.isOpen = false;
   }
+
+  // Control guide functions
+    showControlGuide() {
+    console.log('showControlGuide called');
+    const overlay = document.getElementById('controlGuideOverlay');
+    console.log('Found overlay:', !!overlay);
+    
+    if (overlay) {
+        console.log('Adding show class to overlay');
+        overlay.classList.add('show');
+        
+        // Double-check that the class was added
+        setTimeout(() => {
+        console.log('Overlay classes:', overlay.classList.toString());
+        console.log('Overlay display style:', window.getComputedStyle(overlay).display);
+        console.log('Overlay opacity:', window.getComputedStyle(overlay).opacity);
+        }, 100);
+    } else {
+        console.error('Control guide overlay not found! Creating it now...');
+        // If overlay doesn't exist, create it
+        this.createHelpGuide();
+        
+        // Try again after creating
+        setTimeout(() => {
+        const newOverlay = document.getElementById('controlGuideOverlay');
+        if (newOverlay) {
+            console.log('Successfully created overlay, showing now');
+            newOverlay.classList.add('show');
+        }
+        }, 100);
+    }
+    }
+  hideControlGuide() {
+    const overlay = document.getElementById('controlGuideOverlay');
+    if (overlay) {
+      overlay.classList.remove('show');
+    }
+  }
 }
+
+
+// Replace the end of your section-navigation.js file with this:
 
 // Initialize section navigator
 const sectionNavigator = new SectionNavigator();
@@ -308,3 +721,51 @@ window.loadSections = function(sections) {
 
 // Make sectionNavigator globally available for debugging
 window.sectionNavigator = sectionNavigator;
+
+// Fixed event listener setup
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded, setting up help guide...');
+  
+  // Wait for navigation to be created
+  setTimeout(() => {
+    const helpButton = document.getElementById('help-guide');
+    const overlay = document.getElementById('controlGuideOverlay');
+    
+    console.log('Help button found:', !!helpButton);
+    console.log('Help overlay found:', !!overlay);
+    
+    if (helpButton) {
+      // Remove any existing event listeners
+      helpButton.onclick = null;
+      
+      // Add the event listener
+      helpButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Help button clicked');
+        if (sectionNavigator) {
+          sectionNavigator.showControlGuide();
+        }
+      });
+      
+      console.log('Help guide button event listener attached');
+    }
+    
+    // Test if we can show the guide directly
+    if (overlay) {
+      console.log('Help guide overlay exists and ready');
+    }
+    
+  }, 1000); // Increased delay to ensure navigation is fully created
+});
+
+// Single keyboard event listener for help (separate from the class method)
+document.addEventListener('keydown', (e) => {
+  // Only handle ? key for help guide
+  if (e.key === '?' && !isInputMode) {
+    e.preventDefault();
+    console.log('? key pressed, showing help guide');
+    if (sectionNavigator && sectionNavigator.showControlGuide) {
+      sectionNavigator.showControlGuide();
+    }
+  }
+});

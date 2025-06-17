@@ -12,16 +12,7 @@
   </div>
 
   <div class="nav">
-    <button id="prev">← Prev</button>
-    <span id="counter" onclick="toggleSlideInput()">1 / ?</span>
-    <button id="next">Next →</button>
-    <button id="bigger-text">Bigger Text</button>
-    <button id="smaller-text">Smaller Text</button>
-    <button id="print">🖨️ Print PDF</button>
-    <button class="annotation-toggle" id="annotationToggle">
-      <span class="toggle-icon">👁️</span>
-      <span class="toggle-text">Hide Annotations</span>
-    </button>
+    <!-- Navigation will be created by section-navigation.js -->
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
@@ -32,11 +23,11 @@
   
   <script>
     loadSections([
-  {file: 'title', name: 'Title'}, 
-  {file: 'outline', name: 'Course Outline'},
-  {file: 'containers', name: 'Containers'}, 
-  {file: 'functions', name: 'Function Argument Passing'},
-]);
+      {file: 'title', name: 'Title'}, 
+      {file: 'outline', name: 'Course Outline'},
+      {file: 'containers', name: 'Containers'}, 
+      {file: 'functions', name: 'Function Argument Passing'},
+    ]);
   </script>
 </body>
 </html>

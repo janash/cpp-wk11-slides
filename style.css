@@ -233,23 +233,6 @@ pre[class*="language-"] {
 .msse-logo { position: absolute; top: 0em; right: 0em; height: 250px; }
 
 
-
-/* --- Navigation Styles (Desktop First) --- */
-.nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1em;
-    border-top: 1px solid #ccc;
-    z-index: 100;
-}
-
 button { font-size: 1em; padding: 8px 16px; border-radius: 20px; border: none; background: #003262; color: white; cursor: pointer; transition: background-color 0.2s ease; }
 button:hover { background: #1a4680; }
 
@@ -476,6 +459,159 @@ button:hover { background: #1a4680; }
         padding: 1.5em;
     }
     .title-left h1 { font-size: 2em; }
+}
+
+/* Control Guide Modal Styles - Add this to your style.css */
+
+.control-guide-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.control-guide-overlay.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.control-guide-modal {
+  background: white !important;
+  border-radius: 12px;
+  max-width: 700px;
+  max-height: 80vh;
+  width: 90%;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  z-index: 10000 !important;
+  position: relative;
+}
+
+.control-guide-overlay.show .control-guide-modal {
+  transform: scale(1);
+}
+
+.control-guide-header {
+  background: #003262;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.control-guide-header h3 {
+  margin: 0;
+  font-size: 1.4em;
+}
+
+.close-guide {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.close-guide:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.control-guide-content {
+  padding: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.control-section {
+  margin-bottom: 25px;
+}
+
+.control-section h4 {
+  color: #003262;
+  margin: 0 0 15px 0;
+  font-size: 1.1em;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 0;
+}
+
+.control-key {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-family: monospace;
+  font-size: 0.9em;
+  font-weight: bold;
+  min-width: 80px;
+  text-align: center;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.control-desc {
+  color: #555;
+  flex: 1;
+}
+
+.tips-list {
+  margin: 0;
+  padding-left: 20px;
+  color: #555;
+}
+
+.tips-list li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* Mobile Responsive */
+@media (max-width: 800px) {
+  .control-guide-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .control-grid {
+    font-size: 0.9em;
+  }
+  
+  .control-key {
+    min-width: 60px;
+    font-size: 0.8em;
+  }
 }
 
 /* Hamburger Menu Styles */
@@ -718,4 +854,212 @@ button:hover { background: #1a4680; }
 body.printing-all-slides .slide {
     display: block !important;
     visibility: visible !important;
+}
+
+/* Enhanced Navigation Styles - Replace the nav section in your style.css */
+
+/* --- Navigation Styles (Desktop First) --- */
+.nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-top: 1px solid #ccc;
+    z-index: 100;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slide-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 50, 98, 0.2);
+}
+
+.animation-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 50, 98, 0.1);
+}
+
+.nav-label {
+  font-size: 0.8em;
+  color: #666;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+/* Button styling */
+button { 
+  font-size: 0.9em; 
+  padding: 6px 10px; 
+  border-radius: 6px; 
+  border: none; 
+  background: #003262; 
+  color: white; 
+  cursor: pointer; 
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+button:hover { 
+  background: #1a4680; 
+}
+
+.animation-btn {
+  font-size: 0.85em !important;
+  padding: 4px 6px !important;
+  min-width: auto;
+}
+
+/* Compact buttons for nav-right */
+.nav-right button {
+  font-size: 0.85em;
+  padding: 5px 8px;
+}
+
+/* SVG icon styling */
+button svg {
+  stroke: currentColor;
+  fill: none;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+button:hover svg {
+  stroke: currentColor;
+}
+
+/* Hamburger menu icon */
+.hamburger-menu {
+  background: rgba(0, 50, 98, 0.1) !important;
+  color: #003262 !important;
+}
+
+.hamburger-menu svg {
+  stroke: #003262;
+}
+
+.hamburger-menu:hover {
+  background: rgba(0, 50, 98, 0.2) !important;
+}
+
+.hamburger-menu:hover svg {
+  stroke: #003262;
+}
+
+/* Toggle icon for annotations */
+.toggle-icon svg {
+  stroke: currentColor;
+  margin-right: 4px;
+}
+
+.annotation-toggle.annotations-hidden .toggle-icon svg {
+  stroke: currentColor;
+}
+
+#counter {
+  margin: 0 6px;
+  font-weight: bold;
+  min-width: 45px;
+  text-align: center;
+  font-size: 0.9em;
+  background: transparent;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+
+#counter:hover {
+  background: #f8f9fa;
+  border-color: #003262;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 800px) {
+    body {
+        padding-bottom: 0;
+        padding-top: 70px; /* Increased for larger mobile nav */
+    }
+
+    .nav {
+        top: 0;
+        bottom: auto;
+        border-top: none;
+        border-bottom: 1px solid #ccc;
+        height: 70px;
+        flex-direction: column;
+        gap: 5px;
+        padding: 5px 10px;
+    }
+    
+    .nav-center {
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .nav-right {
+        gap: 5px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .animation-nav-group .nav-label {
+        display: none;
+    }
+    
+    .nav-right button {
+        font-size: 0.8em;
+        padding: 4px 6px;
+    }
+    
+    button {
+        font-size: 0.85em;
+        padding: 4px 6px;
+    }
+    
+    #counter {
+        font-size: 0.8em;
+        min-width: 35px;
+        padding: 3px 4px;
+    }
 }
