@@ -142,10 +142,8 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-/**
- * Enhanced version: Highlights code only if annotations are visible
- */
-function highlightCode(codeBlockId, textToFind, className = 'highlight-overlay') {
+// Modified highlightCode function with color support (backward compatible)
+function highlightCode(codeBlockId, textToFind, color = 'rgba(255, 215, 0, 0.4)', className = 'highlight-overlay') {
     // Only highlight if annotations are visible
     if (!annotationsVisible) return;
     
@@ -196,10 +194,10 @@ function highlightCode(codeBlockId, textToFind, className = 'highlight-overlay')
     overlay.style.left = `${targetRect.left - containerRect.left}px`;
     overlay.style.width = `${targetRect.width}px`;
     overlay.style.height = `${targetRect.height}px`;
-    overlay.style.backgroundColor = 'rgba(255, 215, 0, 0.4)';
+    overlay.style.backgroundColor = color; // Use the provided color (defaults to yellow)
     overlay.style.borderRadius = '3px';
-    overlay.style.zIndex = '0'; // Sit behind the code text
-    overlay.style.pointerEvents = 'none'; // Make it unclickable
+    overlay.style.zIndex = '0';
+    overlay.style.pointerEvents = 'none';
 
     container.appendChild(overlay);
 }

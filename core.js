@@ -585,10 +585,63 @@ const observer = new MutationObserver((mutations) => {
     });
 });
 
+function autoSizeCode() {
+    document.querySelectorAll('.code-container pre code').forEach(codeBlock => {
+        const lines = codeBlock.textContent.split('\n').length;
+        let fontSize;
+        
+        if (lines <= 10) fontSize = '1em';
+        else if (lines <= 15) fontSize = '0.9em';
+        else if (lines <= 20) fontSize = '0.8em';
+        else fontSize = '0.75em';
+        
+        codeBlock.style.fontSize = fontSize;
+    });
+}
+
+// Call after slides load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(autoSizeCode, 500);
+});
+
 // Start observing
 observer.observe(document.body, {
     childList: true,
     subtree: true
+});
+
+// Add this to your core.js or in a script tag
+function enterFullscreen() {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { // Safari
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE11
+        elem.msRequestFullscreen();
+    }
+}
+
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+}
+
+// Add keyboard shortcut (F11 or F)
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'F' || e.key === 'f') {
+        e.preventDefault();
+        if (!document.fullscreenElement) {
+            enterFullscreen();
+        } else {
+            exitFullscreen();
+        }
+    }
 });
 
 // =================================================================== 

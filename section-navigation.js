@@ -493,6 +493,10 @@ class SectionNavigator {
                 Keyboard Shortcuts
               </h4>
               <div class="control-grid">
+              <div class="control-item">
+                <span class="control-key">F</span>
+                <span class="control-desc">Toggle fullscreen mode</span>
+              </div>
                 <div class="control-item">
                   <span class="control-key">← →</span>
                   <span class="control-desc">Navigate with animations</span>

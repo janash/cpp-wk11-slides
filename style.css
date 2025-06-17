@@ -127,17 +127,20 @@ body {
   transition: background-color 0.3s ease;
 }
 
+/* --- Replace it with this block --- */
+
 .slide-body.section-header {
-  display: flex;
-  align-items: flex-start;
-  padding: 2rem;
-  padding-top: 3rem;
+    display: flex;
+    align-items: center;     /* This is the key for vertical centering */
+    height: 100%;            /* Makes the container fill the slide's height */
+    padding: 2rem;           /* Uses consistent padding */
 }
 
 .section-content {
-  text-align: left;
-  width: 100%;
+    text-align: left;        /* This keeps your text aligned to the left, as requested */
+    width: 100%;
 }
+
 
 .section-title {
   font-size: 4rem;
@@ -177,7 +180,11 @@ body {
 }
 
 .left-panel {
-    font-size: 1.15em;
+    font-size: 1.5em;
+}
+
+.right-panel {
+    font-size: 1.5em;
 }
 
 
@@ -435,8 +442,9 @@ button:hover { background: #1a4680; }
     }
     
     .slide-body.two-column {
-        flex-direction: column;
-        gap: 1.5em;
+        display: flex;
+        gap: 2em;
+        align-items: center; /* This is the only change needed */
     }
 
     .left-panel, .right-panel {
@@ -595,6 +603,17 @@ button:hover { background: #1a4680; }
 .tips-list li {
   margin-bottom: 8px;
   line-height: 1.4;
+}
+
+/* Add to your style.css */
+.fullscreen-mode {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: black;
 }
 
 /* Mobile Responsive */
