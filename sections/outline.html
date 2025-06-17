@@ -1,0 +1,50 @@
+<section class="slide two-column" id="course-outline">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="../images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>C++ Part 3: Advanced Concepts</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+        <img src="../images/cpp-reference-meme.jpg" alt="C++ Advanced Concepts Meme" 
+             style="max-width: 100%; max-height: 600px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      </div>
+    </div>
+    <div class="right-panel">
+      <h3 style="color: #003262; margin-bottom: 2rem;">Outline</h3>
+      <ul id="topics-list" style="font-size: 1.2em; line-height: 1.8;">
+        <li><span class="highlight-item">Standard Containers</span></li>
+        <li><span class="highlight-item">Argument Passing to Functions in C++</span></li>
+        <li><span class="highlight-item">More Functions: Function overloading and returning multiple values</span></li>
+        <li><span class="highlight-item">C++ Exceptions</span></li>
+        <li><span class="highlight-item">Organizing Code: Multifile C++ Projects</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+class OutlineAnimation extends SlideAnimation {
+    get slideId() {
+        return 'course-outline';
+    }
+    
+    animate() {
+        const steps = [
+            () => highlightListItem('topics-list', 0),
+            () => highlightListItem('topics-list', 1),
+            () => highlightListItem('topics-list', 2),
+            () => highlightListItem('topics-list', 3),
+            () => highlightListItem('topics-list', 4)
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+new OutlineAnimation();
+</script>
