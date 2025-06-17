@@ -72,7 +72,7 @@ Use for comparison tables, summaries, or content that needs full width.
 <section class="slide one-column" id="descriptive-slide-id">
   <div class="slide-header">
     <div class="left-header">
-      <div class="berkeley-logo"><img src="../images/cal_logo_header.png"></div>
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Course Name:</span>
     </div>
     <div class="right-header">
@@ -117,7 +117,7 @@ This is the standard layout for content slides.
 <section class="slide two-column" id="descriptive-slide-id">
   <div class="slide-header">
     <div class="left-header">
-      <div class="berkeley-logo"><img src="../images/cal_logo_header.png"></div>
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Course Name:</span>
     </div>
     <div class="right-header">
@@ -255,7 +255,7 @@ This shows a typical 3-slide progression from introduction to comparison. Use th
 <section class="slide two-column" id="variables-declaration">
   <div class="slide-header">
     <div class="left-header">
-      <div class="berkeley-logo"><img src="../images/cal_logo_header.png"></div>
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>C++ Fundamentals:</span>
     </div>
     <div class="right-header">
@@ -301,7 +301,7 @@ int main() {
 <section class="slide one-column" id="variables-types-comparison">
   <div class="slide-header">
     <div class="left-header">
-      <div class="berkeley-logo"><img src="../images/cal_logo_header.png"></div>
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>C++ Fundamentals:</span>
     </div>
     <div class="right-header">
@@ -382,7 +382,7 @@ This 3-slide pattern works for most programming concepts and shows all the key e
 <section class="slide two-column" id="containers-vector-intro">
   <div class="slide-header">
     <div class="left-header">
-      <div class="berkeley-logo"><img src="../images/cal_logo_header.png"></div>
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>C++ Fundamentals:</span>
     </div>
     <div class="right-header">

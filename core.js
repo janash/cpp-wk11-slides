@@ -31,6 +31,7 @@ async function loadSections(sectionNames) {
       const html = await response.text();
       slidesContainer.insertAdjacentHTML('beforeend', html);
       
+      
       // Execute any scripts in the loaded content
       const scripts = slidesContainer.querySelectorAll('script');
       scripts.forEach(script => {
