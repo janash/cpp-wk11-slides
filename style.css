@@ -180,11 +180,11 @@ body {
 }
 
 .left-panel {
-    font-size: 1.5em;
+    font-size: 1.75em;
 }
 
 .right-panel {
-    font-size: 1.5em;
+    font-size: 1.75em;
 }
 
 
@@ -199,7 +199,7 @@ pre[class*="language-"] {
     word-spacing: normal;
     word-break: break-word;
     word-wrap: break-word;
-    line-height: 1.5;
+    line-height: 1.0;
     padding: 1em;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -234,7 +234,7 @@ pre[class*="language-"] {
 .title-right { right: 0; width: 40%; background-color: #3a5032; color: white; align-items: flex-start; }
 .title-left h2 { font-size: 1.5em; color: #000; font-weight: bold; margin: 0; }
 .title-left h1 { font-size: 2.8em; color: #00733e; font-weight: bold; margin: 0; line-height: 1.1; }
-.uc-seal {  margin-top: 1.5em;  max-height: 500px; aspect-ratio: auto; align-self: flex-start;}
+.uc-seal {  margin-top: 1.5em;  max-height: 80%; aspect-ratio: auto; align-self: flex-start;}
 .title-right .info p { font-size: 1.1em; margin: 0.5em 0; }
 .title-right .info strong { font-weight: bold; }
 .msse-logo { position: absolute; top: 0em; right: 0em; height: 250px; }
