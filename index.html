@@ -13,7 +13,7 @@
 
   <div class="nav">
     <button id="prev">← Prev</button>
-    <span id="counter">1 / ?</span>
+    <span id="counter" onclick="toggleSlideInput()">1 / ?</span>
     <button id="next">Next →</button>
     <button id="bigger-text">Bigger Text</button>
     <button id="smaller-text">Smaller Text</button>
@@ -28,6 +28,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
   <script src="core.js"></script>
   <script src="animations.js"></script>
+  
   <script>
     // Load sections in order
     loadSections(['title', 'containers', 'functions', 'file-io']);
