@@ -4,6 +4,7 @@
 // --- State and Variables ---
 let current = 0;
 let currentTextSize = parseFloat(localStorage.getItem('slideTextSize') || '1');
+let isInputMode = false;
 
 // --- Helper function to always get current slides ---
 function getSlides() {
@@ -97,7 +98,7 @@ function initializeSlides() {
 function updateSlideCounter() {
   const counter = document.getElementById('counter');
   const totalSlides = getSlides().length;
-  if (counter) {
+  if (counter && !isInputMode) {
     const currentSlide = getCurrentSlideIndex() + 1;
     counter.textContent = `${currentSlide} / ${totalSlides}`;
   }
@@ -121,10 +122,7 @@ function updateTextSize() {
 function showSlide(index) {
   const slides = getSlides();
   slides.forEach((s, i) => s.style.display = i === index ? 'block' : 'none');
-  const counter = document.getElementById('counter');
-  if (counter) {
-    counter.textContent = `${index + 1} / ${slides.length}`;
-  }
+  updateSlideCounter();
   
   if (typeof resetAnimations === 'function') {
     resetAnimations();
@@ -175,6 +173,132 @@ function printAllSlides() {
   window.print();
 }
 
+// --- Interactive slide counter functionality ---
+
+function toggleSlideInput() {
+    const counter = document.getElementById('counter');
+    
+    if (isInputMode) return;
+    
+    isInputMode = true;
+    
+    // Get current slide info
+    const totalSlides = getSlides().length;
+    const currentSlide = current + 1;
+    
+    // Create input element
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'slide-input';
+    input.value = currentSlide.toString();
+    input.maxLength = totalSlides.toString().length;
+    
+    // Replace counter content with input
+    counter.innerHTML = '';
+    counter.appendChild(input);
+    
+    // Focus and select the input
+    input.focus();
+    input.select();
+    
+    // Only allow numeric input
+    input.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        if (e.target.value.length > totalSlides.toString().length) {
+            e.target.value = e.target.value.slice(0, totalSlides.toString().length);
+        }
+    });
+    
+    // Handle completion
+    function handleInputComplete() {
+        const newSlide = parseInt(input.value);
+        
+        if (newSlide >= 1 && newSlide <= totalSlides) {
+            jumpToSlide(newSlide - 1);
+            restoreCounter();
+        } else {
+            showInvalidMessage();
+        }
+    }
+    
+function showInvalidMessage() {
+    input.style.borderColor = '#d32f2f';
+    input.style.backgroundColor = '#ffebee';
+    
+    const errorMsg = document.createElement('div');
+    errorMsg.textContent = `Invalid slide number. Must be 1-${totalSlides}`;
+    errorMsg.style.cssText = `
+        color: white;
+        background: #d32f2f;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        top: -40px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        z-index: 1000;
+    `;
+    
+    // Add tooltip arrow
+    const arrow = document.createElement('div');
+    arrow.style.cssText = `
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid #d32f2f;
+    `;
+    errorMsg.appendChild(arrow);
+    
+    counter.style.position = 'relative';
+    counter.appendChild(errorMsg);
+    
+    setTimeout(() => {
+        restoreCounter();
+    }, 2000);
+}
+    
+    function restoreCounter() {
+        counter.style.position = '';
+        isInputMode = false;
+        updateSlideCounter();
+    }
+    
+    // Event listeners
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            handleInputComplete();
+        } else if (e.key === 'Escape') {
+            restoreCounter();
+        }
+    });
+    
+    input.addEventListener('blur', function() {
+        handleInputComplete();
+    });
+}
+
+function jumpToSlide(slideIndex) {
+    const slides = getSlides();
+    
+    if (slideIndex < 0 || slideIndex >= slides.length) {
+        return;
+    }
+    
+    current = slideIndex;
+    showSlide(current);
+}
+
+// --- Event Listeners ---
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('bigger-text').onclick = () => {
     currentTextSize += 0.05;
@@ -201,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =================================================================== 
-// COPY BUTTON FUNCTIONALITY - Add to your core.js file
+// COPY BUTTON FUNCTIONALITY
 // ===================================================================
 
 /**
@@ -322,108 +446,6 @@ function showCopySuccess(button) {
     }, 2000);
 }
 
-// Interactive slide counter functionality - Add to core.js
-
-let isInputMode = false;
-
-function toggleSlideInput() {
-    const counter = document.getElementById('counter');
-    
-    if (isInputMode) return; // Prevent multiple inputs
-    
-    isInputMode = true;
-    
-    // Get current slide info
-    const totalSlides = getSlides().length;
-    const currentSlide = current + 1; // Convert to 1-based
-    
-    // Store original content
-    const originalContent = counter.innerHTML;
-    
-    // Create input element
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.id = 'slide-input';
-    input.min = '1';
-    input.max = totalSlides.toString();
-    input.value = currentSlide.toString();
-    
-    // Replace counter content with input
-    counter.innerHTML = '';
-    counter.appendChild(input);
-    
-    // Focus and select the input
-    input.focus();
-    input.select();
-    
-    // Handle input completion
-    function handleInputComplete() {
-        const newSlide = parseInt(input.value);
-        
-        // Validate and jump to slide if valid
-        if (newSlide >= 1 && newSlide <= totalSlides) {
-            jumpToSlide(newSlide - 1); // Convert to 0-based index
-        }
-        
-        // Restore the counter display
-        restoreCounter();
-    }
-    
-    function restoreCounter() {
-        // Update the counter with current state
-        updateSlideCounter();
-        
-        // Add tooltip back
-        const counterText = counter.textContent;
-        counter.innerHTML = `
-            ${counterText}
-        `;
-        
-        isInputMode = false;
-    }
-    
-    // Event listeners for input
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            handleInputComplete();
-        } else if (e.key === 'Escape') {
-            restoreCounter();
-        }
-    });
-    
-    input.addEventListener('blur', function() {
-        handleInputComplete();
-    });
-}
-
-function jumpToSlide(slideIndex) {
-    const slides = getSlides();
-    
-    // Validate index
-    if (slideIndex < 0 || slideIndex >= slides.length) {
-        return;
-    }
-    
-    // Update current slide
-    current = slideIndex;
-    
-    // Show the slide
-    showSlide(current);
-}
-
-// Update the existing updateSlideCounter function to handle tooltip
-function updateSlideCounter() {
-    const counter = document.getElementById('counter');
-    const totalSlides = getSlides().length;
-    
-    if (counter && !isInputMode) {
-        const currentSlide = current + 1;
-        counter.innerHTML = `
-            ${currentSlide} / ${totalSlides}
-        `;
-    }
-}
-
 /**
  * Show error feedback on the copy button
  */
@@ -465,6 +487,10 @@ observer.observe(document.body, {
     subtree: true
 });
 
+// =================================================================== 
+// SLIDE ANIMATION BASE CLASS
+// ===================================================================
+
 class SlideAnimation {
     constructor() {
         if (this.slideId === undefined) {
@@ -488,8 +514,3 @@ class SlideAnimation {
         throw new Error('animate() method must be implemented in subclass');
     }
 }
-
-
-document.addEventListener('DOMContentLoaded', setupCodeCopyButtons);
-
-
