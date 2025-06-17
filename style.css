@@ -40,7 +40,7 @@ body {
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: url("./campanile.png") no-repeat center center;
+    background: url("images/campanile.png") no-repeat center center;
     background-size: cover;
     opacity: 0.10;
     z-index: 0;
@@ -218,7 +218,7 @@ pre[class*="language-"] {
 /* --- Title Slide Styles --- */
 .title-slide {
     padding: 0;
-    background: url("./campanile.png") no-repeat center center;
+    background: url("images/campanile.png") no-repeat center center;
     background-size: cover;
 }
 .title-slide::before { display: none; }
@@ -478,9 +478,244 @@ button:hover { background: #1a4680; }
     .title-left h1 { font-size: 2em; }
 }
 
+/* Hamburger Menu Styles */
+.hamburger-menu {
+  background: none;
+  border: none;
+  color: #003262;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.hamburger-menu:hover {
+  background-color: rgba(0, 50, 98, 0.1);
+}
+
+/* Sidebar Styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 300px;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: left 0.3s ease;
+  border-right: 1px solid #e0e0e0;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  padding: 20px;
+  background: #003262;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 0;
+}
+
+.close-sidebar {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.close-sidebar:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-content {
+  padding: 20px 0;
+}
+
+.section-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-item:hover {
+  background-color: #f5f5f5;
+}
+
+.section-item.current {
+  background-color: #e3f2fd;
+  border-left: 4px solid #003262;
+}
+
+.section-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.section-info {
+  font-size: 0.85em;
+  color: #666;
+}
+
+/* Overlay for closing sidebar */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Update nav to include hamburger */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+</style>
+
 /* --- Print Styles --- */
 @media print {
-    body { padding: 0 !important; }
-    .nav { display: none; }
-    .slide { display: block !important; page-break-after: always; height: auto; }
+    /* Reset body */
+    body { 
+        padding: 0 !important; 
+        margin: 0 !important;
+        background: white !important;
+    }
+    
+    /* Hide navigation and UI elements */
+    .nav,
+    .sidebar,
+    .sidebar-overlay,
+    .hamburger-menu,
+    .copy-code-button,
+    button {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* Force all slides to be visible and properly formatted */
+    .slide {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+        padding: 1em !important;
+        margin: 0 !important;
+        background: white !important;
+        overflow: visible !important;
+        position: static !important;
+    }
+    
+    /* Remove background images */
+    .slide::before {
+        display: none !important;
+    }
+    
+    /* Ensure slide content is visible */
+    .slide > * {
+        position: static !important;
+        z-index: auto !important;
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    /* Fix headers */
+    .slide-header {
+        display: flex !important;
+        border-bottom: 2px solid #000 !important;
+        page-break-after: avoid !important;
+    }
+    
+    /* Fix two-column layout */
+    .slide-body.two-column {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 1em !important;
+    }
+    
+    .left-panel, .right-panel {
+        flex: 1 !important;
+        display: block !important;
+    }
+    
+    /* Code blocks */
+    pre[class*="language-"] {
+        background: #f5f5f5 !important;
+        color: #000 !important;
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid !important;
+        font-size: 10px !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    /* Ensure all text is black */
+    * {
+        color: #000 !important;
+        background: transparent !important;
+    }
+    
+    /* Section headers */
+    .section-title {
+        font-size: 24px !important;
+    }
+    
+    .section-subtitle {
+        font-size: 16px !important;
+    }
+    
+    /* Tables */
+    table {
+        page-break-inside: avoid !important;
+        border-collapse: collapse !important;
+    }
+    
+    table, th, td {
+        border: 1px solid #000 !important;
+    }
+}
+
+/* Special class for when printing all slides */
+body.printing-all-slides .slide {
+    display: block !important;
+    visibility: visible !important;
 }

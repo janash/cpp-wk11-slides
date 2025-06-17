@@ -28,10 +28,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
   <script src="core.js"></script>
   <script src="animations.js"></script>
+  <script src="section-navigation.js"></script>
   
   <script>
-    // Load sections in order
-    loadSections(['title', 'outline', 'containers', 'functions', 'file-io']);
+    loadSections([
+  {file: 'title', name: 'Title'}, 
+  {file: 'outline', name: 'Course Outline'},
+  {file: 'containers', name: 'Containers'}, 
+  {file: 'functions', name: 'Function Argument Passing'},
+]);
   </script>
 </body>
 </html>

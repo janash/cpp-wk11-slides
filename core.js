@@ -169,8 +169,81 @@ function prevSlide() {
   }
 }
 
+// Replace the printAllSlides function in core.js
 function printAllSlides() {
-  window.print();
+  console.log('Print function called');
+  
+  // Get all slides
+  const slides = getSlides();
+  console.log(`Found ${slides.length} slides to print`);
+  
+  // Store the current slide index to restore later
+  const originalCurrentSlide = current;
+  
+  // Force ALL slides to be visible before printing
+  slides.forEach((slide, index) => {
+    slide.style.display = 'block';
+    slide.style.pageBreakAfter = 'always';
+    // Remove any inline styles that might hide content
+    slide.style.visibility = 'visible';
+    slide.style.opacity = '1';
+  });
+  
+  // Remove the last slide's page break to avoid blank page
+  if (slides.length > 0) {
+    slides[slides.length - 1].style.pageBreakAfter = 'avoid';
+  }
+  
+  // Hide navigation and other UI elements
+  const elementsToHide = [
+    '.nav',
+    '.sidebar',
+    '.sidebar-overlay',
+    '.hamburger-menu'
+  ];
+  
+  const hiddenElements = [];
+  elementsToHide.forEach(selector => {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(el => {
+      hiddenElements.push({element: el, originalDisplay: el.style.display});
+      el.style.display = 'none';
+    });
+  });
+  
+  // Add a class to body for print-specific styling
+  document.body.classList.add('printing-all-slides');
+  
+  console.log('All slides made visible, calling print...');
+  
+  // Print after a short delay to ensure layout is complete
+  setTimeout(() => {
+    window.print();
+    
+    // Restore original state after print
+    // Use a longer timeout to ensure print dialog has time to open
+    setTimeout(() => {
+      console.log('Restoring original slide visibility...');
+      
+      // Hide all slides except the current one
+      slides.forEach((slide, index) => {
+        slide.style.display = index === originalCurrentSlide ? 'block' : 'none';
+        slide.style.pageBreakAfter = '';
+        slide.style.visibility = '';
+        slide.style.opacity = '';
+      });
+      
+      // Restore hidden elements
+      hiddenElements.forEach(({element, originalDisplay}) => {
+        element.style.display = originalDisplay;
+      });
+      
+      // Remove print class
+      document.body.classList.remove('printing-all-slides');
+      
+      console.log('Print state restored');
+    }, 2000); // Longer timeout to ensure print dialog has opened
+  }, 300);
 }
 
 // --- Interactive slide counter functionality ---
