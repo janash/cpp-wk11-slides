@@ -644,6 +644,38 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const body = document.body;
+    const nav = document.querySelector('.nav'); // Assuming your navigation div has the class 'nav'
+
+    if (!nav) {
+        console.warn("Navigation element with class 'nav' not found. Fullscreen hover effect may not work.");
+        return;
+    }
+
+    // Function to check and apply/remove fullscreen class
+    function handleFullscreenChange() {
+        if (document.fullscreenElement) {
+            body.classList.add('fullscreen-active');
+            // Hide the nav immediately when entering fullscreen, then rely on hover
+            nav.style.opacity = '0';
+        } else {
+            body.classList.remove('fullscreen-active');
+            // Make the nav visible immediately when exiting fullscreen
+            nav.style.opacity = '1';
+        }
+    }
+
+    // Listen for fullscreen change events
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // For Safari
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);   // For Firefox
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);    // For IE/Edge (older)
+
+    // Initial check in case the page loads already in fullscreen (unlikely, but good practice)
+    handleFullscreenChange();
+});
+
 // =================================================================== 
 // SLIDE ANIMATION BASE CLASS
 // ===================================================================

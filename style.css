@@ -69,6 +69,21 @@ body {
     font-weight: bold;
 }
 
+/* Styles for navigation in full-screen mode */
+.fullscreen-active .nav {
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease-in-out; /* Smooth transition */
+}
+
+.fullscreen-active .nav:hover {
+    opacity: 1; /* Fully visible on hover */
+}
+
+/* Optional: If you want a slight delay before it hides after mouseout */
+.fullscreen-active .nav:not(:hover) {
+    transition-delay: 1s; /* Delay before hiding */
+}
+
 .left-header img { height: 50px; }
 .right-header { font-size: 1.2em; font-weight: 500; }
 .slide-body.one-column { font-size: 1.25em; }
