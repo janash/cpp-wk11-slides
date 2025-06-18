@@ -638,3 +638,88 @@ class SecondSlideAnimation extends SlideAnimation {
 new FirstSlideAnimation();
 new SecondSlideAnimation();
 ```
+
+## 9. Additional Content Styling Classes
+
+The system includes predefined CSS classes for common slide content patterns. Use these instead of inline styles to maintain consistent font sizing and follow the framework's design principles.
+
+### File Display Patterns
+For showing multiple files or code examples:
+
+```html
+<!-- File with header -->
+<h5 class="file-header">filename.cpp</h5>
+<div class="file-content">
+  <div class="code-container">
+    <pre><code class="language-cpp">
+      // code here
+    </code></pre>
+  </div>
+</div>
+
+<!-- Different file types -->
+<h5 class="file-header blue">header.h</h5>      <!-- Blue for headers -->
+<h5 class="file-header orange">source.cpp</h5>   <!-- Orange for source -->
+<h5 class="file-header green">main.cpp</h5>      <!-- Green for main/usage -->
+```
+
+### Information Boxes
+For explanations, warnings, and highlights:
+
+```html
+<!-- Info boxes -->
+<div class="info-box">
+  <h4 class="box-header blue">Key Concept</h4>
+  <p>Explanation text here</p>
+</div>
+
+<div class="info-box green">
+  <h4 class="box-header green">Benefits</h4>
+  <ul><li>Advantage 1</li></ul>
+</div>
+
+<div class="info-box orange">
+  <h4 class="box-header orange">Warning</h4>
+  <p>Important note</p>
+</div>
+
+<div class="info-box red">
+  <h4 class="box-header red">Problem</h4>
+  <p>Issue description</p>
+</div>
+```
+
+### Problem/Solution Containers
+For showing code problems and their solutions:
+
+```html
+<!-- Problem demonstration -->
+<div class="problem-box">
+  <h5 class="box-header red">Compiler Error</h5>
+  <div class="command-box">
+    g++ main.cpp -o program<br>
+    error: multiple definition of 'function'
+  </div>
+</div>
+
+<!-- Solution demonstration -->
+<div class="solution-box">
+  <h5 class="box-header green">Solution</h5>
+  <p>Explanation of how to fix it</p>
+</div>
+
+<!-- Examples -->
+<div class="example-box">
+  <h5 class="box-header blue">Example Usage</h5>
+  <div class="command-box">
+    g++ main.cpp utils.cpp -o program
+  </div>
+</div>
+```
+
+### Critical Rules
+- **Never use inline styles** for colors, backgrounds, or containers
+- **Always use these predefined classes** for consistency
+- **Code blocks automatically maintain proper font sizing** within any container
+- **Color scheme**: Blue (headers/info), Orange (source/warnings), Green (usage/solutions), Red (problems/errors)
+```

@@ -122,3 +122,29 @@
 - Creating content that doesn't fit standard screen sizes
 - Overwhelming students with too much information at once
 - Making assertions without supporting evidence
+
+
+---
+
+## 📚 Content Complexity & Academic Context
+
+### Target Audience: Graduate Scientists Learning Programming Tools
+**Scientific Context Over Abstract Examples:**
+- Use **concrete scientific scenarios** familiar to chemistry/physics students (molecular mass calculations, reaction stoichiometry, solution concentrations)
+- Avoid **computer science abstractions** (foo/bar variables, purely algorithmic examples)  
+- Choose **realistic research scenarios** students would encounter in their work
+
+**Appropriate Knowledge Assumptions:**
+- **Don't assume** advanced CS knowledge, design patterns, or programming methodology terminology
+- **Explain principles explicitly** rather than referencing jargon ("avoid repeating code" vs. "Don't Repeat Yourself principle")
+- **Build on known concepts** with explicit bridges ("Review: Declaration vs Definition")
+
+### Multi-Slide Pedagogical Sequences
+**Effective Pattern for Complex Topics:**
+1. **Concrete problem** with realistic scientific context (function reuse across lab programs)
+2. **Naive solution attempts** with actual failures (copy-paste maintenance, compiler errors)
+3. **Bridge to prerequisite knowledge** when introducing new concepts
+4. **Proper solution** with clear technical explanation and working examples
+5. **Complete implementation** students can use immediately
+
+**Maintains cognitive load principles while handling substantial topics that require multiple slides to explain properly.**

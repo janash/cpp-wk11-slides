@@ -28,7 +28,7 @@ body {
     position: relative;
     background: white;
     overflow: hidden;
-    font-size: var(--slide-font-size, 1.25em);
+    font-size: 2em;
 }
 
 .slide.active {
@@ -179,14 +179,6 @@ body {
     min-width: 0; /* Prevents flex items from overflowing if content is too wide */
 }
 
-.left-panel {
-    font-size: 1.5em;
-}
-
-.right-panel {
-    font-size: 1.5em;
-}
-
 
 /* --- Code Block and Syntax Highlighting Styles --- */
 pre[class*="language-"] {
@@ -199,7 +191,7 @@ pre[class*="language-"] {
     word-spacing: normal;
     word-break: break-word;
     word-wrap: break-word;
-    line-height: 1.5;
+    line-height: 1.1;
     padding: 1em;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -327,6 +319,124 @@ button:hover { background: #1a4680; }
         font-size: 0.7em;
         padding: 4px 8px;
     }
+}
+
+/* Add these classes to your style.css */
+
+/* File header styling */
+.file-header {
+  background: #f44336;
+  color: white;
+  padding: 0.4em;
+  margin: 0;
+  border-radius: 4px 4px 0 0;
+  font-size: 0.9em;
+  font-weight: normal;
+}
+
+.file-header.blue { background: #2196f3; }
+.file-header.orange { background: #ff9800; }
+.file-header.green { background: #4caf50; }
+
+/* File content containers */
+.file-content {
+  margin-top: 0;
+  border: 2px solid #f44336;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  background: white;
+}
+
+.file-content.blue { border-color: #2196f3; }
+.file-content.orange { border-color: #ff9800; }
+.file-content.green { border-color: #4caf50; }
+
+/* Info boxes for explanations */
+.info-box {
+  border-left: 4px solid #2196f3;
+  background: #e3f2fd;
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 4px;
+}
+
+.info-box.green {
+  border-color: #4caf50;
+  background: #e8f5e8;
+}
+
+.info-box.orange {
+  border-color: #ff9800;
+  background: #fff3e0;
+}
+
+.info-box.red {
+  border-color: #f44336;
+  background: #ffebee;
+}
+
+/* Problem/solution boxes */
+.problem-box {
+  background: #ffcdd2;
+  border: 2px solid #f44336;
+  border-radius: 8px;
+  padding: 1em;
+  margin: 1em 0;
+}
+
+.solution-box {
+  background: #e8f5e8;
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  padding: 1em;
+  margin: 1em 0;
+}
+
+.example-box {
+  background: #f0f7ff;
+  border: 2px solid #2196f3;
+  border-radius: 8px;
+  padding: 1em;
+  margin: 1em 0;
+}
+
+/* Box headers */
+.box-header {
+  font-weight: bold;
+  margin-top: 0;
+  font-size: 1em;
+}
+
+.box-header.blue { color: #1976d2; }
+.box-header.green { color: #388e3c; }
+.box-header.orange { color: #f57c00; }
+.box-header.red { color: #d32f2f; }
+
+/* Ensure code blocks maintain proper sizing inside any container */
+.info-box .code-container pre[class*="language-"],
+.problem-box .code-container pre[class*="language-"],
+.solution-box .code-container pre[class*="language-"],
+.example-box .code-container pre[class*="language-"],
+
+/* Simple text content inside file containers */
+.file-text {
+  background: white;
+  padding: 1em;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.8em;
+  line-height: 1.4;
+  color: #333;
+}
+
+/* Command line styling */
+.command-box {
+  background: white;
+  padding: 1em;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 1em;
+  border: 1px solid #ddd;
 }
 
 
@@ -1091,7 +1201,7 @@ button:hover svg {
   body.printing-all-slides pre[class*="language-"] {
     page-break-inside: avoid !important;
     font-size: 0.85em; /* ~12px - readable code size */
-    line-height: 1.4;
+    line-height: 1.0;
     max-height: none;
     overflow: visible;
     margin: 0.4em 0;
