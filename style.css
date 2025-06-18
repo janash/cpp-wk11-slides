@@ -16,7 +16,7 @@ body {
     background: white;
     color: #000;
     /* Creates space at the bottom for the fixed desktop navigation bar */
-    padding-bottom: 60px; 
+    padding-bottom: 60px;
 }
 
 /* --- General Slide Styles --- */
@@ -763,114 +763,8 @@ button:hover { background: #1a4680; }
 }
 </style>
 
-/* --- Print Styles --- */
-@media print {
-    /* Reset body */
-    body { 
-        padding: 0 !important; 
-        margin: 0 !important;
-        background: white !important;
-    }
-    
-    /* Hide navigation and UI elements */
-    .nav,
-    .sidebar,
-    .sidebar-overlay,
-    .hamburger-menu,
-    .copy-code-button,
-    button {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* Force all slides to be visible and properly formatted */
-    .slide {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        page-break-after: always !important;
-        page-break-inside: avoid !important;
-        height: auto !important;
-        min-height: auto !important;
-        max-height: none !important;
-        padding: 1em !important;
-        margin: 0 !important;
-        background: white !important;
-        overflow: visible !important;
-        position: static !important;
-    }
-    
-    /* Remove background images */
-    .slide::before {
-        display: none !important;
-    }
-    
-    /* Ensure slide content is visible */
-    .slide > * {
-        position: static !important;
-        z-index: auto !important;
-        display: block !important;
-        visibility: visible !important;
-    }
-    
-    /* Fix headers */
-    .slide-header {
-        display: flex !important;
-        border-bottom: 2px solid #000 !important;
-        page-break-after: avoid !important;
-    }
-    
-    /* Fix two-column layout */
-    .slide-body.two-column {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 1em !important;
-    }
-    
-    .left-panel, .right-panel {
-        flex: 1 !important;
-        display: block !important;
-    }
-    
-    /* Code blocks */
-    pre[class*="language-"] {
-        background: #f5f5f5 !important;
-        color: #000 !important;
-        border: 1px solid #ccc !important;
-        page-break-inside: avoid !important;
-        font-size: 10px !important;
-        max-height: none !important;
-        overflow: visible !important;
-    }
-    
-    /* Ensure all text is black */
-    * {
-        color: #000 !important;
-        background: transparent !important;
-    }
-    
-    /* Section headers */
-    .section-title {
-        font-size: 24px !important;
-    }
-    
-    .section-subtitle {
-        font-size: 16px !important;
-    }
-    
-    /* Tables */
-    table {
-        page-break-inside: avoid !important;
-        border-collapse: collapse !important;
-    }
-    
-    table, th, td {
-        border: 1px solid #000 !important;
-    }
-}
 
-/* Special class for when printing all slides */
-body.printing-all-slides .slide {
+body.slide {
     display: block !important;
     visibility: visible !important;
 }
@@ -1081,4 +975,327 @@ button:hover svg {
         min-width: 35px;
         padding: 3px 4px;
     }
+}
+
+@media print {
+  /* Preserve colors and backgrounds exactly as on screen */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Set up proper page formatting */
+  @page {
+    size: landscape;
+    margin: 0.5in;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 14px; /* Legible base font size */
+  }
+
+  /* Make all slides visible and give each its own page */
+  body.printing-all-slides .slide {
+    display: block !important;
+    visibility: visible !important;
+    
+    /* Strict page breaking - one slide per page */
+    page-break-before: always;
+    page-break-after: always;
+    page-break-inside: avoid !important;
+    
+    /* Reset any transforms but keep original layout */
+    position: relative;
+    transform: none;
+    
+    /* Constrain slide to fit exactly on one page */
+    width: 100%;
+    height: auto;
+    max-height: 7.5in; /* Fit within landscape page minus margins */
+    overflow: hidden; /* Prevent overflow to next page */
+    
+    /* Reasonable padding for print */
+    padding: 0.6em 0.8em;
+    
+    /* Keep background white for slides but preserve other backgrounds */
+    background: white;
+    
+    /* Reasonable scaling for print */
+    font-size: 1em; /* Use the base 14px */
+  }
+
+  /* First slide shouldn't have page break before */
+  body.printing-all-slides .slide:first-child {
+    page-break-before: avoid;
+  }
+
+  /* Don't override font sizes - let them scale naturally from the base */
+  body.printing-all-slides .slide * {
+    /* Only make hidden content visible */
+    opacity: 1 !important;
+  }
+
+  /* Ensure slide content appears above background */
+  body.printing-all-slides .slide > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Keep the background image but lighter for print */
+  body.printing-all-slides .slide::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("images/campanile.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.05; /* Lighter for print */
+    z-index: 0;
+  }
+
+  /* Preserve your exact layout structure */
+  body.printing-all-slides .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+  }
+
+  body.printing-all-slides .slide-body.two-column {
+    display: flex;
+    gap: 2em;
+    align-items: flex-start;
+  }
+
+  body.printing-all-slides .left-panel,
+  body.printing-all-slides .right-panel {
+    flex: 1;
+    min-width: 0;
+  }
+
+  body.printing-all-slides .slide-body.section-header {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 2rem;
+  }
+
+  /* Keep code blocks readable and properly sized */
+  body.printing-all-slides pre[class*="language-"] {
+    page-break-inside: avoid !important;
+    font-size: 0.85em; /* ~12px - readable code size */
+    line-height: 1.4;
+    max-height: none;
+    overflow: visible;
+    margin: 0.4em 0;
+    padding: 0.8em;
+  }
+
+  /* Keep tables intact and sized appropriately */
+  body.printing-all-slides table {
+    page-break-inside: avoid !important;
+    font-size: 0.9em; /* ~13px */
+    margin: 0.4em 0;
+  }
+
+  /* Reasonable spacing in two-column layout */
+  body.printing-all-slides .slide-body.two-column {
+    display: flex;
+    gap: 1.2em;
+    align-items: flex-start;
+  }
+
+  /* Header with reasonable spacing */
+  body.printing-all-slides .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.4em;
+    margin-bottom: 0.6em;
+  }
+
+  body.printing-all-slides .left-header img {
+    height: 40px; /* Reasonable logo size */
+  }
+
+  body.printing-all-slides .right-header {
+    font-size: 1.1em; /* ~15px for slide titles */
+  }
+
+  /* Section headers with proper hierarchy */
+  body.printing-all-slides .slide-body.section-header {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 1.2rem;
+  }
+
+  body.printing-all-slides .section-title {
+    font-size: 3.5rem; /* Large but not overwhelming */
+  }
+
+  body.printing-all-slides .section-subtitle {
+    font-size: 1.3rem; /* ~18px */
+  }
+
+  /* Content hierarchy */
+  body.printing-all-slides h4 {
+    margin: 0.5em 0 0.3em 0;
+    font-size: 1.2em; /* ~17px for subheadings */
+  }
+
+  body.printing-all-slides p {
+    margin: 0.4em 0;
+    line-height: 1.4;
+    font-size: 1em; /* 14px base text */
+  }
+
+  body.printing-all-slides li {
+    margin: 0.2em 0;
+    line-height: 1.4;
+  }
+
+  /* Left/right panel content sizing */
+  body.printing-all-slides .left-panel {
+    font-size: 1.1em; /* ~15px for main content */
+  }
+
+  body.printing-all-slides .right-panel {
+    font-size: 1em; /* 14px for code panels */
+  }
+
+  /* Callout boxes and annotation elements - make smaller */
+  body.printing-all-slides .annotation-element,
+  body.printing-all-slides .callout,
+  body.printing-all-slides .info-box,
+  body.printing-all-slides .warning-box,
+  body.printing-all-slides .note-box,
+  body.printing-all-slides .highlight-box,
+  body.printing-all-slides [id$="-box"],
+  body.printing-all-slides [class*="box"],
+  body.printing-all-slides [style*="background"],
+  body.printing-all-slides [style*="border"] {
+    font-size: 0.8em !important; /* ~11px for callout boxes */
+    line-height: 1.3 !important;
+    padding: 0.4em !important;
+    margin: 0.3em 0 !important;
+  }
+
+  /* Target any nested content in callout boxes */
+  body.printing-all-slides .annotation-element *,
+  body.printing-all-slides .callout *,
+  body.printing-all-slides [id$="-box"] *,
+  body.printing-all-slides [class*="box"] * {
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
+
+  /* Hide interactive elements and annotations */
+  body.printing-all-slides .nav,
+  body.printing-all-slides .sidebar,
+  body.printing-all-slides .sidebar-overlay,
+  body.printing-all-slides button,
+  body.printing-all-slides .copy-code-button,
+  body.printing-all-slides .annotation-toggle,
+  body.printing-all-slides .hamburger-menu,
+  body.printing-all-slides .code-annotation {
+    display: none !important;
+  }
+
+  /* Title slide specific styling for print */
+  body.printing-all-slides .title-slide {
+    padding: 0 !important;
+    background: url("images/campanile.png") no-repeat center center !important;
+    background-size: cover !important;
+    display: block !important;
+    position: relative !important;
+  }
+
+  body.printing-all-slides .title-slide::before {
+    display: none !important; /* Don't double up the background */
+  }
+
+  body.printing-all-slides .title-left,
+  body.printing-all-slides .title-right {
+    position: absolute !important;
+    top: 0 !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    padding: 2em !important; /* Smaller padding for print */
+  }
+
+  body.printing-all-slides .title-left {
+    left: 0 !important;
+    width: 60% !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+  }
+
+  body.printing-all-slides .title-right {
+    right: 0 !important;
+    width: 40% !important;
+    background-color: #3a5032 !important;
+    color: white !important;
+    align-items: flex-start !important;
+  }
+
+  body.printing-all-slides .title-left h2 {
+    font-size: 1.3em !important; /* Smaller for print */
+    color: #000 !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+  }
+
+  body.printing-all-slides .title-left h1 {
+    font-size: 2.2em !important; /* Smaller for print */
+    color: #00733e !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+    line-height: 1.1 !important;
+  }
+
+  body.printing-all-slides .uc-seal {
+    margin-top: 1em !important;
+    max-height: 250px !important; /* Even smaller for print */
+    aspect-ratio: auto !important;
+    align-self: flex-start !important;
+  }
+
+  body.printing-all-slides .title-right {
+    right: 0 !important;
+    width: 40% !important;
+    background-color: #3a5032 !important;
+    color: white !important;
+    align-items: flex-start !important;
+    padding-top: 3em !important; /* Add top padding to avoid logo overlap */
+  }
+
+  body.printing-all-slides .title-right .info p {
+    font-size: 1em !important; /* Smaller for print */
+    margin: 0.4em 0 !important;
+  }
+
+  body.printing-all-slides .msse-logo {
+    position: absolute !important;
+    top: 0.5em !important; /* Move down slightly */
+    right: 0.5em !important; /* Move in slightly */
+    height: 150px !important; /* Smaller for print */
+    z-index: 10 !important; /* Ensure it's on top but not covering text */
+  }
+
+  /* Keep images properly sized */
+  body.printing-all-slides img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
 }
