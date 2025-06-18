@@ -1,4 +1,3 @@
-<!-- Section Header -->
 <section class="slide section-header">
   <div class="slide-header">
     <div class="left-header">
@@ -11,746 +10,770 @@
   </div>
   <div class="slide-body section-header">
     <div class="section-content">
-      <h1 class="section-title">Argument Passing to Functions</h1>
-      <p class="section-subtitle">Pass-by-value vs pass-by-reference</p>
+      <h1 class="section-title">C++ Containers</h1>
+      <p class="section-subtitle">std::vector, std::array, std::map</p>
     </div>
   </div>
 </section>
 
-<style>
-/* Color-coded highlighting classes */
-.highlight-green {
-    background-color: rgba(76, 175, 80, 0.3) !important;
-}
-
-.highlight-pink {
-    background-color: rgba(233, 30, 99, 0.3) !important;
-}
-
-.highlight-blue {
-    background-color: rgba(33, 150, 243, 0.3) !important;
-}
-
-.highlight-orange {
-    background-color: rgba(255, 152, 0, 0.3) !important;
-}
-
-.highlight-purple {
-    background-color: rgba(156, 39, 176, 0.3) !important;
-}
-</style>
-
-<!-- Slide 2: Review Functions -->
-<section class="slide two-column" id="review-functions">
+<section class="slide two-column" id="containers-c-array-limitations">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>Review: Functions</span>
+      <span>Review: Limitations of C Style Arrays</span>
     </div>
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
+      <p><strong>Review</strong></p>
+      <ul>
+        <li>C-style arrays are data structures that hold multiple values of the same type.</li>
+        <li><u>Typically</u> have fixed size determined at compile time.</li>
+        <li>Declare with size (<code>int arr[10]</code>)</li>
+        <li>Can loop over an index into.</li>
+      </ul>
+      <div id="limitations-box" style="background: #ffe6e6; padding: 1em; border-radius: 8px; margin-top: 1em; opacity: 0; transition: opacity 0.5s;">
+        <p style="color: #d32f2f; font-weight: bold;">Limitations:</p>
+        <p>No bounds check, difficult to have variable sizes (must use pointers)</p>
+      </div>
+    </div>
+    <div class="right-panel">
       <div class="code-container">
-<pre><code class="language-cpp" id="review-function">
-<span id="return-type">double</span> <span id="function-name">calculate_area</span>(<span id="parameters">double length, double width</span>) {
-    return length * width;
-}
+<pre><code class="language-cpp" id="c-array-code">#include &lt;iostream&gt; // for std::cout, std::endl
 
-int main() {
-    double my_length = 12.0;
-    double my_width = 8.0;
+int main(void)
+{
+    <span id="array-size-target">int arr[5] = {10, 20, 30, 40, 50};</span>
     
-    double area = calculate_area(my_length, my_width);
+    for(int i = 0; <span id="loop-condition-target">i &lt; 5</span>; i++)
+    {
+        std::cout &lt;&lt; "Element " &lt;&lt; i &lt;&lt; ": " &lt;&lt; 
+                    arr[i] &lt;&lt; std::endl;
+    }
     
     return 0;
 }
 </code></pre>
-        <div class="code-annotation" id="return-annotation" style="opacity:0;">
-          Returns a double value (length × width)
+        <div class="code-annotation" id="array-annotation" style="top: 80px; left: 200px; opacity: 0;">
+          Fixed size - must know at compile time!
+        </div>
+        <div class="code-annotation" id="loop-annotation" style="top: 150px; left: 100px; opacity: 0;">
+          Manual size tracking - error prone!
         </div>
       </div>
     </div>
-    <div class="right-panel">
-      <h3>Function Components</h3>
-      <ul>
-        <li><span style="background-color: rgba(76, 175, 80, 0.3); padding: 2px 4px; border-radius: 3px;">Return type:</span> The type that the function will return</li>
-        <li><span style="background-color: rgba(233, 30, 99, 0.3); padding: 2px 4px; border-radius: 3px;">Function name:</span> The text name that is used to call the function</li>
-        <li><span style="background-color: rgba(33, 150, 243, 0.3); padding: 2px 4px; border-radius: 3px;">Parameters:</span> Comma-separated list of inputs to the function</li>
-      </ul>
-      
-      <p style="margin-top: 1em;">Today we'll focus on how arguments are passed to functions.</p>
-    </div>
   </div>
 </section>
 
-<!-- Slide 3: Pass-by-Value Concept -->
-<section class="slide two-column" id="pass-by-value-concept">
+<section class="slide two-column" id="containers-std-array-intro">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>Pass-by-Value</span>
+      <span>Safer Alternative: std::array</span>
     </div>
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
-      <h3>C++'s Default Behavior</h3>
-      <p>By default, C++ uses <strong>pass-by-value</strong>:</p>
-      <ul>
-        <li>Function receives a <strong>copy</strong> of the argument</li>
-        <li>Original variable is <strong>not affected</strong> by changes inside the function</li>
-        <li>Safe but uses extra memory</li>
+      <p>We can solve <u>one</u> (bounds checking) of these problems with std::array!</p>
+      <ul id="array-benefits">
+        <li>Wrapper for C-style array</li>
+        <li>Size must be known at compile time!</li>
+        <li>include array to use std::array</li>
+        <li>std::array of type int, size 5 elements</li>
+        <li>The array "knows" its size.</li>
       </ul>
-      
-      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
-        <p><strong>Key Point:</strong> The function gets copies of your values, not the original variables.</p>
-      </div>
     </div>
     <div class="right-panel">
       <div class="code-container">
-<pre><code class="language-cpp" id="pass-by-value-demo">
-#include &lt;iostream>
-
-void tryToModify(<span id="copy-param">int x</span>) {
-    <span id="modify-copy">x = 100;</span>  // Only changes the copy
-    std::cout &lt;&lt; "Inside function: " &lt;&lt; x &lt;&lt; std::endl;
-}
+<pre><code class="language-cpp" id="std-array-code"><span id="include-target">#include &lt;array&gt;</span>
+#include &lt;iostream&gt;
 
 int main() {
-    <span id="original-var">int value = 42;</span>
-    std::cout &lt;&lt; "Before: " &lt;&lt; value &lt;&lt; std::endl;
+    // C-style array - unsafe
+    int c_array[5] = {10, 20, 30, 40, 50};
     
-    <span id="function-call">tryToModify(value);</span>  // Passes a copy
+    // std::array - safe wrapper
+    <span id="template-target">std::array&lt;int, 5&gt;</span> safe_array = {10, 20, 30, 40, 50};
     
-    std::cout &lt;&lt; "After: " &lt;&lt; value &lt;&lt; std::endl;  // Still 42
+    std::cout &lt;&lt; "Size: " &lt;&lt; safe_array<span id="size-method-target">.size()</span> &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Max size: " &lt;&lt; safe_array.max_size() &lt;&lt; 
+                std::endl;
     
     return 0;
 }
 </code></pre>
+        <div class="code-annotation" id="include-annotation" style="top: 20px; left: 150px; opacity: 0;">
+          Need to include &lt;array&gt; header
+        </div>
+        <div class="code-annotation" id="template-annotation" style="top: 120px; left: 50px; opacity: 0;">
+          Template: type and size
+        </div>
+        <div class="code-annotation" id="methods-annotation" style="top: 180px; left: 200px; opacity: 0;">
+          Built-in size methods!
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Slide 4: Arrays Are Different -->
-<section class="slide two-column" id="arrays-different">
+<section class="slide two-column" id="containers-array-access-methods">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>Arrays Are Different</span>
+      <span>std::array – Accessing Data</span>
     </div>
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
-      <h3>Arrays Don't Follow Pass-by-Value</h3>
-      <p>Arrays have special behavior:</p>
-      <ul>
-        <li>Arrays <strong>decay to pointers</strong> when passed to functions</li>
-        <li>Function receives the <strong>address</strong> of the first element</li>
-        <li>Changes to array elements <strong>affect the original</strong></li>
-        <li>This is why we pass size separately</li>
-      </ul>
-      
-      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin-top: 1em;">
-        <p><strong>Important:</strong> Arrays are automatically efficient - no copying occurs.</p>
-      </div>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="array-demo">
-#include &lt;iostream>
-
-void modifyArray(<span id="array-param">int arr[]</span>, int size) {
-    <span id="modify-array">arr[0] = 999;</span>  // Modifies original!
-}
-
-int main() {
-    <span id="array-declaration">int numbers[3] = {10, 20, 30};</span>
-    std::cout &lt;&lt; "Before: " &lt;&lt; numbers[0] &lt;&lt; std::endl;
-    
-    <span id="array-call">modifyArray(numbers, 3);</span>  // Passes address
-    
-    std::cout &lt;&lt; "After: " &lt;&lt; numbers[0] &lt;&lt; std::endl;  // Changed!
-    
-    return 0;
-}
-</code></pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Slide 5: Container Problem -->
-<section class="slide two-column" id="container-problem">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>The Container Problem</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>Containers Follow Pass-by-Value</h3>
-      <p>Unlike arrays, std::vector and std::array follow normal pass-by-value rules:</p>
-      <ul>
-        <li><strong>Entire container gets copied</strong></li>
-        <li>Can be very expensive for large containers</li>
-        <li>Wastes time and memory</li>
-      </ul>
-      
-      <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 1em; margin-top: 1em;">
-        <p><strong>Problem:</strong> Copying a million-element vector just to read it is wasteful.</p>
-      </div>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="container-demo">
-#include &lt;vector>
-#include &lt;iostream>
-
-void printVector(<span id="vector-param">std::vector&lt;int> data</span>) {  // Copies entire vector!
-    std::cout &lt;&lt; "Size: " &lt;&lt; data.size() &lt;&lt; std::endl;
-}
-
-int main() {
-    <span id="large-vector">std::vector&lt;int> huge_data(1000000, 42);</span>  // 1 million elements
-    
-    <span id="expensive-call">printVector(huge_data);</span>  // Copies 1 million elements!
-    
-    return 0;
-}
-</code></pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Slide 6: A Possible Solution - Pointers? -->
-<section class="slide two-column" id="pointer-solution">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>A Possible Solution - Pointers?</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>We could use pointers to avoid copying</h3>
-      <p>Pointers pass the address, so no copying occurs:</p>
-      <ul>
-        <li>Function receives the memory address</li>
-        <li>No copying of large data structures</li>
-        <li>Changes affect the original</li>
-      </ul>
-      
-      <h4>Problems with this approach:</h4>
-      <ul>
-        <li><strong>Must dereference:</strong> <code>(*data).size()</code> instead of <code>data.size()</code></li>
-        <li><strong>Function calls:</strong> Must remember <code>&</code> when calling</li>
-        <li><strong>Safety issues:</strong> Pointers can be null or invalid</li>
-        <li><strong>Easy mistakes:</strong> Pointer arithmetic, wrong dereferencing</li>
-      </ul>
-      
-      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin-top: 1em;">
-        <p><strong>Result:</strong> Pointers work but are error-prone and syntactically clunky for this use case.</p>
-      </div>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="pointer-demo">
-#include &lt;vector>
-#include &lt;iostream>
-
-void printVector(<span id="pointer-param">std::vector&lt;int>* data</span>) {
-    <span id="pointer-syntax">std::cout &lt;&lt; "Size: " &lt;&lt; (*data).size() &lt;&lt; std::endl;</span>
-    <span id="pointer-access">std::cout &lt;&lt; "First: " &lt;&lt; (*data)[0] &lt;&lt; std::endl;</span>
-}
-
-int main() {
-    std::vector&lt;int> huge_data(1000000, 42);
-    
-    <span id="address-call">printVector(&huge_data);</span>  // Must use & explicitly
-    
-    return 0;
-}
-</code></pre>
-        <div style="background: #ffebee; padding: 1em; border-radius: 8px; margin-top: 1em;">
-          <h4>Potential Issues:</h4>
-          <ul style="margin: 0; font-size: 0.9em;">
-            <li><code>printVector(nullptr)</code> - crashes program</li>
-            <li><code>data++</code> - accidentally moves pointer</li>
-            <li>Forget <code>&</code> in function call - won't compile</li>
+      <div id="access-comparison">
+        <h3>Two Ways to Access:</h3>
+        <div class="access-method" id="bracket-method">
+          <h4>[] Operator</h4>
+          <ul>
+            <li>Fast access</li>
+            <li><span style="color: #d32f2f;">No bounds checking</span></li>
+            <li>Same as C arrays</li>
+          </ul>
+        </div>
+        <div class="access-method" id="at-method" style="margin-top: 1em;">
+          <h4>.at() Method</h4>
+          <ul>
+            <li><span style="color: #2e7d32;">Bounds checking</span></li>
+            <li>Throws exception if out of bounds</li>
+            <li>Safer but slightly slower</li>
+            <li><strong>This is the preferred method for accessing elements in std::array</strong></li>
           </ul>
         </div>
       </div>
     </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="access-code">int main() {
+    std::array&lt;int, 5&gt; safe_array = {10, 20, 30, 40, 50};
+    
+    // Can access using [] 
+    // No bounds checking, same as with C arrays
+    std::cout &lt;&lt; <span id="unsafe-access-target">safe_array[0]</span> &lt;&lt; std::endl;
+    
+    // Can access using .at()
+    // BETTER! Checks size.
+    std::cout &lt;&lt; <span id="safe-access-target">safe_array.at(0)</span> &lt;&lt; std::endl;
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="unsafe-annotation" style="top: 80px; left: 50px; opacity: 0;">
+          Unsafe - no checking!
+        </div>
+        <div class="code-annotation" id="safe-annotation" style="top: 140px; left: 50px; opacity: 0;">
+          Safe - bounds checked!
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- Slide 7: What are References? (REWRITTEN WITHOUT COPYING MOTIVATION) -->
-<section class="slide two-column" id="what-are-references">
+<section class="slide two-column" id="containers-vector-intro">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>References (&) - A Better Solution</span>
+      <span>Introducing std::vector</span>
     </div>
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
-      <h3>C++ provides a better solution</h3>
-      <p>References give us the efficiency of pointers with safer, cleaner syntax:</p>
-      
-      <h4>How to use references:</h4>
-      <p>Add <code>&</code> to the parameter type:</p>
-      <div style="background: #f5f5f5; padding: 0.5em; border-radius: 4px; margin: 0.5em 0;">
-        <code>void printVector(std::vector&lt;int>& data)</code>
+      <p><strong>For dynamic sizing, use `std::vector`</strong></p>
+      <ul id="vector-features">
+        <li>Allows dynamic resizing – if number of elements isn't known at compile time.</li>
+        <li>#include &lt;vector&gt;</li>
+        <li>Manages its own memory</li>
+      </ul>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="vector-code"><span id="include-vector-target">#include &lt;vector&gt;</span>
+#include &lt;iostream&gt;
+
+int main() {
+    // Empty vector
+    <span id="empty-vector-target">std::vector&lt;int&gt; numbers;</span>
+    
+    // Add elements dynamically
+    <span id="pushback-target">numbers.push_back(42);</span>
+    numbers.push_back(17);
+    numbers.push_back(99);
+    
+    std::cout &lt;&lt; "Size: " &lt;&lt; numbers.size() &lt;&lt; std::endl;
+    std::cout &lt;&lt; "First: " &lt;&lt; numbers[0] &lt;&lt; std::endl;
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="empty-annotation" style="top: 60px; left: 150px; opacity: 0;">
+          Starts empty!
+        </div>
+        <div class="code-annotation" id="pushback-annotation" style="top: 100px; left: 50px; opacity: 0;">
+          Grows dynamically
+        </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide two-column" id="containers-vector-push-back">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Adding Elements and Dynamic Resizing</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>push_back() Method</h3>
+      <ul id="pushback-features">
+        <li>Adds element to the end</li>
+        <li>Automatically handles resizing</li>
+        <li>Very similar to Python's .append()</li>
+      </ul>
       
-      <h4>Advantages over pointers:</h4>
+      <div id="pushback-demo" style="margin-top: 2em;">
+        <h4>Interactive Demo:</h4>
+        <div id="vector-state">
+          <p>Vector: <span id="vector-contents">[]</span></p>
+          <p>Size: <span id="vector-size">0</span></p>
+        </div>
+        <div id="vector-visualization" style="display: flex; gap: 4px; margin: 10px 0; min-height: 40px; align-items: center;">
+          <div id="vector-boxes" style="display: flex; gap: 4px;"></div>
+        </div>
+        <button id="demo-pushback" style="padding: 5px 10px; background: #2e7d32; color: white; border: none; border-radius: 4px; margin: 5px;">
+          push_back(42)
+        </button>
+        <button id="demo-reset" style="padding: 5px 10px; background: #d32f2f; color: white; border: none; border-radius: 4px; margin: 5px;">
+          Reset
+        </button>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="pushback-code">#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::vector&lt;int&gt; numbers;
+
+    std::cout &lt;&lt; "Initial size: " &lt;&lt; numbers.size() &lt;&lt; std::endl;
+
+    // Add elements one by one
+    <span id="pushback-method-target">numbers.push_back(10);</span>
+    std::cout &lt;&lt; "After adding 10: " &lt;&lt; numbers.size() &lt;&lt; std::endl;
+
+    numbers.push_back(20);
+    numbers.push_back(30);
+    std::cout &lt;&lt; "After adding more: " &lt;&lt; numbers.size() &lt;&lt; std::endl;
+
+    // Print all elements
+    <span id="traditional-loop-target">for(size_t i = 0; i &lt; numbers.size(); i++)</span> {
+        std::cout &lt;&lt; numbers[i] &lt;&lt; " ";
+    }
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="grow-annotation" style="top: 100px; left: 50px; opacity: 0;">
+          Size grows automatically
+        </div>
+        <div class="code-annotation" id="sizet-loop-annotation" style="top: 180px; left: 100px; opacity: 0;">
+          Using size_t for loop
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide two-column" id="containers-vector-initialization">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Vector Initialization Methods</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Three Ways to Initialize:</h3>
+      <ul id="init-methods">
+        <li>Declare an empty vector</li>
+        <li>Initialize with values</li>
+        <li>Initialize with size and default value</li>
+      </ul>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="init-code">#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    // 1. Empty vector
+    <span id="empty-vec-target">std::vector&lt;int&gt; empty_vec;</span>
+    
+    // 2. Initialize with values
+    std::vector&lt;double&gt; temps = <span id="init-list-target">{98.6, 99.1, 97.8}</span>;
+    
+    // 3. Initialize with size and default
+    std::vector&lt;int&gt; scores<span id="size-default-target">(10, 0)</span>;  // 10 zeros
+    
+    // Show they work
+    std::cout &lt;&lt; "Empty size: " &lt;&lt; empty_vec.size() &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Temps size: " &lt;&lt; temps.size() &lt;&lt; std::endl;
+    std::cout &lt;&lt; "First temp: " &lt;&lt; temps[0] &lt;&lt; std::endl;
+    std::cout &lt;&lt; "First score: " &lt;&lt; scores[0] &lt;&lt; std::endl;
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="init-list-annotation" style="top: 100px; left: 200px; opacity: 0;">
+          Initializer list syntax
+        </div>
+        <div class="code-annotation" id="size-default-annotation" style="top: 140px; left: 50px; opacity: 0;">
+          Size 10, all elements = 0
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide two-column" id="containers-vector-methods">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Essential Vector Methods</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Key Vector Methods:</h3>
       <ul>
-        <li><strong>Clean syntax:</strong> <code>data.size()</code> (no dereferencing needed)</li>
-        <li><strong>Simple calls:</strong> <code>printVector(myVector)</code> (no <code>&</code> needed)</li>
-        <li><strong>Cannot be null:</strong> Must refer to valid object</li>
-        <li><strong>Cannot be reassigned:</strong> Always refers to same object</li>
-        <li><strong>No pointer arithmetic:</strong> Cannot accidentally move reference</li>
+        <li><strong>.size()</strong> - returns number of elements</li>
+        <li><strong>push_back</strong>- adds an element to the end of the vector.</li>
+        <li><strong>.front()/.back()</strong> - access first/last element</li>
+        <li><strong>.at(index)</strong> - safe access with bounds checking</li>
+        <li><strong>.empty()</strong> - check if vector is empty</li>
       </ul>
       
-      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
-        <h4>Benefits:</h4>
-        <ul style="margin: 0; font-size: 0.9em;">
-          <li>✓ No copying (efficient like pointers)</li>
-          <li>✓ Clean syntax (looks like normal variables)</li>
-          <li>✓ Cannot be null (safe)</li>
-          <li>✓ Simple function calls</li>
-        </ul>
+      <div style="background: #e3f2fd; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>💡 Note:</strong> Other useful methods like .pop_back() and .clear() exist - explore them in the exercises!</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- Slide 8: Important - Different Uses of & -->
-<section class="slide two-column" id="ampersand-confusion">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Important: Two Different Uses of &</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>The & symbol has two different meanings</h3>
-      <p>You've seen & before with pointers, but this is different:</p>
-      
-      <div style="background: #fff3e0; border: 2px solid #ff9800; border-radius: 8px; padding: 1em; margin: 1em 0;">
-        <div style="display: flex; gap: 2em;">
-          <div style="flex: 1;">
-            <h4 style="color: #f57c00; margin-top: 0; font-size: 1em;">With pointers:</h4>
-            <p style="margin: 0;"><code>&variable</code> → gets address</p>
-          </div>
-          <div style="flex: 1;">
-            <h4 style="color: #f57c00; margin-top: 0; font-size: 1em;">In parameters:</h4>
-            <p style="margin: 0;"><code>int& x</code> → creates alias</p>
-          </div>
-        </div>
-      </div>
-      
-      <h4>Key differences:</h4>
-      <ul style="font-size: 0.9em;">
-        <li><strong>Address operator:</strong> Used in expressions</li>
-        <li><strong>Reference parameter:</strong> Used in declarations</li>
-        <li><strong>Context matters:</strong> Same symbol, different meanings</li>
-      </ul>
     </div>
     <div class="right-panel">
       <div class="code-container">
-<pre><code class="language-cpp" id="ampersand-demo">
-#include &lt;iostream>
-
-// Reference parameter (creates alias)
-void printValue(<span id="ref-param">int& x</span>) {
-    std::cout &lt;&lt; "Value: " &lt;&lt; x &lt;&lt; std::endl;
-}
+<pre><code class="language-cpp" id="methods-code">#include &lt;vector&gt;
+#include &lt;iostream&gt;
 
 int main() {
-    int number = 42;
+    std::vector&lt;int&gt; data = {10, 20, 30};
     
-    // Address operator (gets memory address)
-    <span id="address-op">int* ptr = &number;</span>
+    // Check size
+    std::cout &lt;&lt; "Size: " &lt;&lt; <span id="size-target">data.size()</span> &lt;&lt; std::endl;
     
-    // Function call with reference
-    <span id="ref-call">printValue(number);</span>  // No & needed!
+    // Check if empty
+    std::cout &lt;&lt; "Empty? " &lt;&lt; data.empty() &lt;&lt; std::endl;
+    
+    // Access first and last elements
+    std::cout &lt;&lt; "First: " &lt;&lt; <span id="front-target">data.front()</span> &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Last: " &lt;&lt; data.back() &lt;&lt; std::endl;
+    
+    // Safe access by index
+    std::cout &lt;&lt; "Second element: " &lt;&lt; <span id="at-target">data.at(1)</span> &lt;&lt; std::endl;
     
     return 0;
 }
 </code></pre>
-        <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 8px; padding: 0.8em; margin-top: 1em;">
-          <h4 style="color: #1976d2; margin-top: 0; font-size: 1em;">Summary:</h4>
-          <ul style="margin: 0; font-size: 0.85em;">
-            <li><code>&number</code> → address operator</li>
-            <li><code>int& x</code> → reference parameter</li>
-            <li><code>printValue(number)</code> → no & in calls!</li>
-          </ul>
+        <div class="code-annotation" id="safe-access-annotation" style="top: 180px; left: 100px; opacity: 0;">
+          Throws exception if out of bounds
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Slide 9: What is const? (MOVED FROM SLIDE 8) -->
-<section class="slide two-column" id="what-is-const">
+
+
+<section class="slide two-column" id="containers-size-t-solution">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>The const Keyword</span>
+      <span>Container Loops with size_t</span>
     </div>
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
-      <h3>const Prevents Modification</h3>
-      <p>The const keyword creates variables that cannot be changed:</p>
+      <h3>Use size_t for Container Loops</h3>
+      <p>When looping through containers, use <code>size_t</code> instead of <code>int</code>:</p>
       <ul>
-        <li>Must be <strong>initialized when declared</strong></li>
-        <li>Cannot be modified after initialization</li>
-        <li>Compiler enforces this rule</li>
+        <li>Matches what <code>.size()</code> returns</li>
+        <li>No compiler warnings</li>
+        <li>Prevents negative indices</li>
+        <li>Works with both std::array and std::vector</li>
       </ul>
       
-      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
-        <p><strong>Purpose:</strong> Prevents accidental modifications and enables optimizations.</p>
+      <div id="size-t-info" style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Best Practice:</strong> Always use size_t for container indices!</p>
       </div>
     </div>
     <div class="right-panel">
       <div class="code-container">
-<pre><code class="language-cpp" id="const-demo">
-#include &lt;iostream>
+<pre><code class="language-cpp" id="size-t-code">#include &lt;vector&gt;
+#include &lt;array&gt;
+#include &lt;iostream&gt;
 
 int main() {
-    <span id="const-declaration">const int x = 10;</span>  // Must initialize
+    std::vector&lt;int&gt; vec = {10, 20, 30, 40, 50};
+    std::array&lt;int, 3&gt; arr = {1, 2, 3};
     
-    std::cout &lt;&lt; x &lt;&lt; std::endl;  // OK - reading
+    // Correct: use size_t for both containers
+    <span id="vector-loop-target">for(size_t i = 0; i &lt; vec.size(); i++)</span> {
+        std::cout &lt;&lt; vec[i] &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl;
     
-    <span id="const-error">x = 20;</span>  // COMPILER ERROR!
+    for(size_t i = 0; i &lt; arr.size(); i++) {
+        std::cout &lt;&lt; arr.at(i) &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl;
     
     return 0;
 }
 </code></pre>
-        <div style="background: #ffebee; padding: 1em; border-radius: 8px; margin-top: 1em;">
-          <h4>Compiler Error:</h4>
-          <pre style="margin: 0; font-size: 0.9em;">
-error: cannot assign to variable 'x' 
-with const-qualified type 'const int'
-          </pre>
+        <div class="code-annotation" id="vector-loop-annotation" style="top: 80px; left: 50px; opacity: 0;">
+          No warnings with vectors
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Slide 8: Combining const and References -->
-<section class="slide two-column" id="const-references">
+<section class="slide two-column" id="containers-vector-access">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>const References</span>
+      <span>Accessing Vector Elements</span>
     </div>
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
-      <h3>const and & are often used together for large data structures</h3>
-      <p>Combining const and & gives us efficiency and safety:</p>
+      <h3>Same as std::array:</h3>
+      <ul id="vector-access">
+        <li>[] operator - Fast, no bounds checking</li>
+        <li>.at() method - Safe, bounds checked</li>
+        <li>.front() and .back() - First and last elements</li>
+      </ul>
       
-      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin: 1em 0;">
-        <h4>const& provides:</h4>
-        <ul>
-          <li><strong>&:</strong> No copying (efficient)</li>
-          <li><strong>const:</strong> Cannot modify (safe)</li>
-        </ul>
-      </div>
-      
-      <p><strong>Perfect for:</strong> Large objects you only need to read from.</p>
-      
-      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin-top: 1em;">
-        <p><strong>Best practice:</strong> Use const& for containers you don't need to modify.</p>
+      <div id="access-warning" style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin-top: 1em;">
+        <p><strong>⚠️ Important:</strong> Same safety rules apply - use .at() for bounds checking!</p>
       </div>
     </div>
     <div class="right-panel">
       <div class="code-container">
-<pre><code class="language-cpp" id="const-ref-demo">
-#include &lt;vector>
-#include &lt;iostream>
-
-void printVector(<span id="const-ref-param">const std::vector&lt;int>& data</span>) {
-    std::cout &lt;&lt; "Size: " &lt;&lt; data.size() &lt;&lt; std::endl;
-    std::cout &lt;&lt; "First: " &lt;&lt; data[0] &lt;&lt; std::endl;
-    // data.push_back(42);  // ERROR! const prevents this
-}
+<pre><code class="language-cpp" id="vector-access-code">#include &lt;vector&gt;
+#include &lt;iostream&gt;
 
 int main() {
-    std::vector&lt;int> huge_data(1000000, 42);
-    
-    <span id="efficient-call">printVector(huge_data);</span>  // No copying!
+    std::vector&lt;int&gt; data = {100, 200, 300, 400, 500};
+
+    // Unsafe but fast
+    std::cout &lt;&lt; data[0] &lt;&lt; std::endl;        // 100
+    std::cout &lt;&lt; data[4] &lt;&lt; std::endl;        // 500
+
+    // Safe with bounds checking
+    std::cout &lt;&lt; <span id="safe-vec-target">data.at(0)</span> &lt;&lt; std::endl;    // 100
+    // std::cout &lt;&lt; data.at(10) &lt;&lt; std::endl; // Exception!
+
+    // Convenient methods
+    std::cout &lt;&lt; data.front() &lt;&lt; std::endl;  // 100
+    std::cout &lt;&lt; data.back() &lt;&lt; std::endl;     // 500
+
+    // Check size first
+    if(!data.empty()) {
+        std::cout &lt;&lt; "Safe access!" &lt;&lt; std::endl;
+    }
     
     return 0;
 }
 </code></pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Slide 8b: const References - Visual Summary -->
-<section class="slide one-column" id="const-references-visual">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>const References - Visual Summary</span>
-    </div>
-  </div>
-  <div class="slide-body one-column">
-    <div style="max-width: 900px; margin: 0 auto; text-align: center;">
-      <h3 style="color: #003262; margin-bottom: 2em;">const& for Large Data Structures</h3>
-      
-      <div id="const-ref-diagram" style="margin: 2em 0; text-align: center;">
-        <!-- Diagram will be created with CSS/HTML for now -->
-        <div style="display: inline-block; background: #e3f2fd; border: 3px solid #1976d2; border-radius: 12px; padding: 1em; margin-bottom: 2em;">
-          <code style="font-size: 1.2em; font-weight: bold; color: #1976d2;">const std::vector&lt;int&gt;& data</code>
-        </div>
-        
-        <div style="display: flex; justify-content: space-around; gap: 1em; margin-top: 2em;">
-          <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 8px; padding: 1em; flex: 1; text-align: center;">
-            <div style="font-size: 1.5em; color: #4caf50; margin-bottom: 0.5em;">✓</div>
-            <h4 style="color: #388e3c; margin: 0.5em 0;">Efficient</h4>
-            <p style="margin: 0; font-size: 0.9em;">(No copying like arrays)</p>
-          </div>
-          
-          <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 8px; padding: 1em; flex: 1; text-align: center;">
-            <div style="font-size: 1.5em; color: #4caf50; margin-bottom: 0.5em;">✓</div>
-            <h4 style="color: #388e3c; margin: 0.5em 0;">Safe</h4>
-            <p style="margin: 0; font-size: 0.9em;">(Cannot modify like const)</p>
-          </div>
-          
-          <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 8px; padding: 1em; flex: 1; text-align: center;">
-            <div style="font-size: 1.5em; color: #4caf50; margin-bottom: 0.5em;">✓</div>
-            <h4 style="color: #388e3c; margin: 0.5em 0;">Versatile</h4>
-            <p style="margin: 0; font-size: 0.9em;">(Works with any container)</p>
-          </div>
-        </div>
-      </div>
-      
-      <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 12px; padding: 1.5em; margin-top: 2em;">
-        <h4 style="color: #1976d2; margin-top: 0;">Common Pattern</h4>
-        <p style="font-size: 1.1em; margin-bottom: 0;">
-          <strong>const&</strong> gives us efficiency without sacrificing safety - 
-          ideal for reading large containers without modification.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Alternative: Container Problem Visual Comparison -->
-<section class="slide one-column" id="container-problem-visual">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Container Passing - Performance Impact</span>
-    </div>
-  </div>
-  <div class="slide-body one-column">
-    <div style="max-width: 1000px; margin: 0 auto;">
-      <h3 style="color: #003262; text-align: center; margin-bottom: 2em;">The Performance Problem</h3>
-      
-      <div id="performance-comparison" style="margin: 2em 0;">
-        <div style="display: flex; gap: 3em; justify-content: center; align-items: center;">
-          <!-- Problem Side -->
-          <div style="text-align: center; flex: 1;">
-            <div style="background: #ffebee; border: 3px solid #f44336; border-radius: 12px; padding: 1.5em; margin-bottom: 1em;">
-              <h4 style="color: #d32f2f; margin-top: 0;">❌ Pass-by-Value</h4>
-              <code style="background: white; padding: 0.5em; border-radius: 4px; display: block; margin: 0.5em 0;">std::vector&lt;int&gt; data</code>
-              <div style="font-size: 0.9em; color: #666;">Function receives<br/>ENTIRE COPY</div>
-            </div>
-            <div style="background: #ffcdd2; padding: 1em; border-radius: 8px;">
-              <strong>1,000,000 elements copied!</strong><br/>
-              <span style="font-size: 0.9em;">Wastes time and memory</span>
-            </div>
-          </div>
-          
-          <!-- Arrow -->
-          <div style="text-align: center; color: #666; font-size: 2em;">
-            →
-          </div>
-          
-          <!-- Solution Side -->
-          <div style="text-align: center; flex: 1;">
-            <div style="background: #e8f5e8; border: 3px solid #4caf50; border-radius: 12px; padding: 1.5em; margin-bottom: 1em;">
-              <h4 style="color: #388e3c; margin-top: 0;">✅ const Reference</h4>
-              <code style="background: white; padding: 0.5em; border-radius: 4px; display: block; margin: 0.5em 0;">const std::vector&lt;int&gt;& data</code>
-              <div style="font-size: 0.9em; color: #666;">Function receives<br/>REFERENCE ONLY</div>
-            </div>
-            <div style="background: #c8e6c9; padding: 1em; border-radius: 8px;">
-              <strong>No copying!</strong><br/>
-              <span style="font-size: 0.9em;">Just an address</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div style="display: flex; gap: 2em; margin-top: 2em;">
-        <div style="flex: 1; background: #ffebee; border-left: 4px solid #f44336; padding: 1em;">
-          <h4 style="color: #d32f2f; margin-top: 0;">Wasteful Copying</h4>
-          <ul style="margin-bottom: 0;">
-            <li>Duplicates entire container</li>
-            <li>Uses extra memory</li>
-            <li>Takes time to copy</li>
-          </ul>
-        </div>
-        <div style="flex: 1; background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em;">
-          <h4 style="color: #388e3c; margin-top: 0;">Efficient Reference</h4>
-          <ul style="margin-bottom: 0;">
-            <li>No duplication</li>
-            <li>Minimal memory usage</li>
-            <li>Instant access</li>
-          </ul>
+        <div class="code-annotation" id="safe-vec-annotation" style="top: 120px; left: 50px; opacity: 0;">
+          Bounds checked
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<script>
-// No complex animations needed for these diagram slides
-// The diagrams speak for themselves
-class ConstReferencesVisualAnimation extends SlideAnimation {
-    get slideId() {
-        return 'const-references-visual';
-    }
-    
-    animate() {
-        // No animation needed - let the diagram be the focus
-        const steps = [];
-        return runAnimationSteps(steps);
-    }
-}
-
-class ContainerProblemVisualAnimation extends SlideAnimation {
-    get slideId() {
-        return 'container-problem-visual';
-    }
-    
-    animate() {
-        // No animation needed - let the diagram be the focus  
-        const steps = [];
-        return runAnimationSteps(steps);
-    }
-}
-
-// Register animations (even though they're empty)
-new ConstReferencesVisualAnimation();
-new ContainerProblemVisualAnimation();
-</script>
-
-<!-- Slide 12: When to Use Each Method (REDESIGNED) -->
-<section class="slide one-column" id="when-to-use">
+<section class="slide one-column" id="containers-array-vs-vector">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>Choosing the Right Approach</span>
+      <span>std::array vs std::vector</span>
     </div>
   </div>
   <div class="slide-body one-column">
     <div style="max-width: 900px; margin: 0 auto;">
-      <h3 style="color: #003262; text-align: center; margin-bottom: 1.5em;">When to Use Each Method</h3>
+      <table id="comparison-table" style="width: 100%; border-collapse: collapse; margin-bottom: 2em; font-size: 1.1em;">
+        <thead>
+          <tr style="background: #f5f5f5;">
+            <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">When to use</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Size known at compile time, small fixed collections</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Size varies at runtime, general-purpose container</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="slide two-column" id="containers-map-intro">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>std::map</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>std::map - Key-Value Storage</h3>
+      <ul id="map-features">
+        <li>Like Python dictionaries</li>
+        <li>Keys must be unique</li>
+        <li>Automatically sorted by key</li>
+        <li>#include &lt;map&gt;</li>
+      </ul>
       
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; margin-bottom: 1.5em;">
-        <!-- Pass-by-value -->
-        <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 8px; padding: 1em; border: 2px solid #2196f3;">
-          <h4 style="color: #1976d2; margin-top: 0; text-align: center; font-size: 1.1em;">Pass-by-Value</h4>
-          <div style="text-align: center; margin: 0.5em 0;">
-            <code style="background: white; padding: 0.3em 0.8em; border-radius: 6px;">int x</code>
-          </div>
-          <div style="background: white; border-radius: 6px; padding: 0.8em; font-size: 0.9em;">
-            <p style="margin: 0.2em 0;"><strong>Use for:</strong> Small, simple types</p>
-            <p style="margin: 0.2em 0;"><strong>Examples:</strong> int, double, char</p>
-          </div>
-        </div>
-        
-        <!-- const Reference -->
-        <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%); border-radius: 8px; padding: 1em; border: 2px solid #4caf50;">
-          <h4 style="color: #388e3c; margin-top: 0; text-align: center; font-size: 1.1em;">const Reference</h4>
-          <div style="text-align: center; margin: 0.5em 0;">
-            <code style="background: white; padding: 0.3em 0.8em; border-radius: 6px;">const vector&lt;int&gt;&amp; v</code>
-          </div>
-          <div style="background: white; border-radius: 6px; padding: 0.8em; font-size: 0.9em;">
-            <p style="margin: 0.2em 0;"><strong>Use for:</strong> Large objects, read-only</p>
-            <p style="margin: 0.2em 0;"><strong>Examples:</strong> vector, string, array</p>
-          </div>
+      <div id="map-visualization" style="margin-top: 2em;">
+        <h4>Key → Value Mapping:</h4>
+        <div id="map-pairs" style="font-family: monospace; background: #f5f5f5; padding: 1em; border-radius: 8px;">
+          "hydrogen" → 1.008<br>
+          "carbon" → 12.011<br>
+          "oxygen" → 15.999
         </div>
       </div>
-      
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; margin-bottom: 1.5em;">
-        <!-- Reference -->
-        <div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: 8px; padding: 1em; border: 2px solid #ff9800;">
-          <h4 style="color: #f57c00; margin-top: 0; text-align: center; font-size: 1.1em;">Reference</h4>
-          <div style="text-align: center; margin: 0.5em 0;">
-            <code style="background: white; padding: 0.3em 0.8em; border-radius: 6px;">vector&lt;int&gt;&amp; v</code>
-          </div>
-          <div style="background: white; border-radius: 6px; padding: 0.8em; font-size: 0.9em;">
-            <p style="margin: 0.2em 0;"><strong>Use for:</strong> When you need to modify</p>
-            <p style="margin: 0.2em 0;"><strong>Examples:</strong> Sorting, input functions</p>
-          </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="map-code"><span id="map-include-target">#include &lt;map&gt;</span>
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    // Create a map: string → double
+    <span id="map-template-target">std::map&lt;std::string, double&gt;</span> atomic_weights;
+    
+    // Insert key-value pairs
+    <span id="map-insert-target">atomic_weights["hydrogen"] = 1.008;</span>
+    atomic_weights["carbon"] = 12.011;
+    atomic_weights["oxygen"] = 15.999;
+    
+    std::cout &lt;&lt; "Map size: " &lt;&lt; atomic_weights.size() &lt;&lt; std::endl;
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="map-template-annotation" style="top: 60px; left: 50px; opacity: 0;">
+          Template: Key type, Value type
         </div>
-        
-        <!-- Arrays -->
-        <div style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); border-radius: 8px; padding: 1em; border: 2px solid #e91e63;">
-          <h4 style="color: #c2185b; margin-top: 0; text-align: center; font-size: 1.1em;">Arrays</h4>
-          <div style="text-align: center; margin: 0.5em 0;">
-            <code style="background: white; padding: 0.3em 0.8em; border-radius: 6px;">int arr[]</code>
-          </div>
-          <div style="background: white; border-radius: 6px; padding: 0.8em; font-size: 0.9em;">
-            <p style="margin: 0.2em 0;"><strong>Use for:</strong> C-style arrays</p>
-            <p style="margin: 0.2em 0;"><strong>Examples:</strong> Legacy code, C libraries</p>
-          </div>
+        <div class="code-annotation" id="map-insert-annotation" style="top: 100px; left: 100px; opacity: 0;">
+          [] operator for insertion
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide two-column" id="containers-map-access">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Accessing Map Values</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Two Ways to Access:</h3>
+      <ul>
+        <li><strong>[] operator:</strong> Creates key if missing</li>
+        <li><strong>.at() method:</strong> Safe access, throws if missing</li>
+      </ul>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="map-access-code">#include &lt;map&gt;
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::map&lt;std::string, double&gt; atomic_weights;
+    atomic_weights["hydrogen"] = 1.008;
+    atomic_weights["carbon"] = 12.011;
+    
+    // Access by key
+    std::cout &lt;&lt; "Hydrogen: " &lt;&lt; 
+                <span id="map-access-target">atomic_weights["hydrogen"]</span> &lt;&lt; std::endl;
+    
+    // Safe access
+    std::cout &lt;&lt; "Carbon: " &lt;&lt; 
+                <span id="map-at-target">atomic_weights.at("carbon")</span> &lt;&lt; std::endl;
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="map-at-annotation" style="top: 140px; left: 150px; opacity: 0;">
+          Safe access method
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide two-column" id="containers-map-safety">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>std::map Operations and Safety</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <div id="map-operations">
+        <h3>Important Operations:</h3>
+        <ul>
+          <li>.find() - Safe way to check if key exists</li>
+          <li>.at() - Safe access (throws if missing)</li>
+          <li>[] - Creates key if missing!</li>
+        </ul>
+        
+        <div id="map-warning" style="background: #ffebee; border-left: 4px solid #f44336; padding: 1em; margin-top: 1em;">
+          <p><strong>⚠️ Warning:</strong> map["missing_key"] silently creates the key with default value!</p>
+        </div>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="map-safety-code">#include &lt;map&gt;
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    std::map&lt;std::string, double&gt; atomic_weights;
+    atomic_weights["hydrogen"] = 1.008;
+    atomic_weights["carbon"] = 12.011;
+
+    // Safe way to check if key exists
+    if(<span id="find-target">atomic_weights.find("oxygen")</span> != atomic_weights.end()) {
+        std::cout &lt;&lt; atomic_weights["oxygen"] &lt;&lt; std::endl;
+    } else {
+        std::cout &lt;&lt; "oxygen not found" &lt;&lt; std::endl;
+    }
+
+    // This creates a new entry with default value!
+    std::cout &lt;&lt; <span id="create-target">atomic_weights["oxygen"]</span> &lt;&lt; std::endl;  // 0.0
+
+    // Note: This line would cause the program to crash!
+    // std::cout &lt;&lt; atomic_weights.at("helium") &lt;&lt; std::endl;
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="create-annotation" style="top: 140px; left: 100px; opacity: 0;">
+          Creates key silently!
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide one-column" id="containers-summary">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Container Summary</span>
+    </div>
+  </div>
+  <div class="slide-body one-column">
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 2em; font-size: 1.1em;">
+        <thead>
+          <tr style="background: #003262; color: white;">
+            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Container</th>
+            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Purpose</th>
+            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Key Features</th>
+            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">When to Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">std::array</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Fixed-size collection</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Compile-time size, fastest</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Coordinates, small fixed data</td>
+          </tr>
+          <tr style="background: #f5f5f5;">
+            <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">std::vector</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Dynamic array</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Runtime sizing, automatic memory, push_back</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">General-purpose lists</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">std::map</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Key-value storage</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Unique keys, auto-sorted, dictionary-like</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Lookups, associations</td>
+          </tr>
+        </tbody>
+      </table>
       
-      <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 8px; padding: 1em; text-align: center;">
-        <h4 style="color: #1976d2; margin-top: 0; font-size: 1.1em;">Most Common Choice</h4>
-        <p style="margin-bottom: 0;">
-          <strong>const&</strong> for containers you read from, <strong>regular types</strong> for simple values
+      <div style="background: #e8f5e8; padding: 1.5em; border-radius: 8px; text-align: center;">
+        <h3 style="color: #2e7d32; margin-top: 0;">Common Safety Features</h3>
+        <p style="font-size: 1.2em; margin-bottom: 0;">
+          All containers provide: <strong>.size()</strong>, <strong>.empty()</strong>, and safe <strong>.at()</strong> access
         </p>
       </div>
     </div>
@@ -758,250 +781,343 @@ new ContainerProblemVisualAnimation();
 </section>
 
 <script>
-// Enhanced highlightCode function with color support
-function highlightCodeWithColor(codeBlockId, textToFind, color = 'rgba(255, 215, 0, 0.4)', className = 'highlight-overlay') {
-    // Only highlight if annotations are visible
-    if (!annotationsVisible) return;
-    
-    const codeBlock = document.getElementById(codeBlockId);
-    if (!codeBlock || !textToFind) return;
-
-    // Helper to find node and offset of a character index
-    const findChildNodeAndOffset = (container, overallCharIndex) => {
-        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
-        let currentNode = walker.nextNode();
-        let accumulatedLength = 0;
-        while (currentNode) {
-            const nodeLength = currentNode.textContent.length;
-            if (accumulatedLength + nodeLength >= overallCharIndex) {
-                return { node: currentNode, offset: overallCharIndex - accumulatedLength };
-            }
-            accumulatedLength += nodeLength;
-            currentNode = walker.nextNode();
-        }
-        return null;
-    };
-
-    const fullText = codeBlock.textContent;
-    const startIndex = fullText.indexOf(textToFind);
-    if (startIndex === -1) return;
-    const endIndex = startIndex + textToFind.length;
-
-    const startPosition = findChildNodeAndOffset(codeBlock, startIndex);
-    const endPosition = findChildNodeAndOffset(codeBlock, endIndex);
-
-    if (!startPosition || !endPosition) return;
-
-    const range = document.createRange();
-    range.setStart(startPosition.node, startPosition.offset);
-    range.setEnd(endPosition.node, endPosition.offset);
-
-    const targetRect = range.getBoundingClientRect();
-    if (targetRect.width === 0 && targetRect.height === 0) return;
-
-    const container = codeBlock.closest('.code-container');
-    const containerRect = container.getBoundingClientRect();
-
-    // Create and position the highlight overlay element
-    const overlay = document.createElement('div');
-    overlay.className = className;
-    overlay.style.position = 'absolute';
-    overlay.style.top = `${targetRect.top - containerRect.top}px`;
-    overlay.style.left = `${targetRect.left - containerRect.left}px`;
-    overlay.style.width = `${targetRect.width}px`;
-    overlay.style.height = `${targetRect.height}px`;
-    overlay.style.backgroundColor = color; // Use the provided color
-    overlay.style.borderRadius = '3px';
-    overlay.style.zIndex = '0'; // Sit behind the code text
-    overlay.style.pointerEvents = 'none'; // Make it unclickable
-
-    container.appendChild(overlay);
-}
-
-class ReviewFunctionsAnimation extends SlideAnimation {
+class ReviewSlideAnimation extends SlideAnimation {
     get slideId() {
-        return 'review-functions';
+        return 'containers-c-array-limitations';
     }
     
     animate() {
         const steps = [
             () => {
-                // Highlight return type in green to match the bullet point
-                highlightCode('review-function', 'double', 'rgba(76, 175, 80, 0.3)');
+                highlightCode('c-array-code', 'int arr[5] = {10, 20, 30, 40, 50};');
+                positionAnnotation('c-array-code', 'int arr[5]', 'array-annotation');
+                showElement('array-annotation');
             },
             () => {
-                // Highlight function name in pink to match the bullet point
-                highlightCode('review-function', 'calculate_area', 'rgba(233, 30, 99, 0.3)');
-            },
-            () => {
-                // Highlight parameters in blue to match the bullet point
-                highlightCode('review-function', 'double length, double width', 'rgba(33, 150, 243, 0.3)');
-            },
-            () => {
-                // Highlight the return statement and show annotation
-                highlightCode('review-function', 'return length * width;', 'rgba(76, 175, 80, 0.3)');
-                positionAnnotation('review-function', 'return length * width;', 'return-annotation');
-                showElement('return-annotation');
+                showElement('limitations-box');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class PassByValueConceptAnimation extends SlideAnimation {
+class ArrayIntroSlideAnimation extends SlideAnimation {
     get slideId() {
-        return 'pass-by-value-concept';
+        return 'containers-std-array-intro';
     }
     
     animate() {
         const steps = [
             () => {
-                // Only highlight the parameter to show it's a copy
-                highlightCode('pass-by-value-demo', 'int x', 'rgba(255, 152, 0, 0.3)');
+                highlightCode('std-array-code', '#include <array>');
+                positionAnnotation('std-array-code', '#include <array>', 'include-annotation');
+                showElement('include-annotation');
+            },
+            () => {
+                highlightCode('std-array-code', 'std::array<int, 5>');
+                positionAnnotation('std-array-code', 'std::array<int, 5>', 'template-annotation');
+                showElement('template-annotation');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class ArraysDifferentAnimation extends SlideAnimation {
+class ArrayAccessSlideAnimation extends SlideAnimation {
     get slideId() {
-        return 'arrays-different';
+        return 'containers-array-access-methods';
     }
     
     animate() {
         const steps = [
             () => {
-                // Highlight the array parameter to show it's actually a pointer
-                highlightCode('array-demo', 'int arr[]', 'rgba(255, 152, 0, 0.3)');
+                highlightBackground('bracket-method', '#ffebee');
+                highlightCode('access-code', 'safe_array[0]');
+                positionAnnotation('access-code', 'safe_array[0]', 'unsafe-annotation');
+                showElement('unsafe-annotation');
+            },
+            () => {
+                highlightBackground('at-method', '#e8f5e8');
+                highlightCode('access-code', 'safe_array.at(0)');
+                positionAnnotation('access-code', 'safe_array.at(0)', 'safe-annotation');
+                showElement('safe-annotation');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class ContainerProblemAnimation extends SlideAnimation {
+class VectorIntroSlideAnimation extends SlideAnimation {
     get slideId() {
-        return 'container-problem';
+        return 'containers-vector-intro';
     }
     
     animate() {
         const steps = [
             () => {
-                // Only highlight the parameter that causes copying
-                highlightCode('container-demo', 'std::vector<int> data', 'rgba(244, 67, 54, 0.3)');
+                highlightCode('vector-code', '#include <vector>');
+            },
+            () => {
+                highlightCode('vector-code', 'std::vector<int> numbers;');
+                positionAnnotation('vector-code', 'std::vector<int> numbers;', 'empty-annotation');
+                showElement('empty-annotation');
+            },
+            () => {
+                highlightCode('vector-code', 'numbers.push_back(42);');
+                positionAnnotation('vector-code', 'numbers.push_back(42);', 'pushback-annotation');
+                showElement('pushback-annotation');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class PointerSolutionAnimation extends SlideAnimation {
+class PushBackSlideAnimation extends SlideAnimation {
     get slideId() {
-        return 'pointer-solution';
+        return 'containers-vector-push-back';
     }
     
     animate() {
         const steps = [
             () => {
-                highlightCode('pointer-demo', 'std::vector<int>*', 'rgba(255, 152, 0, 0.3)');
+                highlightCode('pushback-code', 'numbers.push_back(10);');
+                positionAnnotation('pushback-code', 'numbers.push_back(10);', 'grow-annotation');
+                showElement('grow-annotation');
             },
             () => {
-                highlightCode('pointer-demo', '(*data).size()', 'rgba(244, 67, 54, 0.3)');
-            },
-            () => {
-                highlightCode('pointer-demo', '&huge_data', 'rgba(244, 67, 54, 0.3)');
+                highlightCode('pushback-code', 'for(size_t i = 0; i < numbers.size(); i++)');
+                positionAnnotation('pushback-code', 'for(size_t i = 0; i < numbers.size(); i++)', 'sizet-loop-annotation');
+                showElement('sizet-loop-annotation');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class WhatAreReferencesAnimation extends SlideAnimation {
+class VectorInitSlideAnimation extends SlideAnimation {
     get slideId() {
-        return 'what-are-references';
+        return 'containers-vector-initialization';
     }
     
     animate() {
         const steps = [
             () => {
-                highlightCode('reference-demo', 'std::vector<int>&', 'rgba(76, 175, 80, 0.3)');
+                highlightCode('init-code', '{98.6, 99.1, 97.8}');
+                positionAnnotation('init-code', '{98.6, 99.1, 97.8}', 'init-list-annotation');
+                showElement('init-list-annotation');
             },
             () => {
-                highlightCode('reference-demo', 'data.size()', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('reference-demo', 'printVector(huge_data)', 'rgba(76, 175, 80, 0.3)');
+                highlightCode('init-code', '(10, 0)');
+                positionAnnotation('init-code', '(10, 0)', 'size-default-annotation');
+                showElement('size-default-annotation');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class AmpersandConfusionAnimation extends SlideAnimation {
+class VectorMethodsSlideAnimation extends SlideAnimation {
     get slideId() {
-        return 'ampersand-confusion';
+        return 'containers-vector-methods';
     }
     
     animate() {
         const steps = [
             () => {
-                highlightCode('ampersand-demo', 'int& x', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('ampersand-demo', '&number', 'rgba(33, 150, 243, 0.3)');
-            },
-            () => {
-                highlightCode('ampersand-demo', 'printValue(number)', 'rgba(76, 175, 80, 0.3)');
-            }
-        ];
-        return runAnimationSteps(steps);
-    }
-}
-class WhatIsConstAnimation extends SlideAnimation {
-    get slideId() {
-        return 'what-is-const';
-    }
-    
-    animate() {
-        const steps = [
-            () => {
-                // Only highlight the const keyword and error line
-                highlightCode('const-demo', 'const', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('const-demo', 'x = 20;', 'rgba(244, 67, 54, 0.3)');
+                highlightCode('methods-code', 'data.at(1)');
+                positionAnnotation('methods-code', 'data.at(1)', 'safe-access-annotation');
+                showElement('safe-access-annotation');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class ConstReferencesAnimation extends SlideAnimation {
+class VectorPitfallsSlideAnimation extends SlideAnimation {
     get slideId() {
-        return 'const-references';
+        return 'containers-vector-pitfalls';
     }
     
     animate() {
         const steps = [
             () => {
-                // Only highlight the const reference parameter - the key solution
-                highlightCode('const-ref-demo', 'const std::vector<int>&', 'rgba(76, 175, 80, 0.3)');
+                highlightCode('pitfall-code', 'for(int i = 0; i < data.size(); i++)');
+                positionAnnotation('pitfall-code', 'for(int i = 0; i < data.size(); i++)', 'warning-annotation');
+                showElement('warning-annotation');
+            },
+            () => {
+                highlightCode('pitfall-code', 'data[10]');
+                positionAnnotation('pitfall-code', 'data[10]', 'unsafe-annotation');
+                showElement('unsafe-annotation');
             }
         ];
         return runAnimationSteps(steps);
+    }
+}
+
+class SizeTSolutionSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-size-t-solution';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('size-t-code', 'for(size_t i = 0; i < vec.size(); i++)');
+                positionAnnotation('size-t-code', 'for(size_t i = 0; i < vec.size(); i++)', 'vector-loop-annotation');
+                showElement('vector-loop-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class VectorAccessSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-vector-access';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('vector-access-code', 'data.at(0)');
+                positionAnnotation('vector-access-code', 'data.at(0)', 'safe-vec-annotation');
+                showElement('safe-vec-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class MapIntroSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-map-intro';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('map-code', '#include <map>');
+            },
+            () => {
+                highlightCode('map-code', 'std::map<std::string, double>');
+                positionAnnotation('map-code', 'std::map<std::string, double>', 'map-template-annotation');
+                showElement('map-template-annotation');
+            },
+            () => {
+                highlightCode('map-code', 'atomic_weights["hydrogen"] = 1.008;');
+                positionAnnotation('map-code', 'atomic_weights["hydrogen"] = 1.008;', 'map-insert-annotation');
+                showElement('map-insert-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class MapAccessSlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-map-access';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('map-access-code', 'atomic_weights.at("carbon")');
+                positionAnnotation('map-access-code', 'atomic_weights.at("carbon")', 'map-at-annotation');
+                showElement('map-at-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class MapSafetySlideAnimation extends SlideAnimation {
+    get slideId() {
+        return 'containers-map-safety';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('map-safety-code', 'atomic_weights["oxygen"]');
+                positionAnnotation('map-safety-code', 'atomic_weights["oxygen"]', 'create-annotation');
+                showElement('create-annotation');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+// Interactive demo setup
+let vectorDemoElements = [];
+let nextValue = 42;
+
+function setupPushBackDemo() {
+    const pushButton = document.getElementById('demo-pushback');
+    const resetButton = document.getElementById('demo-reset');
+    const vectorBoxes = document.getElementById('vector-boxes');
+    const vectorContents = document.getElementById('vector-contents');
+    const vectorSize = document.getElementById('vector-size');
+    
+    if (pushButton && resetButton && vectorBoxes && vectorContents && vectorSize) {
+        pushButton.onclick = function() {
+            vectorDemoElements.push(nextValue);
+            
+            const box = document.createElement('div');
+            box.style.cssText = `
+                width: 40px; height: 40px; background: #4299e1; color: white;
+                display: flex; align-items: center; justify-content: center;
+                border-radius: 4px; font-weight: bold; animation: slideIn 0.3s ease;
+                border: 1px solid #2c5aa0;
+            `;
+            box.textContent = nextValue;
+            vectorBoxes.appendChild(box);
+            
+            vectorContents.textContent = '[' + vectorDemoElements.join(', ') + ']';
+            vectorSize.textContent = vectorDemoElements.length;
+            
+            nextValue += 10;
+            pushButton.textContent = `push_back(${nextValue})`;
+        };
+        
+        resetButton.onclick = function() {
+            vectorDemoElements = [];
+            nextValue = 42;
+            vectorBoxes.innerHTML = '';
+            vectorContents.textContent = '[]';
+            vectorSize.textContent = '0';
+            pushButton.textContent = 'push_back(42)';
+        };
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateX(-20px) scale(0.8); }
+                to { opacity: 1; transform: translateX(0) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
     }
 }
 
 // Register all animations
-new ReviewFunctionsAnimation();
-new PassByValueConceptAnimation();
-new ArraysDifferentAnimation();
-new ContainerProblemAnimation();
-new PointerSolutionAnimation();
-new WhatAreReferencesAnimation();
-new AmpersandConfusionAnimation();
-new WhatIsConstAnimation();
-new ConstReferencesAnimation();
-new ConstReferencesVisualAnimation();
-new ContainerProblemVisualAnimation();
+new ReviewSlideAnimation();
+new ArrayIntroSlideAnimation();
+new ArrayAccessSlideAnimation();
+new VectorIntroSlideAnimation();
+new PushBackSlideAnimation();
+new VectorInitSlideAnimation();
+new VectorMethodsSlideAnimation();
+new SizeTSolutionSlideAnimation();
+new VectorAccessSlideAnimation();
+new MapIntroSlideAnimation();
+new MapAccessSlideAnimation();
+new MapSafetySlideAnimation();
+
+// Simple repeated setup attempts for interactive demo
+setInterval(function() {
+    if (document.getElementById('demo-pushback') && !window.demoSetup) {
+        setupPushBackDemo();
+        window.demoSetup = true;
+    }
+}, 500);

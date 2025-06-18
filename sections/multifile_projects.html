@@ -1,0 +1,1119 @@
+<!-- Multi-File Projects Section Header -->
+<section class="slide section-header">
+  <div class="slide-header"></div>
+  <div class="slide-body section-header">
+    <div class="section-content">
+      <h1 class="section-title">Multi-File Projects</h1>
+      <p class="section-subtitle">Organizing code across multiple files</p>
+    </div>
+  </div>
+</section>
+
+<!-- Forward Declaration Review -->
+<section class="slide two-column" id="forward-declaration-review">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Review: Declaration vs Definition</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>You Already Know This Concept</h3>
+      <p>Remember from Week 2: variables can be declared separately from their definition.</p>
+      
+      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #388e3c; margin-top: 0;">Variables</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li><strong>Declaration:</strong> "This variable exists somewhere"</li>
+          <li><strong>Definition:</strong> "Here's the actual variable and its value"</li>
+        </ul>
+      </div>
+      
+      <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #1976d2; margin-top: 0;">Functions Work the Same Way</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li><strong>Declaration:</strong> "This function exists somewhere"</li>
+          <li><strong>Definition:</strong> "Here's the actual function body"</li>
+        </ul>
+      </div>
+      
+      <p>This solves the ordering problem in C++.</p>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="declaration-review">
+#include &lt;iostream>
+
+// Function declaration (just the signature)
+<span id="func-declaration">int helper(int x);</span>
+
+int main() {
+    <span id="use-before-def">int result = helper(5);</span>  // OK - compiler knows signature
+    std::cout &lt;&lt; result &lt;&lt; std::endl;
+    return 0;
+}
+
+// Function definition (the actual implementation)
+<span id="func-definition">int helper(int x) {
+    return x * 2;
+}</span>
+</code></pre>
+        <div class="code-annotation" id="anno-decl" style="opacity:0;">
+          Tells compiler: "helper exists, takes int, returns int"
+        </div>
+        <div class="code-annotation" id="anno-def" style="opacity:0;">
+          Provides the actual implementation
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- The Multi-File Problem -->
+<section class="slide two-column" id="multifile-problem">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Problem: Sharing Functions Across Files</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>I Want to Reuse My Function</h3>
+      <p>You wrote a useful function and want to use it in multiple programs:</p>
+      
+      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #f57c00; margin-top: 0;">Option 1: Copy-Paste</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Copy function declaration and definition to each file</li>
+          <li>Hard to maintain - if you fix a bug, must fix in all copies</li>
+          <li>Violates "Don't Repeat Yourself" principle</li>
+        </ul>
+      </div>
+      
+      <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #d32f2f; margin-top: 0;">Option 2: Include .cpp Files?</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>You might think: <code>#include "math_funcs.cpp"</code></li>
+          <li>This includes the entire function body</li>
+          <li>Causes "multiple definition" errors during linking</li>
+        </ul>
+      </div>
+      
+      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #388e3c; margin-top: 0;">Better Solution: Headers</h4>
+        <p style="margin-bottom: 0; font-size: 0.9em;">
+          Share just the declarations, keep definitions separate.
+        </p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div style="margin-bottom: 1em;">
+        <h5 style="background: #f44336; color: white; padding: 0.5em; margin: 0; border-radius: 4px 4px 0 0;">The Problem</h5>
+        <div style="background: #ffebee; border: 2px solid #f44336; border-top: none; border-radius: 0 0 4px 4px; padding: 1em; font-size: 0.85em;">
+          <strong>program1.cpp:</strong><br>
+          - Needs <code>calculateArea()</code><br>
+          - Must copy declaration and definition<br><br>
+          
+          <strong>program2.cpp:</strong><br>
+          - Also needs <code>calculateArea()</code><br>
+          - Must copy declaration and definition again<br><br>
+          
+          <strong>Result:</strong><br>
+          - Code duplication<br>
+          - Maintenance nightmare<br>
+          - Bug fixes need to be made everywhere
+        </div>
+      </div>
+      
+      <div>
+        <h5 style="background: #4caf50; color: white; padding: 0.5em; margin: 0; border-radius: 4px 4px 0 0;">The Solution</h5>
+        <div style="background: #e8f5e8; border: 2px solid #4caf50; border-top: none; border-radius: 0 0 4px 4px; padding: 1em; font-size: 0.85em;">
+          <strong>math_utils.h:</strong> Declarations only<br>
+          <strong>math_utils.cpp:</strong> Definitions only<br><br>
+          
+          <strong>program1.cpp:</strong> <code>#include "math_utils.h"</code><br>
+          <strong>program2.cpp:</strong> <code>#include "math_utils.h"</code><br><br>
+          
+          <strong>Result:</strong><br>
+          - No duplication<br>
+          - Single source of truth<br>
+          - Easy to maintain
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Headers as Shared Declarations -->
+<section class="slide two-column" id="headers-as-declarations">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Headers: Shared Declarations</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Headers Let You Share Declarations</h3>
+      <p>A header file contains just the declarations that multiple files need to know about:</p>
+      
+      <div style="background: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #1976d2; margin-top: 0;">What Goes in Headers (.h)</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Function declarations</li>
+          <li>Constants</li>
+          <li>Type definitions</li>
+          <li>Class declarations (later)</li>
+        </ul>
+      </div>
+      
+      <div style="background: #fff3e0; border: 2px solid #ff9800; border-radius: 8px; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #f57c00; margin-top: 0;">What Goes in Source (.cpp)</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Function definitions</li>
+          <li>Variable definitions</li>
+          <li>The actual implementation code</li>
+        </ul>
+      </div>
+      
+      <p><strong>Key idea:</strong> Headers answer "what exists?" and source files answer "how does it work?"</p>
+    </div>
+    <div class="right-panel">
+      <div style="display: flex; flex-direction: column; gap: 1em;">
+        <!-- Header file example -->
+        <div>
+          <h5 style="background: #2196f3; color: white; padding: 0.5em; margin: 0; border-radius: 4px 4px 0 0;">math_utils.h</h5>
+          <div class="code-container" style="margin-top: 0;">
+<pre><code class="language-cpp" id="simple-header">
+// Function declarations only
+<span id="area-decl">double calculateArea(double radius);</span>
+<span id="volume-decl">double calculateVolume(double radius, double height);</span>
+
+// Constants
+<span id="pi-const">const double PI = 3.14159;</span>
+</code></pre>
+          </div>
+        </div>
+        
+        <!-- Source file example -->
+        <div>
+          <h5 style="background: #ff9800; color: white; padding: 0.5em; margin: 0; border-radius: 4px 4px 0 0;">math_utils.cpp</h5>
+          <div class="code-container" style="margin-top: 0;">
+<pre><code class="language-cpp" id="simple-source">
+<span id="include-own">#include "math_utils.h"</span>
+
+// Function definitions
+<span id="area-def">double calculateArea(double radius) {
+    return PI * radius * radius;
+}</span>
+
+<span id="volume-def">double calculateVolume(double radius, double height) {
+    return calculateArea(radius) * height;
+}</span>
+</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Using Headers -->
+<section class="slide two-column" id="using-simple-headers">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Using Headers in Your Program</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Include the Header to Use the Functions</h3>
+      <p>Any file that wants to use your functions includes the header:</p>
+      
+      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #388e3c; margin-top: 0;">Include Syntax</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li><code>#include "myheader.h"</code> - Your files (quotes)</li>
+          <li><code>#include &lt;iostream&gt;</code> - System files (brackets)</li>
+        </ul>
+      </div>
+      
+      <div style="background: #f0f7ff; border-left: 4px solid #2196f3; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #1976d2; margin-top: 0;">What Happens</h4>
+        <ol style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Preprocessor copies header content into your file</li>
+          <li>Compiler sees the function declarations</li>
+          <li>Your code can call the functions</li>
+          <li>Linker connects to the actual implementations</li>
+        </ol>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="using-header">
+// main.cpp
+
+<span id="sys-include">#include &lt;iostream></span>
+<span id="my-include">#include "math_utils.h"</span>  // Now I know about calculateArea
+
+int main() {
+    <span id="use-func">double radius = 5.0;
+    double area = calculateArea(radius);  // OK - compiler knows signature
+    
+    std::cout &lt;&lt; "Area: " &lt;&lt; area &lt;&lt; std::endl;</span>
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="anno-sys" style="opacity:0;">
+          System header (angle brackets)
+        </div>
+        <div class="code-annotation" id="anno-my" style="opacity:0;">
+          Custom header (quotes)
+        </div>
+        <div class="code-annotation" id="anno-use" style="opacity:0;">
+          Function available because we included the declaration
+        </div>
+      </div>
+      
+      <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 6px; padding: 1em; margin-top: 1em; text-align: center;">
+        <h4 style="color: #1976d2; margin-top: 0; font-size: 1em;">Compilation</h4>
+        <code style="background: white; padding: 0.5em; border-radius: 4px; font-size: 0.8em;">
+          g++ main.cpp math_utils.cpp -o program
+        </code>
+        <p style="margin: 0.5em 0 0 0; font-size: 0.85em;">
+          Compiles both .cpp files and links them together
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Multiple Inclusion Problem -->
+<section class="slide two-column" id="multiple-inclusion-problem">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Problem: Multiple Inclusion</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Headers Can Be Included Multiple Times</h3>
+      <p>As projects grow, the same header might get included multiple times in the same file:</p>
+      
+      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #f57c00; margin-top: 0;">How This Happens</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>You include math_utils.h</li>
+          <li>You also include file_io.h</li>
+          <li>But file_io.h also includes math_utils.h</li>
+          <li>Now math_utils.h is included twice!</li>
+        </ul>
+      </div>
+      
+      <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #d32f2f; margin-top: 0;">The Problem</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Function declarations appear twice</li>
+          <li>Compiler sees "redefinition" error</li>
+          <li>Constants defined multiple times</li>
+        </ul>
+      </div>
+      
+      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #388e3c; margin-top: 0;">The Solution</h4>
+        <p style="margin-bottom: 0; font-size: 0.9em;">
+          Header guards ensure each header is only included once, no matter how many times it's requested.
+        </p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div style="margin-bottom: 1em;">
+        <h5 style="background: #f44336; color: white; padding: 0.5em; margin: 0; border-radius: 4px 4px 0 0;">The Problem</h5>
+        <div class="code-container" style="margin-top: 0;">
+<pre><code class="language-cpp" id="inclusion-problem">
+// main.cpp
+<span id="direct-include">#include "math_utils.h"</span>  // Includes calculateArea declaration
+<span id="indirect-include">#include "file_io.h"</span>    // This ALSO includes math_utils.h!
+
+// After preprocessing, this is what the compiler sees:
+<span id="duplicate">double calculateArea(double radius);  // From first include
+double calculateArea(double radius);  // From second include - ERROR!</span>
+
+int main() {
+    return 0;
+}
+</code></pre>
+        </div>
+        <div style="background: #ffcdd2; padding: 0.8em; border-radius: 0 0 4px 4px; font-size: 0.85em;">
+          <strong>Compiler error:</strong> 'calculateArea' redeclared
+        </div>
+      </div>
+      
+      <div>
+        <h5 style="background: #4caf50; color: white; padding: 0.5em; margin: 0; border-radius: 4px 4px 0 0;">The Solution</h5>
+        <div style="background: #e8f5e8; border: 2px solid #4caf50; border-top: none; border-radius: 0 0 4px 4px; padding: 1em; font-size: 0.85em;">
+          <strong>Header guards prevent multiple inclusion:</strong><br><br>
+          
+          1st time: "MATH_UTILS_H not defined → include content"<br>
+          2nd time: "MATH_UTILS_H already defined → skip content"<br><br>
+          
+          <strong>Result:</strong> Declaration appears only once!
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Header Guards Solution -->
+<section class="slide two-column" id="header-guards-solution">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Header Guards</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Preventing Multiple Inclusion</h3>
+      <p>Header guards use preprocessor directives to include content only once:</p>
+      
+      <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #1976d2; margin-top: 0;">The Pattern</h4>
+        <ol style="margin-bottom: 0; font-size: 0.9em;">
+          <li><code>#ifndef SYMBOL</code> - "If symbol not defined..."</li>
+          <li><code>#define SYMBOL</code> - "Define it now"</li>
+          <li>Put all header content here</li>
+          <li><code>#endif</code> - "End conditional block"</li>
+        </ol>
+      </div>
+      
+      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #388e3c; margin-top: 0;">Naming Convention</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Use filename in ALL_CAPS</li>
+          <li>Replace dots with underscores</li>
+          <li>Example: math_utils.h → MATH_UTILS_H</li>
+        </ul>
+      </div>
+      
+      <p><strong>Always use this pattern in every header file!</strong></p>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="guard-pattern">
+// math_utils.h
+
+<span id="ifndef">#ifndef MATH_UTILS_H</span>
+<span id="define">#define MATH_UTILS_H</span>
+
+<span id="content">// All your header content goes here
+double calculateArea(double radius);
+double calculateVolume(double radius, double height);
+
+const double PI = 3.14159;</span>
+
+<span id="endif">#endif  // MATH_UTILS_H</span>
+</code></pre>
+        <div class="code-annotation" id="anno-ifndef" style="opacity:0;">
+          "If MATH_UTILS_H is not defined..."
+        </div>
+        <div class="code-annotation" id="anno-define" style="opacity:0;">
+          "...then define it and include this content"
+        </div>
+        <div class="code-annotation" id="anno-content" style="opacity:0;">
+          Content is only included once
+        </div>
+      </div>
+      
+      <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 8px; padding: 1em; margin-top: 1em;">
+        <h4 style="color: #1976d2; margin-top: 0; font-size: 1em;">How It Works</h4>
+        <div style="font-size: 0.85em;">
+          <strong>1st inclusion:</strong> MATH_UTILS_H undefined → define it, include content<br>
+          <strong>2nd inclusion:</strong> MATH_UTILS_H already defined → skip everything
+        </div>
+      </div>
+    </div>
+  </div>
+</section><!-- Real-World Example -->
+<section class="slide two-column" id="real-world-project">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Real-World Example: Monte Carlo Simulation</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Organizing a Large Project</h3>
+      <p>Your Monte Carlo simulation project might be organized like this:</p>
+      
+      <div style="font-size: 0.9em;">
+        <div style="background: #e3f2fd; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #2196f3;">
+          <strong>random_utils.h/.cpp</strong><br>
+          Random number generation functions
+        </div>
+        
+        <div style="background: #e8f5e8; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #4caf50;">
+          <strong>physics.h/.cpp</strong><br>
+          Energy calculations, force computations
+        </div>
+        
+        <div style="background: #fff3e0; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #ff9800;">
+          <strong>file_io.h/.cpp</strong><br>
+          Reading configuration files, writing results
+        </div>
+        
+        <div style="background: #fce4ec; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #e91e63;">
+          <strong>analysis.h/.cpp</strong><br>
+          Statistical analysis of simulation data
+        </div>
+        
+        <div style="background: #f3e5f5; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #9c27b0;">
+          <strong>main.cpp</strong><br>
+          Coordinates the simulation, calls other modules
+        </div>
+      </div>
+      
+      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Benefits:</strong> Easy to debug, can reuse physics.cpp in other simulations, clear separation of concerns</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div style="text-align: center;">
+        <h4>Project Structure</h4>
+        
+        <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 8px; padding: 1.5em; margin: 1em 0; text-align: left; font-family: monospace; font-size: 0.85em;">
+          monte_carlo_sim/<br>
+          |-- main.cpp (50 lines)<br>
+          |-- random_utils.h (15 lines)<br>
+          |-- random_utils.cpp (60 lines)<br>
+          |-- physics.h (20 lines)<br>
+          |-- physics.cpp (150 lines)<br>
+          |-- file_io.h (12 lines)<br>
+          |-- file_io.cpp (80 lines)<br>
+          |-- analysis.h (18 lines)<br>
+          |-- analysis.cpp (120 lines)
+        </div>
+        
+        <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 8px; padding: 1em; margin-top: 1em;">
+          <h5 style="color: #388e3c; margin-top: 0;">Now you can:</h5>
+          <ul style="text-align: left; font-size: 0.85em; margin: 0;">
+            <li>Find the energy calculation quickly</li>
+            <li>Test random number generation separately</li>
+            <li>Reuse physics.cpp in other projects</li>
+            <li>Have teammates work on different modules</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Compilation Process -->
+<section class="slide two-column" id="compilation-process">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Compilation Process</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>How Multi-File Projects Are Built</h3>
+      <p>The compilation process involves several steps:</p>
+      
+      <div style="font-size: 0.9em;">
+        <div style="background: #e3f2fd; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #2196f3;">
+          <strong>1. Preprocessing</strong><br>
+          Includes headers, processes #define directives
+        </div>
+        
+        <div style="background: #e8f5e8; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #4caf50;">
+          <strong>2. Compilation</strong><br>
+          Each .cpp file becomes an object file (.o)
+        </div>
+        
+        <div style="background: #fff3e0; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #ff9800;">
+          <strong>3. Linking</strong><br>
+          Object files are combined into executable
+        </div>
+      </div>
+      
+      <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 8px; padding: 1em; margin-top: 1em;">
+        <h4 style="color: #1976d2; margin-top: 0; font-size: 1em;">Command Line</h4>
+        <code style="background: white; padding: 0.5em; border-radius: 4px; display: block; font-size: 0.8em;">
+          g++ main.cpp physics.cpp file_io.cpp -o simulation
+        </code>
+        <p style="margin: 0.5em 0 0 0; font-size: 0.85em;">
+          Compiles all .cpp files and links them together
+        </p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div style="text-align: center;">
+        <h4>Compilation Flow</h4>
+        
+        <!-- Source files -->
+        <div style="display: flex; justify-content: center; gap: 1em; margin: 1em 0;">
+          <div style="background: #fff3e0; border: 2px solid #ff9800; border-radius: 6px; padding: 0.8em; font-size: 0.8em;">
+            main.cpp
+          </div>
+          <div style="background: #fff3e0; border: 2px solid #ff9800; border-radius: 6px; padding: 0.8em; font-size: 0.8em;">
+            physics.cpp
+          </div>
+        </div>
+        
+        <!-- Arrow down -->
+        <div style="font-size: 1.5em; color: #666;">↓ compile</div>
+        
+        <!-- Object files -->
+        <div style="display: flex; justify-content: center; gap: 1em; margin: 1em 0;">
+          <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 6px; padding: 0.8em; font-size: 0.8em;">
+            main.o
+          </div>
+          <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 6px; padding: 0.8em; font-size: 0.8em;">
+            physics.o
+          </div>
+        </div>
+        
+        <!-- Arrow down -->
+        <div style="font-size: 1.5em; color: #666;">↓ link</div>
+        
+        <!-- Executable -->
+        <div style="background: #e3f2fd; border: 2px solid #2196f3; border-radius: 6px; padding: 1em; margin: 1em 0; font-size: 0.9em;">
+          simulation (executable)
+        </div>
+        
+        <div style="background: #f5f5f5; border-radius: 6px; padding: 1em; margin-top: 1em; font-size: 0.85em; text-align: left;">
+          <strong>Key Point:</strong> Headers (.h) are never compiled directly. They're included in .cpp files during preprocessing.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Color-coded highlighting classes */
+.highlight-green {
+    background-color: rgba(76, 175, 80, 0.3) !important;
+}
+
+.highlight-blue {
+    background-color: rgba(33, 150, 243, 0.3) !important;
+}
+
+.highlight-orange {
+    background-color: rgba(255, 152, 0, 0.3) !important;
+}
+
+.highlight-red {
+    background-color: rgba(244, 67, 54, 0.3) !important;
+}
+
+.highlight-purple {
+    background-color: rgba(156, 39, 176, 0.3) !important;
+}
+</style>
+
+<script>
+class ForwardDeclarationReviewAnimation extends SlideAnimation {
+    get slideId() {
+        return 'forward-declaration-review';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('declaration-review', 'int helper(int x);', 'rgba(33, 150, 243, 0.3)');
+                positionAnnotation('declaration-review', 'int helper(int x);', 'anno-decl');
+                showElement('anno-decl');
+            },
+            () => {
+                highlightCode('declaration-review', 'int result = helper(5);', 'rgba(76, 175, 80, 0.3)');
+            },
+            () => {
+                highlightCode('declaration-review', 'int helper(int x) {\n    return x * 2;\n}', 'rgba(255, 152, 0, 0.3)');
+                positionAnnotation('declaration-review', 'int helper(int x) {\n    return x * 2;\n}', 'anno-def');
+                showElement('anno-def');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class MultiFileProblemAnimation extends SlideAnimation {
+    get slideId() {
+        return 'multifile-problem';
+    }
+    
+    animate() {
+        const steps = [
+            // No specific code highlighting needed - the explanation speaks for itself
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class HeadersAsDeclarationsAnimation extends SlideAnimation {
+    get slideId() {
+        return 'headers-as-declarations';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('simple-header', 'double calculateArea(double radius);', 'rgba(33, 150, 243, 0.3)');
+            },
+            () => {
+                highlightCode('simple-header', 'const double PI = 3.14159;', 'rgba(33, 150, 243, 0.3)');
+            },
+            () => {
+                highlightCode('simple-source', '#include "math_utils.h"', 'rgba(255, 152, 0, 0.3)');
+            },
+            () => {
+                highlightCode('simple-source', 'double calculateArea(double radius) {\n    return PI * radius * radius;\n}', 'rgba(255, 152, 0, 0.3)');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class UsingSimpleHeadersAnimation extends SlideAnimation {
+    get slideId() {
+        return 'using-simple-headers';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('using-header', '#include <iostream>', 'rgba(156, 39, 176, 0.3)');
+                positionAnnotation('using-header', '#include <iostream>', 'anno-sys');
+                showElement('anno-sys');
+            },
+            () => {
+                highlightCode('using-header', '#include "math_utils.h"', 'rgba(33, 150, 243, 0.3)');
+                positionAnnotation('using-header', '#include "math_utils.h"', 'anno-my');
+                showElement('anno-my');
+            },
+            () => {
+                highlightCode('using-header', 'double area = calculateArea(radius);', 'rgba(76, 175, 80, 0.3)');
+                positionAnnotation('using-header', 'double area = calculateArea(radius);', 'anno-use');
+                showElement('anno-use');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class MultipleInclusionProblemAnimation extends SlideAnimation {
+    get slideId() {
+        return 'multiple-inclusion-problem';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('inclusion-problem', '#include "math_utils.h"', 'rgba(76, 175, 80, 0.3)');
+            },
+            () => {
+                highlightCode('inclusion-problem', '#include "file_io.h"', 'rgba(255, 152, 0, 0.3)');
+            },
+            () => {
+                highlightCode('inclusion-problem', 'double calculateArea(double radius);  // From first include\ndouble calculateArea(double radius);  // From second include - ERROR!', 'rgba(244, 67, 54, 0.3)');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class HeaderGuardsSolutionAnimation extends SlideAnimation {
+    get slideId() {
+        return 'header-guards-solution';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('guard-pattern', '#ifndef MATH_UTILS_H', 'rgba(33, 150, 243, 0.3)');
+                positionAnnotation('guard-pattern', '#ifndef MATH_UTILS_H', 'anno-ifndef');
+                showElement('anno-ifndef');
+            },
+            () => {
+                highlightCode('guard-pattern', '#define MATH_UTILS_H', 'rgba(76, 175, 80, 0.3)');
+                positionAnnotation('guard-pattern', '#define MATH_UTILS_H', 'anno-define');
+                showElement('anno-define');
+            },
+            () => {
+                highlightCode('guard-pattern', '// All your header content goes here\ndouble calculateArea(double radius);\ndouble calculateVolume(double radius, double height);\n\nconst double PI = 3.14159;', 'rgba(255, 152, 0, 0.3)');
+                positionAnnotation('guard-pattern', 'double calculateArea(double radius);', 'anno-content');
+                showElement('anno-content');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+// Register all animations
+new ForwardDeclarationReviewAnimation();
+new MultiFileProblemAnimation();
+new HeadersAsDeclarationsAnimation();
+new UsingSimpleHeadersAnimation();
+new MultipleInclusionProblemAnimation();
+new HeaderGuardsSolutionAnimation();
+</script></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Using Headers in Your Program</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Including and Using Custom Headers</h3>
+      <p>To use functions from your custom headers:</p>
+      
+      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #388e3c; margin-top: 0;">Include Syntax</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li><code>#include "myheader.h"</code> - Your files (quotes)</li>
+          <li><code>#include &lt;iostream&gt;</code> - System files (brackets)</li>
+        </ul>
+      </div>
+      
+      <div style="background: #f0f7ff; border-left: 4px solid #2196f3; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #1976d2; margin-top: 0;">What Happens</h4>
+        <ol style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Preprocessor copies header content</li>
+          <li>Compiler sees function declarations</li>
+          <li>Linker connects to implementations</li>
+        </ol>
+      </div>
+      
+      <p style="font-size: 0.9em; margin-top: 1em;">
+        <strong>Key insight:</strong> The compiler needs to know what functions exist (declarations) before you can call them.
+      </p>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="main-example">
+// main.cpp
+
+<span id="system-include">#include &lt;iostream></span>
+<span id="custom-include">#include "math_utils.h"</span>  // Our custom header
+
+int main() {
+    <span id="use-functions">double radius = 5.0;
+    double height = 10.0;
+    
+    // Use functions declared in math_utils.h
+    double area = calculateArea(radius);
+    double volume = calculateVolume(radius, height);
+    
+    std::cout &lt;&lt; "Area: " &lt;&lt; area &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Volume: " &lt;&lt; volume &lt;&lt; std::endl;
+    
+    // Use constant from header
+    std::cout &lt;&lt; "PI value: " &lt;&lt; PI &lt;&lt; std::endl;</span>
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="anno-system" style="opacity:0;">
+          System header (brackets)
+        </div>
+        <div class="code-annotation" id="anno-custom" style="opacity:0;">
+          Custom header (quotes)
+        </div>
+        <div class="code-annotation" id="anno-usage" style="opacity:0;">
+          Functions are available because we included the header
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Compilation Process -->
+<section class="slide two-column" id="compilation-process">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Compilation Process</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>How Multi-File Projects Are Built</h3>
+      <p>The compilation process involves several steps:</p>
+      
+      <div style="font-size: 0.9em;">
+        <div style="background: #e3f2fd; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #2196f3;">
+          <strong>1. Preprocessing</strong><br>
+          Includes headers, processes #define directives
+        </div>
+        
+        <div style="background: #e8f5e8; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #4caf50;">
+          <strong>2. Compilation</strong><br>
+          Each .cpp file becomes an object file (.o)
+        </div>
+        
+        <div style="background: #fff3e0; padding: 0.8em; margin: 0.5em 0; border-radius: 4px; border-left: 4px solid #ff9800;">
+          <strong>3. Linking</strong><br>
+          Object files are combined into executable
+        </div>
+      </div>
+      
+      <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 8px; padding: 1em; margin-top: 1em;">
+        <h4 style="color: #1976d2; margin-top: 0; font-size: 1em;">Command Line</h4>
+        <code style="background: white; padding: 0.5em; border-radius: 4px; display: block; font-size: 0.8em;">
+          g++ main.cpp math_utils.cpp -o program
+        </code>
+        <p style="margin: 0.5em 0 0 0; font-size: 0.85em;">
+          Compiles both .cpp files and links them together
+        </p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div style="text-align: center;">
+        <h4>Compilation Flow</h4>
+        
+        <!-- Source files -->
+        <div style="display: flex; justify-content: center; gap: 1em; margin: 1em 0;">
+          <div style="background: #fff3e0; border: 2px solid #ff9800; border-radius: 6px; padding: 0.8em; font-size: 0.8em;">
+            main.cpp
+          </div>
+          <div style="background: #fff3e0; border: 2px solid #ff9800; border-radius: 6px; padding: 0.8em; font-size: 0.8em;">
+            math_utils.cpp
+          </div>
+        </div>
+        
+        <!-- Arrow down -->
+        <div style="font-size: 1.5em; color: #666;">↓ compile</div>
+        
+        <!-- Object files -->
+        <div style="display: flex; justify-content: center; gap: 1em; margin: 1em 0;">
+          <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 6px; padding: 0.8em; font-size: 0.8em;">
+            main.o
+          </div>
+          <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 6px; padding: 0.8em; font-size: 0.8em;">
+            math_utils.o
+          </div>
+        </div>
+        
+        <!-- Arrow down -->
+        <div style="font-size: 1.5em; color: #666;">↓ link</div>
+        
+        <!-- Executable -->
+        <div style="background: #e3f2fd; border: 2px solid #2196f3; border-radius: 6px; padding: 1em; margin: 1em 0; font-size: 0.9em;">
+          program (executable)
+        </div>
+        
+        <div style="background: #f5f5f5; border-radius: 6px; padding: 1em; margin-top: 1em; font-size: 0.85em; text-align: left;">
+          <strong>Key Point:</strong> Headers (.h) are never compiled directly. They're included in .cpp files during preprocessing.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Project Organization Example -->
+<section class="slide one-column" id="project-organization">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Project Organization Example</span>
+    </div>
+  </div>
+  <div class="slide-body one-column">
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <h3 style="color: #003262; text-align: center; margin-bottom: 1.5em;">A Well-Organized C++ Project</h3>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em;">
+        <!-- File structure -->
+        <div>
+          <h4 style="background: #2196f3; color: white; padding: 0.8em; margin: 0; border-radius: 6px 6px 0 0;">Project Structure</h4>
+          <div style="background: #f0f7ff; border: 2px solid #2196f3; border-top: none; border-radius: 0 0 6px 6px; padding: 1.5em; font-family: monospace; font-size: 0.9em;">
+            molecular_simulation/<br>
+            |-- main.cpp<br>
+            |-- molecule.h<br>
+            |-- molecule.cpp<br>
+            |-- physics.h<br>
+            |-- physics.cpp<br>
+            |-- file_utils.h<br>
+            |-- file_utils.cpp<br>
+            |-- Makefile
+          </div>
+          
+          <div style="margin-top: 1em; font-size: 0.9em;">
+            <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin-bottom: 0.8em;">
+              <strong>Benefits of this organization:</strong>
+              <ul style="margin: 0.5em 0 0 0;">
+                <li>Related functions grouped together</li>
+                <li>Easy to find specific functionality</li>
+                <li>Can work on different modules independently</li>
+                <li>Reusable components</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- File contents preview -->
+        <div>
+          <h4 style="background: #ff9800; color: white; padding: 0.8em; margin: 0; border-radius: 6px 6px 0 0;">File Contents</h4>
+          <div style="background: #fff8e1; border: 2px solid #ff9800; border-top: none; border-radius: 0 0 6px 6px; padding: 1em;">
+            
+            <div style="background: white; border-radius: 4px; padding: 0.8em; margin-bottom: 0.8em; font-size: 0.85em;">
+              <strong>molecule.h:</strong> Molecule class declaration<br>
+              <strong>molecule.cpp:</strong> Molecule methods implementation
+            </div>
+            
+            <div style="background: white; border-radius: 4px; padding: 0.8em; margin-bottom: 0.8em; font-size: 0.85em;">
+              <strong>physics.h:</strong> Physics calculation declarations<br>
+              <strong>physics.cpp:</strong> Force, energy calculations
+            </div>
+            
+            <div style="background: white; border-radius: 4px; padding: 0.8em; margin-bottom: 0.8em; font-size: 0.85em;">
+              <strong>file_utils.h:</strong> File I/O function declarations<br>
+              <strong>file_utils.cpp:</strong> Reading/writing data files
+            </div>
+            
+            <div style="background: white; border-radius: 4px; padding: 0.8em; font-size: 0.85em;">
+              <strong>main.cpp:</strong> Program entry point, includes all headers, coordinates the simulation
+            </div>
+          </div>
+          
+          <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 6px; padding: 1em; margin-top: 1em; text-align: center;">
+            <strong>Compilation:</strong><br>
+            <code style="background: white; padding: 0.5em; border-radius: 4px; font-size: 0.8em;">
+              g++ main.cpp molecule.cpp physics.cpp file_utils.cpp -o simulation
+            </code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Best Practices -->
+<section class="slide two-column" id="multifile-best-practices">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Multi-File Best Practices</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Guidelines for Success</h3>
+      
+      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #388e3c; margin-top: 0;">✓ Do This</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Always use header guards</li>
+          <li>Match .h and .cpp file names</li>
+          <li>Group related functions together</li>
+          <li>Include only what you need</li>
+          <li>Use meaningful file names</li>
+        </ul>
+      </div>
+      
+      <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #d32f2f; margin-top: 0;">✗ Avoid This</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Putting implementations in headers</li>
+          <li>Including .cpp files</li>
+          <li>Circular dependencies</li>
+          <li>Too many files for simple projects</li>
+        </ul>
+      </div>
+      
+      <div style="background: #f0f7ff; border-left: 4px solid #2196f3; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #1976d2; margin-top: 0;">💡 Tips</h4>
+        <ul style="margin-bottom: 0; font-size: 0.9em;">
+          <li>Start with 2-3 files, grow as needed</li>
+          <li>Use IDEs or Makefiles for compilation</li>
+          <li>Comment your header files well</li>
+        </ul>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="best-practices-example">
+// Good header structure (math_utils.h)
+<span id="good-guard">#ifndef MATH_UTILS_H
+#define MATH_UTILS_H</span>
+
+<span id="good-includes">#include &lt;vector>  // Only include what we need</span>
+
+// Clear, documented function declarations
+<span id="good-comments">/**
+ * Calculates the mean of a vector of numbers
+ * @param numbers Vector of double values
+ * @return The arithmetic mean
+ */</span>
+<span id="good-declaration">double calculateMean(const std::vector&lt;double>& numbers);</span>
+
+<span id="good-const">// Constants for this module
+const double PI = 3.14159265359;</span>
+
+<span id="good-endif">#endif  // MATH_UTILS_H</span>
+
+
+// ✗ Bad practice - implementation in header
+<span id="bad-implementation">// DON'T DO THIS:
+double badFunction(double x) {
+    return x * x;  // Implementation belongs in .cpp!
+}</span>
+</code></pre>
+        <div class="code-annotation" id="anno-good-structure" style="opacity:0;">
+          Good: Clear structure with guards
+        </div>
+        <div class="code-annotation" id="anno-bad-impl" style="opacity:0;">
+          Bad: Implementation in header file
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Color-coded highlighting classes */
+.highlight-green {
+    background-color: rgba(76, 175, 80,
