@@ -1066,119 +1066,114 @@ button:hover svg {
   visibility: visible;
 }
 
-/* =================================================================== */
-/* PRINT STYLES                                                        */
-/* =================================================================== */
+/* --- Print Styles --- */
 @media print {
-  /* Reset body for printing */
-  body {
-    padding: 0 !important;
-    margin: 0 !important;
-    background: white !important;
-  }
-
-  /* Hide navigation and UI elements when printing */
-  .nav,
-  .sidebar,
-  .sidebar-overlay,
-  .hamburger-menu,
-  .copy-code-button,
-  button {
-    display: none !important;
-    visibility: hidden !important;
-  }
-
-  /* Force all slides to be visible and properly formatted */
-  .slide {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    page-break-after: always !important;
-    page-break-inside: avoid !important;
-    height: auto !important;
-    min-height: auto !important;
-    max-height: none !important;
-    padding: 1em !important;
-    margin: 0 !important;
-    background: white !important;
-    overflow: visible !important;
-    position: static !important;
-  }
-
-  /* Remove background images when printing */
-  .slide::before {
-    display: none !important;
-  }
-
-  /* Ensure slide content is visible */
-  .slide > * {
-    position: static !important;
-    z-index: auto !important;
-    display: block !important;
-    visibility: visible !important;
-  }
-
-  /* Print specific header adjustments */
-  .slide-header {
-    display: flex !important;
-    border-bottom: 2px solid #000 !important;
-    page-break-after: avoid !important;
-  }
-
-  /* Print specific two-column layout adjustments */
-  .slide-body.two-column {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 1em !important;
-  }
-
-  .left-panel,
-  .right-panel {
-    flex: 1 !important;
-    display: block !important;
-  }
-
-  /* Print specific code block adjustments */
-  pre[class*="language-"] {
-    background: var(--background-code) !important;
-    color: #000 !important;
-    border: 1px solid var(--border-color-light) !important;
-    page-break-inside: avoid !important;
-    font-size: 10px !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  /* Ensure all text is black for printing */
-  * {
-    color: #000 !important;
-    background: transparent !important;
-  }
-
-  /* Print specific section header adjustments */
-  .section-title {
-    font-size: 24px !important;
-  }
-
-  .section-subtitle {
-    font-size: 16px !important;
-  }
-
-  /* Print specific table adjustments */
-  table {
-    page-break-inside: avoid !important;
-    border-collapse: collapse !important;
-  }
-
-  table,
-  th,
-  td {
-    border: 1px solid #000 !important;
-  }
+    /* Reset body */
+    body { 
+        padding: 0 !important; 
+        margin: 0 !important;
+        background: white !important;
+    }
+    
+    /* Hide navigation and UI elements */
+    .nav,
+    .sidebar,
+    .sidebar-overlay,
+    .hamburger-menu,
+    .copy-code-button,
+    button {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* Force all slides to be visible and properly formatted */
+    .slide {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+        padding: 1em !important;
+        margin: 0 !important;
+        background: white !important;
+        overflow: visible !important;
+        position: static !important;
+    }
+    
+    /* Remove background images */
+    .slide::before {
+        display: none !important;
+    }
+    
+    /* Ensure slide content is visible */
+    .slide > * {
+        position: static !important;
+        z-index: auto !important;
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    /* Fix headers */
+    .slide-header {
+        display: flex !important;
+        border-bottom: 2px solid #000 !important;
+        page-break-after: avoid !important;
+    }
+    
+    /* Fix two-column layout */
+    .slide-body.two-column {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 1em !important;
+    }
+    
+    .left-panel, .right-panel {
+        flex: 1 !important;
+        display: block !important;
+    }
+    
+    /* Code blocks */
+    pre[class*="language-"] {
+        background: #f5f5f5 !important;
+        color: #000 !important;
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid !important;
+        font-size: 10px !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    /* Ensure all text is black */
+    * {
+        color: #000 !important;
+        background: transparent !important;
+    }
+    
+    /* Section headers */
+    .section-title {
+        font-size: 24px !important;
+    }
+    
+    .section-subtitle {
+        font-size: 16px !important;
+    }
+    
+    /* Tables */
+    table {
+        page-break-inside: avoid !important;
+        border-collapse: collapse !important;
+    }
+    
+    table, th, td {
+        border: 1px solid #000 !important;
+    }
 }
 
 /* Special class for when printing all slides */
 body.printing-all-slides .slide {
-  display: block !important;
-  visibility: visible !important;
+    display: block !important;
+    visibility: visible !important;
 }
