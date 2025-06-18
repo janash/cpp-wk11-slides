@@ -2,90 +2,135 @@
 /* GLOBAL & DESKTOP STYLES                                             */
 /* =================================================================== */
 
-/* * FIX #1: Universal Box Sizing
- * This ensures that padding and borders are included in the element's
- * total width and height, preventing unexpected layout wrapping.
- */
-*, *::before, *::after {
-    box-sizing: border-box;
+/* --- CSS Variables for Consistency --- */
+:root {
+  --primary-color: #003262; /* Berkeley Blue */
+  --secondary-color: #1a4680;
+  --accent-color: #00733e; /* California Gold variant */
+  --highlight-color: rgba(255, 229, 100, 0.7);
+
+  --text-color-dark: #000;
+  --text-color-medium: #333;
+  --text-color-light: #555;
+  --text-color-muted: #666;
+  --text-color-white: #ffffff;
+
+  --background-white: #ffffff;
+  --background-light-gray: #f0f0f0;
+  --background-faded: rgba(255, 255, 255, 0.85); /* For title slide overlay */
+  --background-code: #f5f5f5; /* For print code blocks */
+
+  --border-color-light: #ccc;
+  --border-color-medium: #ddd;
+  --border-color-dark: #e0e0e0;
+
+  --box-shadow-light: rgba(0, 0, 0, 0.2);
+  --box-shadow-medium: rgba(0, 0, 0, 0.3);
+
+  --font-family-body: "Segoe UI", Calibri, sans-serif;
+  --font-family-code: Consolas, "Source Code Pro", monospace;
+
+  --slide-font-size: 1.25em;
+  --code-font-size: 0.95em;
+  --base-button-font-size: 1.1em;
+  --base-button-padding: 10px 18px;
+
+  --nav-height-desktop: 60px;
+  --nav-height-mobile: 70px;
+}
+
+/* Universal Box Sizing: Ensures padding and borders are included in the element's total width and height. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: "Segoe UI", Calibri, sans-serif;
-    background: white;
-    color: #000;
-    /* Creates space at the bottom for the fixed desktop navigation bar */
-    padding-bottom: 60px; 
+  margin: 0;
+  font-family: var(--font-family-body);
+  background: var(--background-white);
+  color: var(--text-color-dark);
+  padding-bottom: var(--nav-height-desktop); /* Space for the fixed desktop navigation bar */
 }
 
 /* --- General Slide Styles --- */
 .slide {
-    display: none; /* Hide all slides by default */
-    width: 100%;
-    height: 100vh;
-    padding: 1.5em 2em;
-    position: relative;
-    background: white;
-    overflow: hidden;
-    font-size: var(--slide-font-size, 1.25em);
+  display: none; /* Hide all slides by default */
+  width: 100%;
+  height: 100vh;
+  padding: 1.5em 2em;
+  position: relative;
+  background: var(--background-white);
+  overflow: hidden;
+  font-size: var(--slide-font-size);
 }
 
 .slide.active {
-    display: block; /* Show the active slide */
+  display: block; /* Show the active slide */
 }
 
-/* Faded background for all regular slides */
+/* Faded background for all regular slides and title slide */
 .slide::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: url("images/campanile.png") no-repeat center center;
-    background-size: cover;
-    opacity: 0.10;
-    z-index: 0;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("images/campanile.png") no-repeat center center;
+  background-size: cover;
+  opacity: 0.1;
+  z-index: 0;
+  display: block; /* Ensure pseudo-element is always block for consistent sizing */
 }
 
 /* Ensure all slide content is above the faded background */
 .slide > * {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 /* --- Header and Content Styles --- */
 .slide-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 0.5em;
-    margin-bottom: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-color-light);
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
 }
 
 .left-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75em;
-    font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  font-weight: bold;
 }
 
-.left-header img { height: 50px; }
-.right-header { font-size: 1.2em; font-weight: 500; }
-.slide-body.one-column { font-size: 1.25em; }
+.left-header img {
+  height: 50px;
+}
 
-/*
- * FIX #2: Correct Two-Column Layout
- * The parent is a flex container.
- */
+.right-header {
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.slide-body.one-column {
+  font-size: 1.25em;
+}
+
+/* Two-Column Layout: Flex container for proper layout. */
 .slide-body.two-column {
-    display: flex;
-    gap: 2em;
-    align-items: flex-start;
+  display: flex;
+  gap: 2em;
+  align-items: flex-start;
 }
 
 .annotation-toggle {
   background: #2d3748;
-  color: white;
+  color: var(--text-color-white);
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
@@ -120,779 +165,429 @@ body {
 }
 
 .highlight {
-  background-color: rgba(255, 229, 100, 0.7); /* A pleasant yellow highlight */
+  background-color: var(--highlight-color);
   border-radius: 4px;
   padding: 0.1em 0.3em;
   margin: -0.1em -0.3em; /* Prevents the padding from shifting the layout */
   transition: background-color 0.3s ease;
 }
 
-/* --- Replace it with this block --- */
-
 .slide-body.section-header {
-    display: flex;
-    align-items: center;     /* This is the key for vertical centering */
-    height: 100%;            /* Makes the container fill the slide's height */
-    padding: 2rem;           /* Uses consistent padding */
+  display: flex;
+  align-items: center; /* Vertical centering */
+  height: 100%; /* Makes the container fill the slide's height */
+  padding: 2rem; /* Consistent padding */
 }
 
 .section-content {
-    text-align: left;        /* This keeps your text aligned to the left, as requested */
-    width: 100%;
+  text-align: left;
+  width: 100%;
 }
-
 
 .section-title {
   font-size: 4rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-color-medium);
   margin: 0;
   line-height: 1.2;
 }
 
 .section-subtitle {
   font-size: 1.5rem;
-  color: #666;
+  color: var(--text-color-muted);
   margin: 1rem 0 0 0;
   font-weight: 400;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments for section header */
 @media (max-width: 768px) {
   .section-title {
     font-size: 2.5rem;
   }
-  
+
   .section-subtitle {
     font-size: 1.2rem;
   }
 }
 
-
-/*
- * Instead of a rigid "width: 50%", "flex: 1" tells each panel to
- * grow and take up equal amounts of the available space. This
- * automatically accounts for the "gap" and is the correct way to do this.
- */
-.left-panel, .right-panel {
-    flex: 1; 
-    min-width: 0; /* Prevents flex items from overflowing if content is too wide */
-}
-
-.left-panel {
-    font-size: 1.75em;
-}
-
+/* In a two-column layout, 'flex: 1' makes panels take equal space */
+.left-panel,
 .right-panel {
-    font-size: 1.75em;
+  flex: 1;
+  min-width: 0; /* Prevents flex items from overflowing */
+  font-size: 1.75em;
 }
-
 
 /* --- Code Block and Syntax Highlighting Styles --- */
 pre[class*="language-"] {
-    background: #ffffff;
-    color: #333333;
-    font-family: Consolas, 'Source Code Pro', monospace;
-    font-size: var(--code-font-size, 0.95em);
-    text-align: left;
-    white-space: pre-wrap;
-    word-spacing: normal;
-    word-break: break-word;
-    word-wrap: break-word;
-    line-height: 1.0;
-    padding: 1em;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: auto;
-    max-height: 80vh; 
+  background: var(--background-white);
+  color: var(--dark-gray);
+  font-family: var(--font-family-code);
+  font-size: var(--code-font-size);
+  text-align: left;
+  white-space: pre-wrap;
+  word-spacing: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  line-height: 1;
+  padding: 1em;
+  border: 1px solid var(--border-color-medium);
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 80vh;
 }
 
 /* PrismJS token styling (Quiet Light theme) */
-.token.comment, .token.prolog, .token.doctype, .token.cdata { color: #008000; font-style: italic; }
-.token.punctuation { color: #393A34; }
-.token.namespace { opacity: .7; }
-.token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted { color: #098658; }
-.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #a31515; }
-.token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #393A34; }
-.token.atrule, .token.attr-value, .token.keyword { color: #0000ff; }
-.token.function, .token.class-name { color: #795e26; }
-.token.regex, .token.important, .token.variable { color: #e90; }
-.token.important, .token.bold { font-weight: bold; }
-.token.italic { font-style: italic; }
-.token.entity { cursor: help; }
-
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #008000;
+  font-style: italic;
+}
+.token.punctuation {
+  color: #393a34;
+}
+.token.namespace {
+  opacity: 0.7;
+}
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #098658;
+}
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #a31515;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #393a34;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #0000ff;
+}
+.token.function,
+.token.class-name {
+  color: #795e26;
+}
+.token.regex,
+.token.important,
+.token.variable {
+  color: #e90;
+}
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+.token.entity {
+  cursor: help;
+}
 
 /* --- Title Slide Styles --- */
 .title-slide {
-    padding: 0;
-    background: url("images/campanile.png") no-repeat center center;
-    background-size: cover;
+  padding: 0;
+  background: url("images/campanile.png") no-repeat center center;
+  background-size: cover;
+  /* Removed ::before display: none; to allow the default faded background to apply */
 }
-.title-slide::before { display: none; }
-.title-left, .title-right { position: absolute; top: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 3em; }
-.title-left { left: 0; width: 60%; background: rgba(255, 255, 255, 0.85); }
-.title-right { right: 0; width: 40%; background-color: #3a5032; color: white; align-items: flex-start; }
-.title-left h2 { font-size: 1.5em; color: #000; font-weight: bold; margin: 0; }
-.title-left h1 { font-size: 2.8em; color: #00733e; font-weight: bold; margin: 0; line-height: 1.1; }
-.uc-seal {  margin-top: 1.5em;  max-height: 80%; aspect-ratio: auto; align-self: flex-start;}
-.title-right .info p { font-size: 1.1em; margin: 0.5em 0; }
-.title-right .info strong { font-weight: bold; }
-.msse-logo { position: absolute; top: 0em; right: 0em; height: 250px; }
 
+/* Specific overlay for the title content (overrides faded background for the text area) */
+.title-left,
+.title-right {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3em;
+}
 
-button { font-size: 1em; padding: 8px 16px; border-radius: 20px; border: none; background: #003262; color: white; cursor: pointer; transition: background-color 0.2s ease; }
-button:hover { background: #1a4680; }
+.title-left {
+  left: 0;
+  width: 60%;
+  background: var(--background-faded); /* Using RGBA for consistent transparency */
+}
 
-.jump-container { display: flex; }
-#slide-jumper { width: 50px; text-align: center; border: 1px solid #ccc; border-right: none; border-radius: 20px 0 0 20px; padding: 8px; font-size: 1em; }
-#jump-btn { border-radius: 0 20px 20px 0; }
+.title-right {
+  right: 0;
+  width: 40%;
+  background-color: #3a5032;
+  color: var(--text-color-white);
+  align-items: flex-start;
+}
 
+.title-left h2 {
+  font-size: 1.5em;
+  color: var(--text-color-dark);
+  font-weight: bold;
+  margin: 0;
+}
+
+.title-left h1 {
+  font-size: 2.8em;
+  color: var(--accent-color);
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.uc-seal {
+  margin-top: 1.5em;
+  min-height: 40%;
+  aspect-ratio: auto;
+  align-self: flex-start;
+}
+
+.title-right .info p {
+  font-size: 1.1em;
+  margin: 0.5em 0;
+}
+
+.title-right .info strong {
+  font-weight: bold;
+}
+
+.msse-logo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 250px;
+}
+
+.info {
+  font-size: 1.5em;
+  line-height: 1.4;
+  color: var(--text-color-white);
+}
+
+/* --- Button and Jumper Styles --- */
+button {
+  font-size: var(--base-button-font-size);
+  padding: var(--base-button-padding);
+  border-radius: 20px;
+  border: none;
+  background: var(--primary-color);
+  color: var(--text-color-white);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex; /* Added for icon alignment */
+  align-items: center; /* Added for icon alignment */
+  gap: 4px; /* Added for icon spacing */
+  white-space: nowrap; /* Prevent button text wrapping */
+}
+
+button:hover {
+  background: var(--secondary-color);
+}
+
+.jump-container {
+  display: flex;
+}
+
+#slide-jumper {
+  width: 50px;
+  text-align: center;
+  border: 1px solid var(--border-color-light);
+  border-right: none;
+  border-radius: 20px 0 0 20px;
+  padding: 8px;
+  font-size: 1em;
+}
+
+#jump-btn {
+  border-radius: 0 20px 20px 0;
+}
 
 /* --- Code Annotation Styling --- */
-.code-container { position: relative; }
-.code-annotation { position: absolute; background-color: #003262; color: #ffffff; padding: 8px 12px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); font-family: sans-serif; font-size: 0.9em; border: 1px solid #fff; z-index: 10; opacity: 0; pointer-events: none; transition: opacity 0.4s ease-in-out; }
-.code-annotation.show { opacity: 1; pointer-events: auto; }
-.code-annotation::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-width: 5px; border-style: solid; border-color: #003262 transparent transparent transparent; }
+.code-container {
+  position: relative;
+}
+
+.code-annotation {
+  position: absolute;
+  background-color: var(--primary-color);
+  color: var(--text-color-white);
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px var(--box-shadow-light);
+  font-family: var(--font-family-body);
+  font-size: 0.9em;
+  border: 1px solid var(--text-color-white);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.code-annotation.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.code-annotation::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--primary-color) transparent transparent transparent;
+  display: block; /* Explicitly set display */
+}
 
 .copy-code-button {
-    position: absolute;
-    top: 0.5em;
-    right: 0.5em;
-    background-color: rgba(85, 85, 85, 0.9);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 6px 10px;
-    cursor: pointer;
-    opacity: 0; /* Start hidden */
-    transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.75em;
-    font-family: inherit;
-    z-index: 20;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  background-color: rgba(85, 85, 85, 0.9);
+  color: var(--text-color-white);
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  opacity: 0; /* Start hidden */
+  transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75em;
+  font-family: inherit;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Show button on hover over the code container */
 .code-container:hover .copy-code-button {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .copy-code-button:hover {
-    opacity: 1 !important;
-    transform: translateY(-1px);
-    background-color: rgba(85, 85, 85, 1);
+  opacity: 1 !important;
+  transform: translateY(-1px);
+  background-color: rgba(85, 85, 85, 1);
 }
 
 .copy-code-button:active {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 /* Success state styling */
 .copy-code-button.copied {
-    background-color: rgba(46, 125, 50, 0.9);
-    opacity: 1 !important;
+  background-color: rgba(46, 125, 50, 0.9);
+  opacity: 1 !important;
 }
 
 .copy-code-button.copied:hover {
-    background-color: rgba(46, 125, 50, 1);
+  background-color: rgba(46, 125, 50, 1);
 }
 
 /* Icon styles for copy and check marks */
-.copy-icon, .check-icon {
-    width: 25px;
-    height: 25px;
-    flex-shrink: 0;
+.copy-icon,
+.check-icon {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
 }
 
 .check-icon {
-    display: none;
+  display: none;
 }
 
 .copy-code-button.copied .copy-icon {
-    display: none;
+  display: none;
 }
 
 .copy-code-button.copied .check-icon {
-    display: inline;
+  display: inline;
 }
 
-/* Mobile adjustments */
+/* Mobile adjustments for copy button */
 @media (max-width: 800px) {
-    .copy-code-button {
-        opacity: 0.7; /* Always visible on mobile */
-        font-size: 0.7em;
-        padding: 4px 8px;
-    }
-}
-
-
-/* Interactive counter styles - Add to style.css */
-#counter {
-    cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-    user-select: none;
-    min-width: 60px;
-    text-align: center;
-    position: relative;
-}
-
-#counter:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-#slide-input {
-    background: white;
-    border: 2px solid #003262;
-    border-radius: 4px;
-    padding: 6px 8px;
-    font-size: 1em;
-    width: 60px;
-    text-align: center;
-    font-family: inherit;
-}
-
-#slide-input:focus {
-    outline: none;
-    border-color: #4a90e2;
-    box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
-}
-
-/* Input field style counter */
-/* Input field style counter - no arrows, size validation */
-#counter {
-    border: 1px solid #ccc;
-    background: white;
-    border-radius: 3px;
+  .copy-code-button {
+    opacity: 0.7; /* Always visible on mobile */
+    font-size: 0.7em;
     padding: 4px 8px;
-    font-family: monospace;
-    min-width: 50px;
-    text-align: center;
-    cursor: text;
-    font-size: 0.9em;
-    transition: all 0.2s ease;
+  }
 }
 
-#counter:hover {
-    border-color: #003262;
-    box-shadow: 0 0 3px rgba(0, 50, 98, 0.3);
-    background: #f8f9fa;
-}
-
-#counter:focus-within {
-    border-color: #4a90e2;
-    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
-    outline: none;
-}
-
+/* --- Interactive Counter Styles --- */
 #slide-input {
-    background: transparent;
-    border: none;
-    padding: 0;
-    font-size: inherit;
-    width: 100%;
-    text-align: center;
-    font-family: inherit;
-    outline: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  width: 100%;
+  text-align: center;
+  font-family: inherit;
+  outline: none;
 }
 
 /* Hide number input arrows */
 #slide-input::-webkit-outer-spin-button,
 #slide-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-#slide-input[type=number] {
-    -moz-appearance: textfield; /* Firefox */
-}
-/* =================================================================== */
-/* MOBILE & RESPONSIVE STYLES                                          */
-/* =================================================================== */
-@media (max-width: 800px) {
-    body {
-        /* On mobile, remove bottom padding and add top padding for the nav bar */
-        padding-bottom: 0;
-        padding-top: 60px;
-    }
-
-    /* 1. Move Nav to Top */
-    .nav {
-        top: 0;
-        bottom: auto;
-        border-top: none;
-        border-bottom: 1px solid #ccc;
-        gap: 0.5em;
-        padding: 0 0.5em;
-        justify-content: space-evenly;
-    }
-    
-    .nav #counter { display: none; }
-    
-    /* 2. Adjust Slide Layout */
-    .slide {
-        height: auto;
-        min-height: calc(100vh - 60px);
-        padding: 1em;
-    }
-    
-    .slide-body.two-column {
-        display: flex;
-        gap: 2em;
-        align-items: center; /* This is the only change needed */
-    }
-
-    .left-panel, .right-panel {
-        width: 100%; /* In a column layout, each panel takes full width */
-        flex: none;    /* Unset the flex-grow property from desktop */
-    }
-
-    /* 3. Simplify Nav Controls */
-    .desktop-only, .jump-container {
-        display: none;
-    }
-    
-    button { padding: 6px 12px; border-radius: 8px; }
-    
-    /* 4. Adjust Title Slide for Mobile */
-    .title-left, .title-right {
-        position: relative;
-        width: 100%;
-        height: 50%;
-        padding: 1.5em;
-    }
-    .title-left h1 { font-size: 2em; }
-}
-
-/* Control Guide Modal Styles - Add this to your style.css */
-
-.control-guide-overlay {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  background: rgba(0, 0, 0, 0.7) !important;
-  z-index: 9999 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.control-guide-overlay.show {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.control-guide-modal {
-  background: white !important;
-  border-radius: 12px;
-  max-width: 700px;
-  max-height: 80vh;
-  width: 90%;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  transform: scale(0.9);
-  transition: transform 0.3s ease;
-  z-index: 10000 !important;
-  position: relative;
-}
-
-.control-guide-overlay.show .control-guide-modal {
-  transform: scale(1);
-}
-
-.control-guide-header {
-  background: #003262;
-  color: white;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.control-guide-header h3 {
+  -webkit-appearance: none;
   margin: 0;
-  font-size: 1.4em;
 }
 
-.close-guide {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5em;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+#slide-input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
 }
 
-.close-guide:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.control-guide-content {
-  padding: 20px;
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-.control-section {
-  margin-bottom: 25px;
-}
-
-.control-section h4 {
-  color: #003262;
-  margin: 0 0 15px 0;
-  font-size: 1.1em;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 5px;
-  display: flex;
-  align-items: center;
-}
-
-.control-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
-.control-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 8px 0;
-}
-
-.control-key {
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-family: monospace;
-  font-size: 0.9em;
+#counter {
+  margin: 0 6px;
   font-weight: bold;
-  min-width: 80px;
+  min-width: 60px; /* Increased width to accommodate larger font */
   text-align: center;
-  color: #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.control-desc {
-  color: #555;
-  flex: 1;
-}
-
-.tips-list {
-  margin: 0;
-  padding-left: 20px;
-  color: #555;
-}
-
-.tips-list li {
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-
-/* Add to your style.css */
-.fullscreen-mode {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 9999;
-    background: black;
-}
-
-/* Mobile Responsive */
-@media (max-width: 800px) {
-  .control-guide-modal {
-    width: 95%;
-    max-height: 90vh;
-  }
-  
-  .control-grid {
-    font-size: 0.9em;
-  }
-  
-  .control-key {
-    min-width: 60px;
-    font-size: 0.8em;
-  }
-}
-
-/* Hamburger Menu Styles */
-.hamburger-menu {
-  background: none;
-  border: none;
-  color: #003262;
-  font-size: 1.5em;
-  cursor: pointer;
-  padding: 8px 12px;
+  font-size: 1.3em; /* Increased font size for desktop */
+  background: transparent;
+  color: var(--text-color-medium);
+  border: 1px solid var(--border-color-medium);
   border-radius: 4px;
-  transition: background-color 0.3s ease;
+  padding: 4px 6px;
+  transition: all 0.2s ease;
 }
 
-.hamburger-menu:hover {
-  background-color: rgba(0, 50, 98, 0.1);
+#counter:hover {
+  background: #f8f9fa;
+  border-color: var(--primary-color);
 }
-
-/* Sidebar Styles */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -300px;
-  width: 300px;
-  height: 100vh;
-  background: #ffffff;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  transition: left 0.3s ease;
-  border-right: 1px solid #e0e0e0;
-}
-
-.sidebar.open {
-  left: 0;
-}
-
-.sidebar-header {
-  padding: 20px;
-  background: #003262;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.sidebar-title {
-  font-weight: bold;
-  font-size: 1.1em;
-  margin: 0;
-}
-
-.close-sidebar {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5em;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.close-sidebar:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-content {
-  padding: 20px 0;
-}
-
-.section-item {
-  padding: 12px 20px;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background-color 0.3s ease;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.section-item:hover {
-  background-color: #f5f5f5;
-}
-
-.section-item.current {
-  background-color: #e3f2fd;
-  border-left: 4px solid #003262;
-}
-
-.section-name {
-  font-weight: 500;
-  color: #333;
-}
-
-.section-info {
-  font-size: 0.85em;
-  color: #666;
-}
-
-/* Overlay for closing sidebar */
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 999;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.sidebar-overlay.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Update nav to include hamburger */
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-</style>
-
-/* --- Print Styles --- */
-@media print {
-    /* Reset body */
-    body { 
-        padding: 0 !important; 
-        margin: 0 !important;
-        background: white !important;
-    }
-    
-    /* Hide navigation and UI elements */
-    .nav,
-    .sidebar,
-    .sidebar-overlay,
-    .hamburger-menu,
-    .copy-code-button,
-    button {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* Force all slides to be visible and properly formatted */
-    .slide {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        page-break-after: always !important;
-        page-break-inside: avoid !important;
-        height: auto !important;
-        min-height: auto !important;
-        max-height: none !important;
-        padding: 1em !important;
-        margin: 0 !important;
-        background: white !important;
-        overflow: visible !important;
-        position: static !important;
-    }
-    
-    /* Remove background images */
-    .slide::before {
-        display: none !important;
-    }
-    
-    /* Ensure slide content is visible */
-    .slide > * {
-        position: static !important;
-        z-index: auto !important;
-        display: block !important;
-        visibility: visible !important;
-    }
-    
-    /* Fix headers */
-    .slide-header {
-        display: flex !important;
-        border-bottom: 2px solid #000 !important;
-        page-break-after: avoid !important;
-    }
-    
-    /* Fix two-column layout */
-    .slide-body.two-column {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 1em !important;
-    }
-    
-    .left-panel, .right-panel {
-        flex: 1 !important;
-        display: block !important;
-    }
-    
-    /* Code blocks */
-    pre[class*="language-"] {
-        background: #f5f5f5 !important;
-        color: #000 !important;
-        border: 1px solid #ccc !important;
-        page-break-inside: avoid !important;
-        font-size: 10px !important;
-        max-height: none !important;
-        overflow: visible !important;
-    }
-    
-    /* Ensure all text is black */
-    * {
-        color: #000 !important;
-        background: transparent !important;
-    }
-    
-    /* Section headers */
-    .section-title {
-        font-size: 24px !important;
-    }
-    
-    .section-subtitle {
-        font-size: 16px !important;
-    }
-    
-    /* Tables */
-    table {
-        page-break-inside: avoid !important;
-        border-collapse: collapse !important;
-    }
-    
-    table, th, td {
-        border: 1px solid #000 !important;
-    }
-}
-
-/* Special class for when printing all slides */
-body.printing-all-slides .slide {
-    display: block !important;
-    visibility: visible !important;
-}
-
-/* Enhanced Navigation Styles - Replace the nav section in your style.css */
 
 /* --- Navigation Styles (Desktop First) --- */
 .nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    border-top: 1px solid #ccc;
-    z-index: 100;
-    padding: 0 15px;
-    box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--nav-height-desktop);
+  background: var(--background-light-gray);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid var(--border-color-light);
+  z-index: 100;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
 
 .nav-left {
@@ -936,45 +631,26 @@ body.printing-all-slides .slide {
 }
 
 .nav-label {
-  font-size: 0.8em;
-  color: #666;
+  font-size: 0.9em; /* Slightly increased for readability */
+  color: var(--text-color-muted);
   margin-right: 4px;
   white-space: nowrap;
 }
 
-/* Button styling */
-button { 
-  font-size: 0.9em; 
-  padding: 6px 10px; 
-  border-radius: 6px; 
-  border: none; 
-  background: #003262; 
-  color: white; 
-  cursor: pointer; 
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-button:hover { 
-  background: #1a4680; 
-}
-
+/* Specific styling for smaller animation buttons */
 .animation-btn {
-  font-size: 0.85em !important;
-  padding: 4px 6px !important;
+  font-size: 1em !important; /* Increased font size */
+  padding: 8px 12px !important; /* Increased padding */
   min-width: auto;
 }
 
 /* Compact buttons for nav-right */
 .nav-right button {
-  font-size: 0.85em;
-  padding: 5px 8px;
+  font-size: 1em; /* Increased font size */
+  padding: 8px 12px; /* Increased padding */
 }
 
-/* SVG icon styling */
+/* SVG icon styling for buttons */
 button svg {
   stroke: currentColor;
   fill: none;
@@ -989,11 +665,11 @@ button:hover svg {
 /* Hamburger menu icon */
 .hamburger-menu {
   background: rgba(0, 50, 98, 0.1) !important;
-  color: #003262 !important;
+  color: var(--primary-color) !important;
 }
 
 .hamburger-menu svg {
-  stroke: #003262;
+  stroke: var(--primary-color);
 }
 
 .hamburger-menu:hover {
@@ -1001,7 +677,7 @@ button:hover svg {
 }
 
 .hamburger-menu:hover svg {
-  stroke: #003262;
+  stroke: var(--primary-color);
 }
 
 /* Toggle icon for annotations */
@@ -1014,71 +690,495 @@ button:hover svg {
   stroke: currentColor;
 }
 
-#counter {
-  margin: 0 6px;
-  font-weight: bold;
-  min-width: 45px;
-  text-align: center;
-  font-size: 0.9em;
-  background: transparent;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 4px 6px;
-}
-
-#counter:hover {
-  background: #f8f9fa;
-  border-color: #003262;
-}
-
-/* Mobile responsive adjustments */
+/* =================================================================== */
+/* MOBILE & RESPONSIVE STYLES                                          */
+/* =================================================================== */
 @media (max-width: 800px) {
-    body {
-        padding-bottom: 0;
-        padding-top: 70px; /* Increased for larger mobile nav */
-    }
+  body {
+    padding-bottom: 0;
+    padding-top: var(--nav-height-mobile); /* Increased for larger mobile nav */
+  }
 
-    .nav {
-        top: 0;
-        bottom: auto;
-        border-top: none;
-        border-bottom: 1px solid #ccc;
-        height: 70px;
-        flex-direction: column;
-        gap: 5px;
-        padding: 5px 10px;
-    }
-    
-    .nav-center {
-        flex-direction: column;
-        gap: 5px;
-        width: 100%;
-    }
-    
-    .nav-right {
-        gap: 5px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .animation-nav-group .nav-label {
-        display: none;
-    }
-    
-    .nav-right button {
-        font-size: 0.8em;
-        padding: 4px 6px;
-    }
-    
-    button {
-        font-size: 0.85em;
-        padding: 4px 6px;
-    }
-    
-    #counter {
-        font-size: 0.8em;
-        min-width: 35px;
-        padding: 3px 4px;
-    }
+  /* Mobile Navigation Adjustments */
+  .nav {
+    top: 0;
+    bottom: auto;
+    border-top: none;
+    border-bottom: 1px solid var(--border-color-light);
+    height: var(--nav-height-mobile);
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px 10px;
+  }
+
+  .nav-left {
+    display: none; /* Hide desktop-only nav items */
+  }
+
+  .nav-center {
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .nav-right {
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .animation-nav-group .nav-label {
+    display: none;
+  }
+
+  .nav-right button {
+    font-size: 0.9em; /* Adjusted for mobile */
+    padding: 6px 10px; /* Adjusted for mobile */
+  }
+
+  /* General button and counter adjustments for mobile */
+  button {
+    font-size: 1em; /* Adjusted for mobile */
+    padding: 6px 10px; /* Adjusted for mobile */
+  }
+
+  #counter {
+    font-size: 1.1em; /* Increased font size for mobile */
+    min-width: 50px; /* Adjusted width for mobile */
+    padding: 3px 4px;
+  }
+
+  /* Adjust Slide Layout for mobile */
+  .slide {
+    height: auto;
+    min-height: calc(100vh - var(--nav-height-mobile));
+    padding: 1em;
+  }
+
+  .slide-body.two-column {
+    flex-direction: column; /* Stack columns vertically */
+    /* Removed redundant display:flex; */
+    align-items: center;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%; /* In a column layout, each panel takes full width */
+    flex: none; /* Unset the flex-grow property from desktop */
+  }
+
+  /* Simplify Nav Controls for mobile */
+  .desktop-only,
+  .jump-container {
+    display: none;
+  }
+
+  /* Adjust Title Slide for Mobile */
+  .title-left,
+  .title-right {
+    position: relative;
+    width: 100%;
+    height: 50%;
+    padding: 1.5em;
+  }
+
+  .title-left h1 {
+    font-size: 2em;
+  }
+}
+
+/* --- Control Guide Modal Styles --- */
+.control-guide-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.control-guide-overlay.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.control-guide-modal {
+  background: var(--background-white) !important;
+  border-radius: 12px;
+  max-width: 700px;
+  max-height: 80vh;
+  width: 90%;
+  overflow: hidden;
+  box-shadow: 0 20px 40px var(--box-shadow-medium);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  z-index: 10000 !important;
+  position: relative;
+}
+
+.control-guide-overlay.show .control-guide-modal {
+  transform: scale(1);
+}
+
+.control-guide-header {
+  background: var(--primary-color);
+  color: var(--text-color-white);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.control-guide-header h3 {
+  margin: 0;
+  font-size: 1.4em;
+}
+
+.close-guide {
+  background: none;
+  border: none;
+  color: var(--text-color-white);
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.close-guide:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.control-guide-content {
+  padding: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.control-section {
+  margin-bottom: 25px;
+}
+
+.control-section h4 {
+  color: var(--primary-color);
+  margin: 0 0 15px 0;
+  font-size: 1.1em;
+  border-bottom: 2px solid var(--border-color-dark);
+  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 0;
+}
+
+.control-key {
+  background: #f5f5f5;
+  border: 1px solid var(--border-color-medium);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-family: var(--font-family-code);
+  font-size: 0.9em;
+  font-weight: bold;
+  min-width: 80px;
+  text-align: center;
+  color: var(--text-color-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.control-desc {
+  color: var(--text-color-light);
+  flex: 1;
+}
+
+.tips-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-color-light);
+}
+
+.tips-list li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* Control guide modal responsive */
+@media (max-width: 800px) {
+  .control-guide-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .control-grid {
+    font-size: 0.9em;
+  }
+
+  .control-key {
+    min-width: 60px;
+    font-size: 0.8em;
+  }
+}
+
+/* --- Fullscreen Mode Styles --- */
+.fullscreen-mode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: black;
+}
+
+/* --- Hamburger Menu Styles --- */
+.hamburger-menu {
+  background: rgba(0, 50, 98, 0.1) !important;
+  border: none;
+  color: var(--primary-color) !important;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.hamburger-menu:hover {
+  background-color: rgba(0, 50, 98, 0.2) !important;
+}
+
+/* --- Sidebar Styles --- */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 300px;
+  height: 100vh;
+  background: var(--background-white);
+  box-shadow: 2px 0 10px var(--box-shadow-light);
+  z-index: 1000;
+  transition: left 0.3s ease;
+  border-right: 1px solid var(--border-color-dark);
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  padding: 20px;
+  background: var(--primary-color);
+  color: var(--text-color-white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 0;
+}
+
+.close-sidebar {
+  background: none;
+  border: none;
+  color: var(--text-color-white);
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.close-sidebar:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-content {
+  padding: 20px 0;
+}
+
+.section-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-item:hover {
+  background-color: #f5f5f5;
+}
+
+.section-item.current {
+  background-color: #e3f2fd;
+  border-left: 4px solid var(--primary-color);
+}
+
+.section-name {
+  font-weight: 500;
+  color: var(--text-color-medium);
+}
+
+.section-info {
+  font-size: 0.85em;
+  color: var(--text-color-muted);
+}
+
+/* Overlay for closing sidebar */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =================================================================== */
+/* PRINT STYLES                                                        */
+/* =================================================================== */
+@media print {
+  /* Reset body for printing */
+  body {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+  }
+
+  /* Hide navigation and UI elements when printing */
+  .nav,
+  .sidebar,
+  .sidebar-overlay,
+  .hamburger-menu,
+  .copy-code-button,
+  button {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Force all slides to be visible and properly formatted */
+  .slide {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    page-break-after: always !important;
+    page-break-inside: avoid !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    padding: 1em !important;
+    margin: 0 !important;
+    background: white !important;
+    overflow: visible !important;
+    position: static !important;
+  }
+
+  /* Remove background images when printing */
+  .slide::before {
+    display: none !important;
+  }
+
+  /* Ensure slide content is visible */
+  .slide > * {
+    position: static !important;
+    z-index: auto !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Print specific header adjustments */
+  .slide-header {
+    display: flex !important;
+    border-bottom: 2px solid #000 !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Print specific two-column layout adjustments */
+  .slide-body.two-column {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 1em !important;
+  }
+
+  .left-panel,
+  .right-panel {
+    flex: 1 !important;
+    display: block !important;
+  }
+
+  /* Print specific code block adjustments */
+  pre[class*="language-"] {
+    background: var(--background-code) !important;
+    color: #000 !important;
+    border: 1px solid var(--border-color-light) !important;
+    page-break-inside: avoid !important;
+    font-size: 10px !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Ensure all text is black for printing */
+  * {
+    color: #000 !important;
+    background: transparent !important;
+  }
+
+  /* Print specific section header adjustments */
+  .section-title {
+    font-size: 24px !important;
+  }
+
+  .section-subtitle {
+    font-size: 16px !important;
+  }
+
+  /* Print specific table adjustments */
+  table {
+    page-break-inside: avoid !important;
+    border-collapse: collapse !important;
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid #000 !important;
+  }
+}
+
+/* Special class for when printing all slides */
+body.printing-all-slides .slide {
+  display: block !important;
+  visibility: visible !important;
 }
