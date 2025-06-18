@@ -28,7 +28,7 @@ body {
     position: relative;
     background: white;
     overflow: hidden;
-    font-size: 2em;
+    font-size: 1.75em;
 }
 
 .slide.active {
@@ -81,6 +81,13 @@ body {
     display: flex;
     gap: 2em;
     align-items: flex-start;
+}
+
+.slide-body.one-column {
+    font-size: 1.25em;
+    width: 100%;
+    max-width: none;
+    display: block;
 }
 
 .annotation-toggle {
