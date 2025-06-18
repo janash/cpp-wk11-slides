@@ -1,0 +1,144 @@
+<!-- Conclusion Section Header -->
+<section class="slide section-header">
+  <div class="slide-header"></div>
+  <div class="slide-body section-header">
+    <div class="section-content">
+      <h1 class="section-title">Conclusion</h1>
+      <p class="section-subtitle">C++ Advanced Concepts Summary</p>
+    </div>
+  </div>
+</section>
+
+<!-- Summary Slide -->
+<section class="slide two-column" id="course-summary">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>What You've Learned</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3 style="color: #003262; margin-bottom: 1.5rem;">C++ Advanced Concepts</h3>
+      <ul id="summary-list" style="line-height: 1.6;">
+        <li><span class="summary-item"><strong>Standard Containers:</strong> vector, array, and map for organizing data efficiently</span></li>
+        <li><span class="summary-item"><strong>Argument Passing:</strong> Pass-by-value vs const& for performance and safety</span></li>
+        <li><span class="summary-item"><strong>Function Overloading:</strong> Multiple functions with the same name but different parameters</span></li>
+        <li><span class="summary-item"><strong>Multiple Return Values:</strong> Using references and std::pair to return multiple results</span></li>
+        <li><span class="summary-item"><strong>Exception Handling:</strong> try/catch blocks for robust error handling</span></li>
+        <li><span class="summary-item"><strong>Multi-file Projects:</strong> Headers, source files, and organizing large codebases</span></li>
+      </ul>
+    </div>
+    <div class="right-panel">
+      <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+        <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 12px; padding: 2em; margin-bottom: 2em;">
+          <h4 style="color: #1976d2; margin-top: 0;">Key Takeaway</h4>
+          <p style="margin-bottom: 0;">
+            You now have the tools to write efficient, organized, and robust C++ programs for scientific computing.
+          </p>
+        </div>
+        
+        <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 12px; padding: 2em;">
+          <h4 style="color: #388e3c; margin-top: 0;">Next Steps</h4>
+          <ul style="text-align: left; margin-bottom: 0;">
+            <li>Practice with your own molecular science projects</li>
+            <li>Apply these concepts to research problems</li>
+            <li>Build larger, more complex programs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Thank You Slide -->
+<section class="slide one-column" id="thank-you">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>C++ Part 3: Advanced Concepts</span>
+    </div>
+  </div>
+  <div class="slide-body one-column">
+    <div style="max-width: 1000px; margin: 0 auto; text-align: center;">
+      <h1 style="color: #003262; margin-bottom: 1em; line-height: 1.2;">Thank You for Your Attention</h1>
+      
+      <div style="display: flex; align-items: center; justify-content: center; margin-top: 2em;">
+        <img src="./images/thank-you-image.png" alt="Thank You Image" style="max-width: 75%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        
+        </div>
+      </div>
+          </div>
+  </div>
+</section>
+
+<script>
+class CourseSummaryAnimation extends SlideAnimation {
+    get slideId() {
+        return 'course-summary';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                const items = document.querySelectorAll('#summary-list .summary-item');
+                if (items.length > 0) {
+                    items[0].style.backgroundColor = 'rgba(33, 150, 243, 0.3)';
+                    items[0].style.borderRadius = '4px';
+                    items[0].style.padding = '0.2em 0.4em';
+                }
+            },
+            () => {
+                const items = document.querySelectorAll('#summary-list .summary-item');
+                if (items.length > 1) {
+                    items[1].style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+                    items[1].style.borderRadius = '4px';
+                    items[1].style.padding = '0.2em 0.4em';
+                }
+            },
+            () => {
+                const items = document.querySelectorAll('#summary-list .summary-item');
+                if (items.length > 2) {
+                    items[2].style.backgroundColor = 'rgba(255, 152, 0, 0.3)';
+                    items[2].style.borderRadius = '4px';
+                    items[2].style.padding = '0.2em 0.4em';
+                }
+            },
+            () => {
+                const items = document.querySelectorAll('#summary-list .summary-item');
+                if (items.length > 3) {
+                    items[3].style.backgroundColor = 'rgba(156, 39, 176, 0.3)';
+                    items[3].style.borderRadius = '4px';
+                    items[3].style.padding = '0.2em 0.4em';
+                }
+            },
+            () => {
+                const items = document.querySelectorAll('#summary-list .summary-item');
+                if (items.length > 4) {
+                    items[4].style.backgroundColor = 'rgba(233, 30, 99, 0.3)';
+                    items[4].style.borderRadius = '4px';
+                    items[4].style.padding = '0.2em 0.4em';
+                }
+            },
+            () => {
+                const items = document.querySelectorAll('#summary-list .summary-item');
+                if (items.length > 5) {
+                    items[5].style.backgroundColor = 'rgba(255, 193, 7, 0.3)';
+                    items[5].style.borderRadius = '4px';
+                    items[5].style.padding = '0.2em 0.4em';
+                }
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+// Register animation
+new CourseSummaryAnimation();
+</script>
