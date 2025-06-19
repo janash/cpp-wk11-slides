@@ -70,7 +70,65 @@ int main() {
   </div>
 </section>
 
-<!-- Solution 1: References -->
+<!-- Solution 1: std::pair -->
+<section class="slide two-column" id="solution-pair">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Solution 1: std::pair</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Package Two Values Together</h3>
+      <p>std::pair lets you bundle two values into one return value:</p>
+      <ul>
+        <li>Template that holds two values of any types</li>
+        <li>Access with <code>.first</code> and <code>.second</code></li>
+        <li>Can return as a single value</li>
+      </ul>
+      
+      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Benefit:</strong> Clean function interface, true return value</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="pair-solution">
+#include &lt;iostream>
+#include &lt;utility>  // for std::pair
+
+<span id="pair-function">std::pair&lt;int, int> divide(int a, int b) {
+    return std::make_pair(a / b, a % b);
+}</span>
+
+int main() {
+    <span id="pair-call">auto result = divide(17, 5);</span>
+    
+    <span id="pair-access">std::cout &lt;&lt; result.first &lt;&lt; " remainder " 
+              &lt;&lt; result.second &lt;&lt; std::endl;</span>
+    
+    // Or unpack immediately
+    <span id="pair-unpack">auto [q, r] = divide(17, 5);  // C++17 feature</span>
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="anno-pair-return" style="opacity:0;">
+          Returns a pair containing quotient and remainder
+        </div>
+        <div class="code-annotation" id="anno-pair-modern" style="opacity:0;">
+          Modern C++ can unpack pairs automatically
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Solution 2: References -->
 <section class="slide two-column" id="solution-references">
   <div class="slide-header">
     <div class="left-header">
@@ -78,7 +136,7 @@ int main() {
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>Solution 1: Reference Parameters</span>
+      <span>Solution 2: Reference Parameters</span>
     </div>
   </div>
   <div class="slide-body two-column">
@@ -125,27 +183,136 @@ int main() {
   </div>
 </section>
 
-<!-- Solution 2: std::pair -->
-<section class="slide two-column" id="solution-pair">
+<!-- When to Use Each -->
+<section class="slide one-column" id="when-to-use-multiple">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>Solution 2: std::pair</span>
+      <span>Choosing Your Approach</span>
     </div>
   </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>Package Two Values Together</h3>
-      <p>std::pair lets you bundle two values into one return value:</p>
-      <ul>
-        <li>Template that holds two values of any types</li>
-        <li>Access with <code>.first</code> and <code>.second</code></li>
-        <li>Can return as a single value</li>
-      </ul>
+  <div class="slide-body one-column">
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <h3 style="color: #003262; text-align: center; margin-bottom: 1.5em;">When to Use Each Approach</h3>
       
-      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
-        <p><strong>Benefit:</strong> Clean function interface, true return value</p>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 2em;">
+        <thead>
+          <tr style="background: #003262; color: white;">
+            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Method</th>
+            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Syntax</th>
+            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Best For</th>
+            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Use Cases</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">Reference Parameters</td>
+            <td style="padding: 10px; border: 1px solid #ccc;"><code>void func(int& a, int& b)</code></td>
+            <td style="padding: 10px; border: 1px solid #ccc;">More than 2 return values, large objects</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Avoid copying, optional outputs</td>
+          </tr>
+          <tr style="background: #f5f5f5;">
+            <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">std::pair</td>
+            <td style="padding: 10px; border: 1px solid #ccc;"><code>pair&lt;int, int&gt; func()</code></td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Exactly 2 return values</td>
+            <td style="padding: 10px; border: 1px solid #ccc;">Small types, mathematical functions</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div style="background: #e8f5e8; padding: 1.5em; border-radius: 8px; text-align: center;">
+        <h4 style="color: #2e7d32; margin-top: 0;">Quick Decision Guide</h4>
+        <p style="margin-bottom: 0;">
+          <strong>2 small values?</strong> Use std::pair. 
+          <strong>3+ values or large objects?</strong> Use reference parameters.
+        </p>
       </div>
+    </div>
+  </div>
+</section>
+
+<script>
+class MultipleReturnProblemAnimation extends SlideAnimation {
+    get slideId() {
+        return 'multiple-return-problem';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('problem-demo', '// int, int divide(int a, int b) {  // ERROR!\n//     return a / b, a % b;\n// }', 'rgba(244, 67, 54, 0.3)');
+            },
+            () => {
+                highlightCode('problem-demo', 'int q = quotient(17, 5);  // 17/5 = 3\n    int r = remainder(17, 5); // 17%5 = 2', 'rgba(255, 152, 0, 0.3)');
+                positionAnnotation('problem-demo', 'int q = quotient(17, 5);  // 17/5 = 3\n    int r = remainder(17, 5); // 17%5 = 2', 'anno-problem');
+                showElement('anno-problem');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class SolutionReferencesAnimation extends SlideAnimation {
+    get slideId() {
+        return 'solution-references';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('reference-solution', 'int& quotient, int& remainder', 'rgba(76, 175, 80, 0.3)');
+                positionAnnotation('reference-solution', 'int& quotient, int& remainder', 'anno-ref-params');
+                showElement('anno-ref-params');
+            },
+            () => {
+                highlightCode('reference-solution', 'divide(17, 5, q, r);', 'rgba(33, 150, 243, 0.3)');
+                positionAnnotation('reference-solution', 'divide(17, 5, q, r);', 'anno-ref-call');
+                showElement('anno-ref-call');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class SolutionPairAnimation extends SlideAnimation {
+    get slideId() {
+        return 'solution-pair';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('pair-solution', 'std::pair<int, int> divide(int a, int b)', 'rgba(76, 175, 80, 0.3)');
+            },
+            () => {
+                highlightCode('pair-solution', 'return std::make_pair(a / b, a % b);', 'rgba(76, 175, 80, 0.3)');
+                positionAnnotation('pair-solution', 'return std::make_pair(a / b, a % b);', 'anno-pair-return');
+                showElement('anno-pair-return');
+            },
+            () => {
+                highlightCode('pair-solution', 'auto result = divide(17, 5);', 'rgba(33, 150, 243, 0.3)');
+            },
+            () => {
+                highlightCode('pair-solution', 'result.first', 'rgba(33, 150, 243, 0.3)');
+            },
+            () => {
+                highlightCode('pair-solution', 'result.second', 'rgba(33, 150, 243, 0.3)');
+            },
+            () => {
+                highlightCode('pair-solution', 'auto [q, r] = divide(17, 5);', 'rgba(156, 39, 176, 0.3)');
+                positionAnnotation('pair-solution', 'auto [q, r] = divide(17, 5);', 'anno-pair-modern');
+                showElement('anno-pair-modern');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+// Register animations
+new MultipleReturnProblemAnimation();
+new SolutionReferencesAnimation();
+new SolutionPairAnimation();
+</script>

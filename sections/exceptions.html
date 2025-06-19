@@ -26,26 +26,22 @@
       <p>You're already familiar with Python's approach:</p>
       <ul>
         <li>Automatic exception throwing</li>
-        <li><code>try/except/finally</code> blocks</li>
+        <li><code>try/except</code> blocks</li>
         <li>Built-in exception types</li>
       </ul>
       
       <div class="code-container">
 <pre><code class="language-python" id="python-exceptions">
-def divide_numbers(a, b):
+def print_element(numbers, index):
     try:
-        result = a / b
-        print(f"Result: {result}")
-    except ZeroDivisionError:
-        print("Cannot divide by zero!")
-    except TypeError:
-        print("Invalid types for division")
-    finally:
-        print("Division attempt completed")
+        print(f"Element {index}: {numbers[index]}")
+    except IndexError:
+        print(f"Index {index} out of range, printing last element: {numbers[-1]}")
 
 # Python automatically throws exceptions
-divide_numbers(10, 0)  # ZeroDivisionError
-divide_numbers("a", 5)  # TypeError
+numbers = [10, 20, 30]
+print_element(numbers, 1)   # Works fine
+print_element(numbers, 10)  # IndexError, prints last
 </code></pre>
       </div>
     </div>
@@ -53,7 +49,7 @@ divide_numbers("a", 5)  # TypeError
       <h3>C++ Exceptions</h3>
       <p>C++ has similar concepts but different syntax:</p>
       <ul>
-        <li><code>try/catch/finally</code> blocks</li>
+        <li><code>try/catch</code> blocks</li>
         <li>Manual exception throwing with <code>throw</code></li>
         <li>Standard library exception types</li>
       </ul>
@@ -61,23 +57,21 @@ divide_numbers("a", 5)  # TypeError
       <div class="code-container">
 <pre><code class="language-cpp" id="cpp-exceptions">
 #include &lt;iostream>
-#include &lt;stdexcept>
+#include &lt;vector>
 
-void divideNumbers(double a, double b) {
+void printElement(const std::vector&lt;int>& numbers, int index) {
     try {
-        if (b == 0) {
-            throw std::runtime_error("Cannot divide by zero!");
-        }
-        double result = a / b;
-        std::cout &lt;&lt; "Result: " &lt;&lt; result &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Element " &lt;&lt; index &lt;&lt; ": " &lt;&lt; numbers.at(index) &lt;&lt; std::endl;
     }
-    catch (const std::runtime_error& e) {
-        std::cout &lt;&lt; "Error: " &lt;&lt; e.what() &lt;&lt; std::endl;
+    catch (const std::out_of_range& e) {
+        std::cout &lt;&lt; "Index " &lt;&lt; index &lt;&lt; " out of range, printing last element: " 
+                  &lt;&lt; numbers.back() &lt;&lt; std::endl;
     }
 }
 
-// Must explicitly check and throw
-divideNumbers(10.0, 0.0);
+std::vector&lt;int> numbers = {10, 20, 30};
+printElement(numbers, 1);   // Works fine
+printElement(numbers, 10);  // out_of_range, prints last
 </code></pre>
       </div>
     </div>
@@ -98,7 +92,7 @@ divideNumbers(10.0, 0.0);
   <div class="slide-body two-column">
     <div class="left-panel">
       <h3>The try-catch Structure</h3>
-      <p>C++ exception handling has three main parts:</p>
+      <p>When operations might fail, wrap them in try-catch:</p>
       
       <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
         <h4 style="color: #388e3c; margin-top: 0;">try block</h4>
@@ -107,37 +101,25 @@ divideNumbers(10.0, 0.0);
       
       <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 1em; margin: 1em 0;">
         <h4 style="color: #1976d2; margin-top: 0;">catch block</h4>
-        <p style="margin-bottom: 0;">Handles specific exception types</p>
+        <p style="margin-bottom: 0;">Handles the exception if it occurs</p>
       </div>
-      
-      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin: 1em 0;">
-        <h4 style="color: #f57c00; margin-top: 0;">throw statement</h4>
-        <p style="margin-bottom: 0;">Creates and throws an exception</p>
-      </div>
+
     </div>
     <div class="right-panel">
       <div class="code-container">
 <pre><code class="language-cpp" id="basic-syntax">
 #include &lt;iostream>
-#include &lt;stdexcept>
+#include &lt;vector>
 
 int main() {
+    std::vector&lt;int> numbers = {1, 2, 3};
+    
     <span id="try-block">try {
-        int age;
-        std::cout &lt;&lt; "Enter age: ";
-        std::cin &gt;&gt; age;
-        
-        if (age &lt; 0) {
-            <span id="throw-stmt">throw std::invalid_argument("Age cannot be negative");</span>
-        }
-        
-        std::cout &lt;&lt; "Age is: " &lt;&lt; age &lt;&lt; std::endl;
+        // This will automatically throw if index is invalid
+        <span id="risky-operation">std::cout &lt;&lt; numbers.at(10) &lt;&lt; std::endl;</span>
     }</span>
-    <span id="catch-block">catch (const std::invalid_argument& e) {
-        std::cout &lt;&lt; "Input error: " &lt;&lt; e.what() &lt;&lt; std::endl;
-    }</span>
-    <span id="catch-all">catch (...) {
-        std::cout &lt;&lt; "Unknown error occurred" &lt;&lt; std::endl;
+    <span id="catch-block">catch (const std::out_of_range& e) {
+        std::cout &lt;&lt; "Index error: " &lt;&lt; e.what() &lt;&lt; std::endl;
     }</span>
     
     return 0;
@@ -146,14 +128,84 @@ int main() {
         <div class="code-annotation" id="anno-try" style="opacity:0;">
           Code that might fail
         </div>
-        <div class="code-annotation" id="anno-throw" style="opacity:0;">
-          Manually throw an exception
+        <div class="code-annotation" id="anno-risky" style="opacity:0;">
+          .at() throws automatically on bad index
         </div>
         <div class="code-annotation" id="anno-catch" style="opacity:0;">
-          Handle specific exception type
+          Handle the exception
         </div>
-        <div class="code-annotation" id="anno-catch-all" style="opacity:0;">
-          Catch any remaining exceptions
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Throwing Your Own Exceptions -->
+<section class="slide two-column" id="throwing-exceptions">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Throwing Your Own Exceptions</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>The throw Statement</h3>
+      <p>Sometimes you need to throw exceptions manually:</p>
+      
+      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #f57c00; margin-top: 0;">throw statement</h4>
+        <p style="margin-bottom: 0;">Creates and throws an exception when you detect a problem</p>
+      </div>
+      
+      <h4>When to throw manually:</h4>
+      <ul>
+        <li>Validating function parameters</li>
+        <li>Checking business rules</li>
+        <li>Detecting logical errors</li>
+      </ul>
+      
+      <div style="background: #f0f7ff; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Pattern:</strong> Check for problems, then throw appropriate exception type</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="throw-syntax">
+#include &lt;iostream>
+#include &lt;stdexcept>
+
+<span id="function-def">void validateAge(int age) {
+    if (age &lt; 0) {
+        <span id="throw-statement">throw std::invalid_argument("Age cannot be negative");</span>
+    }
+    if (age &gt; 150) {
+        throw std::invalid_argument("Age seems unrealistic");
+    }
+}</span>
+
+int main() {
+    try {
+        <span id="call-function">validateAge(-5);</span>  // This will throw
+        std::cout &lt;&lt; "Age is valid" &lt;&lt; std::endl;
+    }
+    catch (const std::invalid_argument& e) {
+        std::cout &lt;&lt; "Error: " &lt;&lt; e.what() &lt;&lt; std::endl;
+    }
+    
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="anno-check" style="opacity:0;">
+          Check for invalid conditions
+        </div>
+        <div class="code-annotation" id="anno-throw" style="opacity:0;">
+          Manually throw exception
+        </div>
+        <div class="code-annotation" id="anno-caller" style="opacity:0;">
+          Caller handles with try/catch
         </div>
       </div>
     </div>
@@ -174,32 +226,27 @@ int main() {
   <div class="slide-body two-column">
     <div class="left-panel">
       <h3>Standard Library Exceptions</h3>
-      <p>C++ provides several built-in exception types:</p>
+      <p>A few key exception types you'll commonly use:</p>
       
-      <div style="font-size: 0.9em;">
-        <div style="background: #f5f5f5; padding: 0.8em; margin: 0.5em 0; border-radius: 4px;">
+      <div style="font-size: 0.95em;">
+        <div style="background: #f5f5f5; padding: 1em; margin: 0.8em 0; border-radius: 4px;">
           <code style="color: #d32f2f; font-weight: bold;">std::runtime_error</code><br>
           <span style="color: #666;">General runtime problems</span>
         </div>
         
-        <div style="background: #f5f5f5; padding: 0.8em; margin: 0.5em 0; border-radius: 4px;">
+        <div style="background: #f5f5f5; padding: 1em; margin: 0.8em 0; border-radius: 4px;">
           <code style="color: #d32f2f; font-weight: bold;">std::invalid_argument</code><br>
           <span style="color: #666;">Bad function parameters</span>
         </div>
         
-        <div style="background: #f5f5f5; padding: 0.8em; margin: 0.5em 0; border-radius: 4px;">
+        <div style="background: #f5f5f5; padding: 1em; margin: 0.8em 0; border-radius: 4px;">
           <code style="color: #d32f2f; font-weight: bold;">std::out_of_range</code><br>
           <span style="color: #666;">Array/vector index errors</span>
         </div>
-        
-        <div style="background: #f5f5f5; padding: 0.8em; margin: 0.5em 0; border-radius: 4px;">
-          <code style="color: #d32f2f; font-weight: bold;">std::bad_alloc</code><br>
-          <span style="color: #666;">Memory allocation failures</span>
-        </div>
       </div>
       
-      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin-top: 1em;">
-        <p><strong>Note:</strong> Must <code>#include &lt;stdexcept&gt;</code> for most exception types</p>
+      <div style="background: #f0f7ff; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Remember:</strong> Must <code>#include &lt;stdexcept&gt;</code> for these types</p>
       </div>
     </div>
     <div class="right-panel">
@@ -209,16 +256,17 @@ int main() {
 #include &lt;stdexcept>
 #include &lt;vector>
 
-void demonstrateExceptions() {
+int main() {
     try {
-        // Different types of exceptions
+        // Runtime error example
         <span id="runtime-ex">throw std::runtime_error("Something went wrong");</span>
         
-        <span id="invalid-arg-ex">throw std::invalid_argument("Bad parameter value");</span>
+        // Invalid argument example  
+        <span id="invalid-arg-ex">// throw std::invalid_argument("Bad parameter");</span>
         
-        // Vector out of range
+        // Out of range example
         <span id="vector-ex">std::vector&lt;int> numbers = {1, 2, 3};
-        std::cout &lt;&lt; numbers.at(10);  // Throws out_of_range</span>
+        // std::cout &lt;&lt; numbers.at(10);  // Would throw out_of_range</span>
         
     }
     catch (const std::runtime_error& e) {
@@ -230,294 +278,17 @@ void demonstrateExceptions() {
     catch (const std::out_of_range& e) {
         std::cout &lt;&lt; "Out of range: " &lt;&lt; e.what() &lt;&lt; std::endl;
     }
-}
-</code></pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Multiple Catch Blocks -->
-<section class="slide two-column" id="multiple-catch-blocks">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Multiple Catch Blocks</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>Handling Different Exception Types</h3>
-      <p>You can have multiple catch blocks for different scenarios:</p>
-      
-      <ul>
-        <li><strong>Specific first:</strong> More specific exceptions should be caught before general ones</li>
-        <li><strong>Order matters:</strong> First matching catch block is executed</li>
-        <li><strong>Catch all:</strong> <code>catch(...)</code> catches any exception</li>
-      </ul>
-      
-      <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 1em; margin-top: 1em;">
-        <p><strong>Important:</strong> Put more specific exceptions before general ones, or they'll never be reached!</p>
-      </div>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="multiple-catch">
-#include &lt;iostream>
-#include &lt;stdexcept>
-#include &lt;vector>
-
-void processVector(std::vector&lt;int>& vec, int index, int value) {
-    try {
-        if (value &lt; 0) {
-            <span id="throw-invalid">throw std::invalid_argument("Value must be positive");</span>
-        }
-        
-        <span id="at-access">vec.at(index) = value;</span>  // Might throw out_of_range
-        
-        std::cout &lt;&lt; "Successfully set vec[" &lt;&lt; index &lt;&lt; "] = " &lt;&lt; value &lt;&lt; std::endl;
-    }
-    <span id="catch-invalid">catch (const std::invalid_argument& e) {
-        std::cout &lt;&lt; "Invalid input: " &lt;&lt; e.what() &lt;&lt; std::endl;
-    }</span>
-    <span id="catch-range">catch (const std::out_of_range& e) {
-        std::cout &lt;&lt; "Index error: " &lt;&lt; e.what() &lt;&lt; std::endl;
-    }</span>
-    <span id="catch-general">catch (const std::exception& e) {
-        std::cout &lt;&lt; "Other error: " &lt;&lt; e.what() &lt;&lt; std::endl;
-    }</span>
-}
-</code></pre>
-        <div class="code-annotation" id="anno-specific" style="opacity:0;">
-          Specific exceptions first
-        </div>
-        <div class="code-annotation" id="anno-general" style="opacity:0;">
-          General exception catches anything else
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Exception Best Practices -->
-<section class="slide two-column" id="exception-best-practices">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Exception Best Practices</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>When and How to Use Exceptions</h3>
-      
-      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
-        <h4 style="color: #388e3c; margin-top: 0;">✓ Good Uses</h4>
-        <ul style="margin-bottom: 0; font-size: 0.9em;">
-          <li>Unexpected error conditions</li>
-          <li>Invalid user input</li>
-          <li>Resource allocation failures</li>
-          <li>File I/O errors</li>
-        </ul>
-      </div>
-      
-      <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 1em; margin: 1em 0;">
-        <h4 style="color: #d32f2f; margin-top: 0;">✗ Avoid For</h4>
-        <ul style="margin-bottom: 0; font-size: 0.9em;">
-          <li>Normal program flow control</li>
-          <li>Expected conditions</li>
-          <li>Performance-critical code</li>
-        </ul>
-      </div>
-      
-      <div style="background: #f0f7ff; border-left: 4px solid #2196f3; padding: 1em; margin: 1em 0;">
-        <h4 style="color: #1976d2; margin-top: 0;">💡 Tips</h4>
-        <ul style="margin-bottom: 0; font-size: 0.9em;">
-          <li>Always catch by const reference</li>
-          <li>Use meaningful error messages</li>
-          <li>Clean up resources properly</li>
-        </ul>
-      </div>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="best-practices">
-#include &lt;iostream>
-#include &lt;stdexcept>
-#include &lt;fstream>
-
-// ✓ Good: Validate input and throw meaningful errors
-<span id="good-validation">double calculateSquareRoot(double x) {
-    if (x &lt; 0) {
-        throw std::invalid_argument(
-            "Cannot calculate square root of negative number: " + 
-            std::to_string(x)
-        );
-    }
-    return sqrt(x);
-}</span>
-
-// ✓ Good: Catch by const reference
-<span id="good-catch">void safeCalculation() {
-    try {
-        double result = calculateSquareRoot(-5.0);
-    }
-    catch (const std::invalid_argument& e) {
-        std::cout &lt;&lt; "Error: " &lt;&lt; e.what() &lt;&lt; std::endl;
-        // Handle error appropriately
-    }
-}</span>
-
-// ✗ Bad: Using exceptions for control flow
-<span id="bad-example">void badExample() {
-    try {
-        for (int i = 0; ; ++i) {
-            processItem(i);  // Throws when no more items
-        }
-    }
-    catch (const std::out_of_range&) {
-        // Don't use exceptions to exit loops!
-    }
-}</span>
-</code></pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Real-World Example -->
-<section class="slide two-column" id="real-world-example">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Real-World Example</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>File Processing with Exception Handling</h3>
-      <p>A practical example combining multiple concepts:</p>
-      
-      <ul>
-        <li><strong>File operations</strong> can fail in many ways</li>
-        <li><strong>Input validation</strong> prevents bad data</li>
-        <li><strong>Multiple catch blocks</strong> handle different errors</li>
-        <li><strong>Resource cleanup</strong> happens automatically</li>
-      </ul>
-      
-      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
-        <p><strong>Result:</strong> Code that handles errors and provides helpful feedback.</p>
-      </div>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="real-world">
-#include &lt;iostream>
-#include &lt;fstream>
-#include &lt;stdexcept>
-#include &lt;vector>
-
-<span id="function-def">std::vector&lt;double> readNumbers(const std::string& filename) {
-    std::vector&lt;double> numbers;
     
-    try {
-        <span id="file-open">std::ifstream file(filename);
-        if (!file.is_open()) {
-            throw std::runtime_error("Could not open file: " + filename);
-        }</span>
-        
-        <span id="read-loop">double value;
-        while (file &gt;&gt; value) {
-            if (value &lt; 0) {
-                throw std::invalid_argument("Negative values not allowed");
-            }
-            numbers.push_back(value);
-        }</span>
-        
-    }
-    catch (const std::invalid_argument& e) {
-        std::cout &lt;&lt; "Data error: " &lt;&lt; e.what() &lt;&lt; std::endl;
-        throw;  // Re-throw to caller
-    }
-    catch (const std::runtime_error& e) {
-        std::cout &lt;&lt; "File error: " &lt;&lt; e.what() &lt;&lt; std::endl;
-        throw;  // Re-throw to caller
-    }
-    
-    return numbers;
-}</span>
+    return 0;
+}
 </code></pre>
-        <div class="code-annotation" id="anno-file-check" style="opacity:0;">
-          Check if file opened successfully
-        </div>
-        <div class="code-annotation" id="anno-validation" style="opacity:0;">
-          Validate data as we read it
-        </div>
       </div>
     </div>
   </div>
 </section>
 
-<style>
-/* Color-coded highlighting classes */
-.highlight-green {
-    background-color: rgba(76, 175, 80, 0.3) !important;
-}
-
-.highlight-blue {
-    background-color: rgba(33, 150, 243, 0.3) !important;
-}
-
-.highlight-orange {
-    background-color: rgba(255, 152, 0, 0.3) !important;
-}
-
-.highlight-red {
-    background-color: rgba(244, 67, 54, 0.3) !important;
-}
-
-.highlight-purple {
-    background-color: rgba(156, 39, 176, 0.3) !important;
-}
-</style>
 
 <script>
-class PythonVsCppExceptionsAnimation extends SlideAnimation {
-    get slideId() {
-        return 'python-vs-cpp-exceptions';
-    }
-    
-    animate() {
-        const steps = [
-            () => {
-                highlightCode('python-exceptions', 'try:', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('python-exceptions', 'except ZeroDivisionError:', 'rgba(244, 67, 54, 0.3)');
-            },
-            () => {
-                highlightCode('cpp-exceptions', 'try {', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('cpp-exceptions', 'throw std::runtime_error', 'rgba(255, 152, 0, 0.3)');
-            },
-            () => {
-                highlightCode('cpp-exceptions', 'catch (const std::runtime_error& e)', 'rgba(244, 67, 54, 0.3)');
-            }
-        ];
-        return runAnimationSteps(steps);
-    }
-}
-
 class BasicExceptionSyntaxAnimation extends SlideAnimation {
     get slideId() {
         return 'basic-exception-syntax';
@@ -531,19 +302,41 @@ class BasicExceptionSyntaxAnimation extends SlideAnimation {
                 showElement('anno-try');
             },
             () => {
-                highlightCode('basic-syntax', 'throw std::invalid_argument("Age cannot be negative");', 'rgba(255, 152, 0, 0.3)');
-                positionAnnotation('basic-syntax', 'throw std::invalid_argument("Age cannot be negative");', 'anno-throw');
+                highlightCode('basic-syntax', 'numbers.at(10)', 'rgba(255, 152, 0, 0.3)');
+                positionAnnotation('basic-syntax', 'numbers.at(10)', 'anno-risky');
+                showElement('anno-risky');
+            },
+            () => {
+                highlightCode('basic-syntax', 'catch (const std::out_of_range& e)', 'rgba(33, 150, 243, 0.3)');
+                positionAnnotation('basic-syntax', 'catch (const std::out_of_range& e)', 'anno-catch');
+                showElement('anno-catch');
+            }
+        ];
+        return runAnimationSteps(steps);
+    }
+}
+
+class ThrowingExceptionsAnimation extends SlideAnimation {
+    get slideId() {
+        return 'throwing-exceptions';
+    }
+    
+    animate() {
+        const steps = [
+            () => {
+                highlightCode('throw-syntax', 'if (age < 0)', 'rgba(255, 152, 0, 0.3)');
+                positionAnnotation('throw-syntax', 'if (age < 0)', 'anno-check');
+                showElement('anno-check');
+            },
+            () => {
+                highlightCode('throw-syntax', 'throw std::invalid_argument("Age cannot be negative");', 'rgba(244, 67, 54, 0.3)');
+                positionAnnotation('throw-syntax', 'throw std::invalid_argument("Age cannot be negative");', 'anno-throw');
                 showElement('anno-throw');
             },
             () => {
-                highlightCode('basic-syntax', 'catch (const std::invalid_argument& e)', 'rgba(33, 150, 243, 0.3)');
-                positionAnnotation('basic-syntax', 'catch (const std::invalid_argument& e)', 'anno-catch');
-                showElement('anno-catch');
-            },
-            () => {
-                highlightCode('basic-syntax', 'catch (...)', 'rgba(156, 39, 176, 0.3)');
-                positionAnnotation('basic-syntax', 'catch (...)', 'anno-catch-all');
-                showElement('anno-catch-all');
+                highlightCode('throw-syntax', 'validateAge(-5);', 'rgba(33, 150, 243, 0.3)');
+                positionAnnotation('throw-syntax', 'validateAge(-5);', 'anno-caller');
+                showElement('anno-caller');
             }
         ];
         return runAnimationSteps(steps);
@@ -558,92 +351,15 @@ class CommonExceptionTypesAnimation extends SlideAnimation {
     animate() {
         const steps = [
             () => {
-                highlightCode('exception-types', 'std::runtime_error', 'rgba(244, 67, 54, 0.3)');
-            },
-            () => {
-                highlightCode('exception-types', 'std::invalid_argument', 'rgba(244, 67, 54, 0.3)');
-            },
-            () => {
-                highlightCode('exception-types', 'numbers.at(10)', 'rgba(244, 67, 54, 0.3)');
+                highlightCode('exception-types', 'std::runtime_error("Something went wrong")', 'rgba(244, 67, 54, 0.3)');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class MultipleCatchBlocksAnimation extends SlideAnimation {
-    get slideId() {
-        return 'multiple-catch-blocks';
-    }
-    
-    animate() {
-        const steps = [
-            () => {
-                highlightCode('multiple-catch', 'catch (const std::invalid_argument& e)', 'rgba(33, 150, 243, 0.3)');
-                positionAnnotation('multiple-catch', 'catch (const std::invalid_argument& e)', 'anno-specific');
-                showElement('anno-specific');
-            },
-            () => {
-                highlightCode('multiple-catch', 'catch (const std::out_of_range& e)', 'rgba(33, 150, 243, 0.3)');
-            },
-            () => {
-                highlightCode('multiple-catch', 'catch (const std::exception& e)', 'rgba(156, 39, 176, 0.3)');
-                positionAnnotation('multiple-catch', 'catch (const std::exception& e)', 'anno-general');
-                showElement('anno-general');
-            }
-        ];
-        return runAnimationSteps(steps);
-    }
-}
-
-class ExceptionBestPracticesAnimation extends SlideAnimation {
-    get slideId() {
-        return 'exception-best-practices';
-    }
-    
-    animate() {
-        const steps = [
-            () => {
-                highlightCode('best-practices', 'if (x < 0) {\n        throw std::invalid_argument(', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('best-practices', 'catch (const std::invalid_argument& e)', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('best-practices', 'try {\n        for (int i = 0; ; ++i) {\n            processItem(i);  // Throws when no more items\n        }\n    }\n    catch (const std::out_of_range&) {\n        // Don\'t use exceptions to exit loops!\n    }', 'rgba(244, 67, 54, 0.3)');
-            }
-        ];
-        return runAnimationSteps(steps);
-    }
-}
-
-class RealWorldExampleAnimation extends SlideAnimation {
-    get slideId() {
-        return 'real-world-example';
-    }
-    
-    animate() {
-        const steps = [
-            () => {
-                highlightCode('real-world', 'if (!file.is_open()) {\n            throw std::runtime_error("Could not open file: " + filename);\n        }', 'rgba(244, 67, 54, 0.3)');
-                positionAnnotation('real-world', 'if (!file.is_open())', 'anno-file-check');
-                showElement('anno-file-check');
-            },
-            () => {
-                highlightCode('real-world', 'if (value < 0) {\n                throw std::invalid_argument("Negative values not allowed");\n            }', 'rgba(255, 152, 0, 0.3)');
-                positionAnnotation('real-world', 'if (value < 0)', 'anno-validation');
-                showElement('anno-validation');
-            }
-        ];
-        return runAnimationSteps(steps);
-    }
-}
-
-// Register all animations
-new PythonVsCppExceptionsAnimation();
+// Register animations
 new BasicExceptionSyntaxAnimation();
+new ThrowingExceptionsAnimation();
 new CommonExceptionTypesAnimation();
-new MultipleCatchBlocksAnimation();
-new ExceptionBestPracticesAnimation();
-new RealWorldExampleAnimation();
 </script>
