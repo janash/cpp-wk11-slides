@@ -35,19 +35,22 @@
       
       <div class="code-container">
 <pre><code class="language-python" id="python-approach">
+import math
+
 def area_circle(radius):
     return 3.14159 * radius * radius
 
 def area_rectangle(length, width):
     return length * width
 
-def area_triangle(base, height):
-    return 0.5 * base * height
+def area_triangle(side1, side2, side3):
+    s = (side1 + side2 + side3) / 2
+    return math.sqrt(s * (s - side1) * (s - side2) * (s - side3))
 
 # Different names for different shapes
 print(area_circle(5.0))
 print(area_rectangle(4.0, 6.0))
-print(area_triangle(3.0, 8.0))
+print(area_triangle(3.0, 4.0, 5.0))
 </code></pre>
       </div>
     </div>
@@ -65,6 +68,8 @@ print(area_triangle(3.0, 8.0))
       
       <div class="code-container">
 <pre><code class="language-cpp" id="cpp-approach">
+#include &lt;cmath>
+
 double area(double radius) {
     return 3.14159 * radius * radius;
 }
@@ -73,14 +78,15 @@ double area(double length, double width) {
     return length * width;
 }
 
-double area(double base, double height, bool triangle) {
-    return 0.5 * base * height;
+double area(double side1, double side2, double side3) {
+    double s = (side1 + side2 + side3) / 2;
+    return sqrt(s * (s - side1) * (s - side2) * (s - side3));
 }
 
 // Same name, compiler picks the right one
-std::cout << area(5.0) << std::endl;
-std::cout << area(4.0, 6.0) << std::endl;
-std::cout << area(3.0, 8.0, true) << std::endl;
+std::cout << area(5.0) << std::endl;           // Circle
+std::cout << area(4.0, 6.0) << std::endl;      // Rectangle  
+std::cout << area(3.0, 4.0, 5.0) << std::endl; // Triangle
 </code></pre>
       </div>
     </div>
@@ -116,6 +122,7 @@ std::cout << area(3.0, 8.0, true) << std::endl;
       <div class="code-container">
 <pre><code class="language-cpp" id="overload-demo">
 #include &lt;iostream>
+#include &lt;cmath>
 
 <span id="overload-1">double area(double radius) {
     return 3.14159 * radius * radius;  // Circle
@@ -125,14 +132,15 @@ std::cout << area(3.0, 8.0, true) << std::endl;
     return length * width;  // Rectangle
 }</span>
 
-<span id="overload-3">double area(double base, double height, bool triangle) {
-    return 0.5 * base * height;  // Triangle
+<span id="overload-3">double area(double side1, double side2, double side3) {
+    double s = (side1 + side2 + side3) / 2;
+    return sqrt(s * (s - side1) * (s - side2) * (s - side3));  // Triangle (Heron's formula)
 }</span>
 
 int main() {
-    <span id="call-1">std::cout &lt;&lt; area(5.0) &lt;&lt; std::endl;</span>        // Circle
-    <span id="call-2">std::cout &lt;&lt; area(4.0, 6.0) &lt;&lt; std::endl;</span>   // Rectangle
-    <span id="call-3">std::cout &lt;&lt; area(3.0, 8.0, true) &lt;&lt; std::endl;</span> // Triangle
+    <span id="call-1">std::cout &lt;&lt; area(5.0) &lt;&lt; std::endl;</span>           // Circle
+    <span id="call-2">std::cout &lt;&lt; area(4.0, 6.0) &lt;&lt; std::endl;</span>      // Rectangle
+    <span id="call-3">std::cout &lt;&lt; area(3.0, 4.0, 5.0) &lt;&lt; std::endl;</span> // Triangle
     
     return 0;
 }
@@ -144,7 +152,7 @@ int main() {
           Two parameters → rectangle area
         </div>
         <div class="code-annotation" id="anno-overload-3" style="opacity:0;">
-          Three parameters → triangle area
+          Three parameters → triangle area (Heron's formula)
         </div>
       </div>
     </div>
@@ -209,268 +217,199 @@ void mix(double a, int b);</span>
   </div>
 </section>
 
-<!-- Multiple Return Values Section Header -->
-<section class="slide section-header">
-  <div class="slide-header"></div>
-  <div class="slide-body section-header">
-    <div class="section-content">
-      <h1 class="section-title">Returning Multiple Values</h1>
-      <p class="section-subtitle">When one return value isn't enough</p>
-    </div>
-  </div>
-</section>
-
-<!-- The Problem -->
-<section class="slide two-column" id="multiple-return-problem">
+<!-- Challenge Slide: Is This Good for Overloading? -->
+<section class="slide two-column" id="overloading-challenge">
   <div class="slide-header">
     <div class="left-header">
       <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
       <span>Python for Molecular Sciences:</span>
     </div>
     <div class="right-header">
-      <span>The Problem</span>
+      <span>Challenge: Is This Good for Overloading?</span>
     </div>
   </div>
   <div class="slide-body two-column">
     <div class="left-panel">
-      <h3>Sometimes We Need Multiple Results</h3>
-      <p>Some calculations naturally produce multiple values:</p>
+      <h3>Consider This Scenario</h3>
+      <p>We want to create a function called <code>square</code> that can:</p>
       <ul>
-        <li>Division: quotient <em>and</em> remainder</li>
-        <li>Coordinates: x <em>and</em> y values</li>
-        <li>Statistics: mean <em>and</em> standard deviation</li>
-        <li>Min/max: both minimum <em>and</em> maximum</li>
+        <li>Square a single number</li>
+        <li>Square every element in a vector</li>
       </ul>
       
-      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin-top: 1em;">
-        <p><strong>Problem:</strong> C++ functions can only return one value directly.</p>
+      <h4>Goal: Use the same function name for both</h4>
+      <div style="background: #f5f5f5; padding: 1em; border-radius: 8px; margin: 1em 0; font-family: monospace;">
+        square(5.0) → 25.0<br>
+        square({1.0, 2.0, 3.0}) → {1.0, 4.0, 9.0}
       </div>
+      
+      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin: 1.5em 0;">
+        <h4>Questions to Consider:</h4>
+        <ul style="margin-bottom: 0;">
+          <li>Is this a good candidate for function overloading?</li>
+          <li>Why or why not?</li>
+          <li>What makes functions different enough to overload?</li>
+        </ul>
+      </div>
+      
+      <p><strong>Think about the overloading rules we just learned...</strong></p>
     </div>
     <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="problem-demo">
-#include &lt;iostream>
-
-// This doesn't work - can't return two values
-<span id="invalid-return">// int, int divide(int a, int b) {  // ERROR!
-//     return a / b, a % b;
-// }</span>
-
-// Inefficient - need separate function calls
-<span id="separate-funcs">int quotient(int a, int b) {
-    return a / b;
-}
-
-int remainder(int a, int b) {
-    return a % b;
-}</span>
-
-int main() {
-    <span id="inefficient-calls">int q = quotient(17, 5);  // 17/5 = 3
-    int r = remainder(17, 5); // 17%5 = 2</span>
-    
-    std::cout &lt;&lt; q &lt;&lt; " remainder " &lt;&lt; r &lt;&lt; std::endl;
-    return 0;
-}
-</code></pre>
-        <div class="code-annotation" id="anno-problem" style="opacity:0;">
-          Two separate calculations of the same division
+      <div style="background: #f0f7ff; border: 2px solid #2196f3; border-radius: 12px; padding: 2em; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+        <h3 style="color: #1976d2; margin-top: 0;">What would the functions look like?</h3>
+        
+        <div style="background: white; border-radius: 8px; padding: 1.5em; margin: 1em 0;">
+          <h4 style="margin-top: 0;">Think about:</h4>
+          <ul style="text-align: left; margin-bottom: 0;">
+            <li>What would the parameter types be?</li>
+            <li>What would the return types be?</li>
+            <li>Are they different enough to overload?</li>
+            <li>Does it make logical sense?</li>
+          </ul>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Solution 1: References -->
-<section class="slide two-column" id="solution-references">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Solution 1: Reference Parameters</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>Use References for "Output" Parameters</h3>
-      <p>We can use reference parameters to "return" multiple values:</p>
-      <ul>
-        <li>Function modifies variables through references</li>
-        <li>Caller gets multiple results</li>
-        <li>More efficient than separate calculations</li>
-      </ul>
-      
-      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
-        <p><strong>Pattern:</strong> Pass variables by reference to receive results</p>
-      </div>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="reference-solution">
-#include &lt;iostream>
-
-<span id="ref-function">void divide(int a, int b, int& quotient, int& remainder) {
-    quotient = a / b;
-    remainder = a % b;
-}</span>
-
-int main() {
-    <span id="declare-vars">int q, r;</span>  // Variables to receive results
-    
-    <span id="call-ref-func">divide(17, 5, q, r);</span>  // Pass by reference
-    
-    std::cout &lt;&lt; q &lt;&lt; " remainder " &lt;&lt; r &lt;&lt; std::endl;
-    return 0;
-}
-</code></pre>
-        <div class="code-annotation" id="anno-ref-params" style="opacity:0;">
-          References allow function to modify caller's variables
-        </div>
-        <div class="code-annotation" id="anno-ref-call" style="opacity:0;">
-          After this call, q=3 and r=2
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Solution 2: std::pair -->
-<section class="slide two-column" id="solution-pair">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Solution 2: std::pair</span>
-    </div>
-  </div>
-  <div class="slide-body two-column">
-    <div class="left-panel">
-      <h3>Package Two Values Together</h3>
-      <p>std::pair lets you bundle two values into one return value:</p>
-      <ul>
-        <li>Template that holds two values of any types</li>
-        <li>Access with <code>.first</code> and <code>.second</code></li>
-        <li>Can return as a single value</li>
-      </ul>
-      
-      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
-        <p><strong>Benefit:</strong> Clean function interface, true return value</p>
-      </div>
-    </div>
-    <div class="right-panel">
-      <div class="code-container">
-<pre><code class="language-cpp" id="pair-solution">
-#include &lt;iostream>
-#include &lt;utility>  // for std::pair
-
-<span id="pair-function">std::pair&lt;int, int> divide(int a, int b) {
-    return std::make_pair(a / b, a % b);
-}</span>
-
-int main() {
-    <span id="pair-call">std::pair&lt;int, int> result = divide(17, 5);</span>
-    
-    <span id="pair-access">std::cout &lt;&lt; result.first &lt;&lt; " remainder " 
-              &lt;&lt; result.second &lt;&lt; std::endl;</span>
-    
-    // Or unpack immediately
-    <span id="pair-unpack">auto [q, r] = divide(17, 5);  // C++17 feature</span>
-    
-    return 0;
-}
-</code></pre>
-        <div class="code-annotation" id="anno-pair-return" style="opacity:0;">
-          Returns a pair containing quotient and remainder
-        </div>
-        <div class="code-annotation" id="anno-pair-modern" style="opacity:0;">
-          Modern C++ can unpack pairs automatically
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- When to Use Each -->
-<section class="slide one-column" id="when-to-use-multiple">
-  <div class="slide-header">
-    <div class="left-header">
-      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
-      <span>Python for Molecular Sciences:</span>
-    </div>
-    <div class="right-header">
-      <span>Choosing Your Approach</span>
-    </div>
-  </div>
-  <div class="slide-body one-column">
-    <div style="max-width: 1000px; margin: 0 auto;">
-      <h3 style="color: #003262; text-align: center; margin-bottom: 1.5em;">When to Use Each Approach</h3>
-      
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 2em;">
-        <thead>
-          <tr style="background: #003262; color: white;">
-            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Method</th>
-            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Syntax</th>
-            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Best For</th>
-            <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">Use Cases</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">Reference Parameters</td>
-            <td style="padding: 10px; border: 1px solid #ccc;"><code>void func(int& a, int& b)</code></td>
-            <td style="padding: 10px; border: 1px solid #ccc;">More than 2 return values, large objects</td>
-            <td style="padding: 10px; border: 1px solid #ccc;">Avoid copying, optional outputs</td>
-          </tr>
-          <tr style="background: #f5f5f5;">
-            <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">std::pair</td>
-            <td style="padding: 10px; border: 1px solid #ccc;"><code>pair&lt;int, int&gt; func()</code></td>
-            <td style="padding: 10px; border: 1px solid #ccc;">Exactly 2 return values</td>
-            <td style="padding: 10px; border: 1px solid #ccc;">Small types, mathematical functions</td>
-          </tr>
-        </tbody>
-      </table>
-      
-      <div style="background: #e8f5e8; padding: 1.5em; border-radius: 8px; text-align: center;">
-        <h4 style="color: #2e7d32; margin-top: 0;">Quick Decision Guide</h4>
-        <p style="margin-bottom: 0;">
-          <strong>2 small values?</strong> Use std::pair. 
-          <strong>3+ values or large objects?</strong> Use reference parameters.
+        
+        <p style="font-style: italic; color: #666; margin-bottom: 0;">
+          Consider your answer, then we'll see the solution...
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<style>
-/* Color-coded highlighting classes - reusing from previous slides */
-.highlight-green {
-    background-color: rgba(76, 175, 80, 0.3) !important;
-}
+<!-- Answer Slide: Yes, and Here's Why -->
+<section class="slide two-column" id="overloading-answer">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Answer: Yes, Perfect for Overloading!</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Why This Works Well</h3>
+      <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 1em; margin: 1em 0;">
+        <h4 style="color: #388e3c; margin-top: 0;">✓ Meets All Requirements</h4>
+        <ul style="margin-bottom: 0;">
+          <li><strong>Different parameter types:</strong> double vs vector&lt;double>&</li>
+          <li><strong>Same logical operation:</strong> Both square their input</li>
+          <li><strong>Intuitive naming:</strong> "square" makes sense for both</li>
+        </ul>
+      </div>
+      
+      <h4>Additional Benefits:</h4>
+      <ul>
+        <li>Compiler chooses the right function automatically</li>
+        <li>Natural interface - same operation, different data</li>
+        <li>Common pattern in scientific computing</li>
+      </ul>
+      
+      <div style="background: #f0f7ff; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Result:</strong> Clean, intuitive code that works with both individual values and collections</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="answer-code">
+#include &lt;vector>
 
-.highlight-pink {
-    background-color: rgba(233, 30, 99, 0.3) !important;
-}
+<span id="answer-function-1">double square(double x) {
+    return x * x;
+}</span>
 
-.highlight-blue {
-    background-color: rgba(33, 150, 243, 0.3) !important;
-}
+<span id="answer-function-2">std::vector&lt;double> square(const std::vector&lt;double>& vec) {
+    std::vector&lt;double> result;
+    for (double x : vec) {
+        result.push_back(x * x);
+    }
+    return result;
+}</span>
 
-.highlight-orange {
-    background-color: rgba(255, 152, 0, 0.3) !important;
+int main() {
+    <span id="answer-call-1">double single_result = square(5.0);</span>
+    
+    <span id="answer-call-2">std::vector&lt;double> data = {1.0, 2.0, 3.0};
+    std::vector&lt;double> vector_result = square(data);</span>
+    
+    return 0;
 }
+</code></pre>
+        <div class="code-annotation" id="anno-param-diff" style="opacity: 0;">
+          Different parameter types
+        </div>
+        <div class="code-annotation" id="anno-compiler-choice" style="opacity: 0;">
+          Compiler chooses automatically
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-.highlight-purple {
-    background-color: rgba(156, 39, 176, 0.3) !important;
-}
+<!-- Auto Keyword Slide -->
+<section class="slide two-column" id="auto-keyword-square">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>The auto Keyword</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Automatic Type Deduction</h3>
+      <p>The <code>auto</code> keyword lets the compiler determine variable types automatically:</p>
+      <ul>
+        <li>Compiler examines the initialization value</li>
+        <li>Deduces the appropriate type</li>
+        <li>Variable behaves exactly as if you specified the type manually</li>
+        <li>Especially useful with complex return types</li>
+      </ul>
+      
+      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Key rule:</strong> Variable must be initialized when using <code>auto</code></p>
+      </div>
+      
+      <div style="background: #f0f7ff; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Benefit:</strong> Don't need to remember exact return types</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="auto-square-demo">
+#include &lt;vector>
 
-.highlight-red {
-    background-color: rgba(244, 67, 54, 0.3) !important;
+// Our overloaded square functions
+double square(double x) { return x * x; }
+std::vector&lt;double> square(const std::vector&lt;double>& vec) { /* ... */ }
+
+int main() {
+    // Explicit types
+    <span id="explicit-single">double single_result = square(5.0);</span>
+    <span id="explicit-vector">std::vector&lt;double> vector_result = square({1.0, 2.0});</span>
+    
+    // Equivalent with auto
+    <span id="auto-single">auto single_auto = square(5.0);</span>          // double
+    <span id="auto-vector">auto vector_auto = square({1.0, 2.0});</span>   // vector&lt;double>
+    
+    // Much more convenient!
+    
+    return 0;
 }
-</style>
+</code></pre>
+        <div class="code-annotation" id="anno-explicit-types" style="opacity: 0;">
+          Must specify complex return types
+        </div>
+        <div class="code-annotation" id="anno-auto-types" style="opacity: 0;">
+          Compiler deduces the correct type
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <script>
 class FunctionOverloadingConceptAnimation extends SlideAnimation {
@@ -482,27 +421,21 @@ class FunctionOverloadingConceptAnimation extends SlideAnimation {
         const steps = [
             () => {
                 highlightCode('overload-demo', 'double area(double radius)', 'rgba(76, 175, 80, 0.3)');
+                highlightCode('overload-demo', 'area(5.0)', 'rgba(76, 175, 80, 0.3)');
                 positionAnnotation('overload-demo', 'double area(double radius)', 'anno-overload-1');
                 showElement('anno-overload-1');
             },
             () => {
                 highlightCode('overload-demo', 'double area(double length, double width)', 'rgba(33, 150, 243, 0.3)');
+                highlightCode('overload-demo', 'area(4.0, 6.0)', 'rgba(33, 150, 243, 0.3)');
                 positionAnnotation('overload-demo', 'double area(double length, double width)', 'anno-overload-2');
                 showElement('anno-overload-2');
             },
             () => {
-                highlightCode('overload-demo', 'double area(double base, double height, bool triangle)', 'rgba(255, 152, 0, 0.3)');
-                positionAnnotation('overload-demo', 'double area(double base, double height, bool triangle)', 'anno-overload-3');
+                highlightCode('overload-demo', 'double area(double side1, double side2, double side3)', 'rgba(255, 152, 0, 0.3)');
+                highlightCode('overload-demo', 'area(3.0, 4.0, 5.0)', 'rgba(255, 152, 0, 0.3)');
+                positionAnnotation('overload-demo', 'double area(double side1, double side2, double side3)', 'anno-overload-3');
                 showElement('anno-overload-3');
-            },
-            () => {
-                highlightCode('overload-demo', 'area(5.0)', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('overload-demo', 'area(4.0, 6.0)', 'rgba(33, 150, 243, 0.3)');
-            },
-            () => {
-                highlightCode('overload-demo', 'area(3.0, 8.0, true)', 'rgba(255, 152, 0, 0.3)');
             }
         ];
         return runAnimationSteps(steps);
@@ -536,83 +469,54 @@ class OverloadingRulesAnimation extends SlideAnimation {
     }
 }
 
-class MultipleReturnProblemAnimation extends SlideAnimation {
+class OverloadingAnswerAnimation extends SlideAnimation {
     get slideId() {
-        return 'multiple-return-problem';
+        return 'overloading-answer';
     }
     
     animate() {
         const steps = [
             () => {
-                highlightCode('problem-demo', '// int, int divide(int a, int b) {  // ERROR!\n//     return a / b, a % b;\n// }', 'rgba(244, 67, 54, 0.3)');
+                highlightCode('answer-code', 'double square(double x)', 'rgba(76, 175, 80, 0.3)');
+                highlightCode('answer-code', 'std::vector<double> square(const std::vector<double>& vec)', 'rgba(33, 150, 243, 0.3)');
+                positionAnnotation('answer-code', 'double x', 'anno-param-diff');
+                showElement('anno-param-diff');
             },
             () => {
-                highlightCode('problem-demo', 'int q = quotient(17, 5);  // 17/5 = 3\n    int r = remainder(17, 5); // 17%5 = 2', 'rgba(255, 152, 0, 0.3)');
-                positionAnnotation('problem-demo', 'int q = quotient(17, 5);  // 17/5 = 3\n    int r = remainder(17, 5); // 17%5 = 2', 'anno-problem');
-                showElement('anno-problem');
+                highlightCode('answer-code', 'square(5.0)', 'rgba(76, 175, 80, 0.3)');
+                highlightCode('answer-code', 'square(data)', 'rgba(33, 150, 243, 0.3)');
+                positionAnnotation('answer-code', 'square(5.0)', 'anno-compiler-choice');
+                showElement('anno-compiler-choice');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class SolutionReferencesAnimation extends SlideAnimation {
+class AutoKeywordSquareAnimation extends SlideAnimation {
     get slideId() {
-        return 'solution-references';
+        return 'auto-keyword-square';
     }
     
     animate() {
         const steps = [
             () => {
-                highlightCode('reference-solution', 'int& quotient, int& remainder', 'rgba(76, 175, 80, 0.3)');
-                positionAnnotation('reference-solution', 'int& quotient, int& remainder', 'anno-ref-params');
-                showElement('anno-ref-params');
+                highlightCode('auto-square-demo', 'double single_result = square(5.0);\n    std::vector<double> vector_result = square({1.0, 2.0});', 'rgba(255, 152, 0, 0.3)');
+                positionAnnotation('auto-square-demo', 'std::vector<double> vector_result', 'anno-explicit-types');
+                showElement('anno-explicit-types');
             },
             () => {
-                highlightCode('reference-solution', 'divide(17, 5, q, r);', 'rgba(33, 150, 243, 0.3)');
-                positionAnnotation('reference-solution', 'divide(17, 5, q, r);', 'anno-ref-call');
-                showElement('anno-ref-call');
+                highlightCode('auto-square-demo', 'auto single_auto = square(5.0);          // double\n    auto vector_auto = square({1.0, 2.0});   // vector<double>', 'rgba(76, 175, 80, 0.3)');
+                positionAnnotation('auto-square-demo', 'auto single_auto', 'anno-auto-types');
+                showElement('anno-auto-types');
             }
         ];
         return runAnimationSteps(steps);
     }
 }
 
-class SolutionPairAnimation extends SlideAnimation {
-    get slideId() {
-        return 'solution-pair';
-    }
-    
-    animate() {
-        const steps = [
-            () => {
-                highlightCode('pair-solution', 'std::pair<int, int> divide(int a, int b)', 'rgba(76, 175, 80, 0.3)');
-            },
-            () => {
-                highlightCode('pair-solution', 'return std::make_pair(a / b, a % b);', 'rgba(76, 175, 80, 0.3)');
-                positionAnnotation('pair-solution', 'return std::make_pair(a / b, a % b);', 'anno-pair-return');
-                showElement('anno-pair-return');
-            },
-            () => {
-                highlightCode('pair-solution', 'result.first', 'rgba(33, 150, 243, 0.3)');
-            },
-            () => {
-                highlightCode('pair-solution', 'result.second', 'rgba(33, 150, 243, 0.3)');
-            },
-            () => {
-                highlightCode('pair-solution', 'auto [q, r] = divide(17, 5);', 'rgba(156, 39, 176, 0.3)');
-                positionAnnotation('pair-solution', 'auto [q, r] = divide(17, 5);', 'anno-pair-modern');
-                showElement('anno-pair-modern');
-            }
-        ];
-        return runAnimationSteps(steps);
-    }
-}
-
-// Register all animations
+// Register animations
 new FunctionOverloadingConceptAnimation();
-new OverloadingRulesAnimation();
-new MultipleReturnProblemAnimation();
-new SolutionReferencesAnimation();
-new SolutionPairAnimation();
+new OverloadingAnswerAnimation();
+new AutoKeywordSquareAnimation();
 </script>

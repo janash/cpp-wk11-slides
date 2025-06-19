@@ -1,0 +1,151 @@
+<!-- Multiple Return Values Section Header -->
+<section class="slide section-header">
+  <div class="slide-header"></div>
+  <div class="slide-body section-header">
+    <div class="section-content">
+      <h1 class="section-title">Returning Multiple Values</h1>
+      <p class="section-subtitle">When one return value isn't enough</p>
+    </div>
+  </div>
+</section>
+
+<!-- The Problem -->
+<section class="slide two-column" id="multiple-return-problem">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>The Problem</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Sometimes We Need Multiple Results</h3>
+      <p>Some calculations naturally produce multiple values:</p>
+      <ul>
+        <li>Division: quotient <em>and</em> remainder</li>
+        <li>Coordinates: x <em>and</em> y values</li>
+        <li>Statistics: mean <em>and</em> standard deviation</li>
+        <li>Min/max: both minimum <em>and</em> maximum</li>
+      </ul>
+      
+      <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin-top: 1em;">
+        <p><strong>Problem:</strong> C++ functions can only return one value directly.</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="problem-demo">
+#include &lt;iostream>
+
+// This doesn't work - can't return two values
+<span id="invalid-return">// int, int divide(int a, int b) {  // ERROR!
+//     return a / b, a % b;
+// }</span>
+
+// Inefficient - need separate function calls
+<span id="separate-funcs">int quotient(int a, int b) {
+    return a / b;
+}
+
+int remainder(int a, int b) {
+    return a % b;
+}</span>
+
+int main() {
+    <span id="inefficient-calls">int q = quotient(17, 5);  // 17/5 = 3
+    int r = remainder(17, 5); // 17%5 = 2</span>
+    
+    std::cout &lt;&lt; q &lt;&lt; " remainder " &lt;&lt; r &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="anno-problem" style="opacity:0;">
+          Two separate calculations of the same division
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Solution 1: References -->
+<section class="slide two-column" id="solution-references">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Solution 1: Reference Parameters</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Use References for "Output" Parameters</h3>
+      <p>We can use reference parameters to "return" multiple values:</p>
+      <ul>
+        <li>Function modifies variables through references</li>
+        <li>Caller gets multiple results</li>
+        <li>More efficient than separate calculations</li>
+      </ul>
+      
+      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Pattern:</strong> Pass variables by reference to receive results</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="code-container">
+<pre><code class="language-cpp" id="reference-solution">
+#include &lt;iostream>
+
+<span id="ref-function">void divide(int a, int b, int& quotient, int& remainder) {
+    quotient = a / b;
+    remainder = a % b;
+}</span>
+
+int main() {
+    <span id="declare-vars">int q, r;</span>  // Variables to receive results
+    
+    <span id="call-ref-func">divide(17, 5, q, r);</span>  // Pass by reference
+    
+    std::cout &lt;&lt; q &lt;&lt; " remainder " &lt;&lt; r &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+        <div class="code-annotation" id="anno-ref-params" style="opacity:0;">
+          References allow function to modify caller's variables
+        </div>
+        <div class="code-annotation" id="anno-ref-call" style="opacity:0;">
+          After this call, q=3 and r=2
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Solution 2: std::pair -->
+<section class="slide two-column" id="solution-pair">
+  <div class="slide-header">
+    <div class="left-header">
+      <div class="berkeley-logo"><img src="./images/cal_logo_header.png"></div>
+      <span>Python for Molecular Sciences:</span>
+    </div>
+    <div class="right-header">
+      <span>Solution 2: std::pair</span>
+    </div>
+  </div>
+  <div class="slide-body two-column">
+    <div class="left-panel">
+      <h3>Package Two Values Together</h3>
+      <p>std::pair lets you bundle two values into one return value:</p>
+      <ul>
+        <li>Template that holds two values of any types</li>
+        <li>Access with <code>.first</code> and <code>.second</code></li>
+        <li>Can return as a single value</li>
+      </ul>
+      
+      <div style="background: #e8f5e8; padding: 1em; border-radius: 8px; margin-top: 1em;">
+        <p><strong>Benefit:</strong> Clean function interface, true return value</p>
+      </div>
