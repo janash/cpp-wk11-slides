@@ -168,7 +168,6 @@ class SectionNavigator {
       </div>
       
       <div class="nav-center">
-        <!-- Slide Navigation -->
         <div class="slide-nav-group">
           <button id="first-slide" title="First Slide">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -195,7 +194,6 @@ class SectionNavigator {
           </button>
         </div>
         
-        <!-- Animation Controls -->
         <div class="animation-nav-group">
           <span class="nav-label">Animations:</span>
           <button id="prev-animation" class="animation-btn" title="Previous Animation Step">
@@ -237,9 +235,15 @@ class SectionNavigator {
         </button>
         <button class="annotation-toggle" id="annotationToggle">
           <span class="toggle-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="eye-open-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="eye-closed-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.54 18.54 0 0 1 2.94-3.12M2.36 2.36L21.64 21.64"></path>
+              <path d="M11.29 11.29A3.5 3.5 0 0 0 12 14c1.65 0 3-1.35 3-3V9"></path>
+              <path d="M18 10V6a2 2 0 0 0-2-2"></path>
+              <path d="M6 6v.01"></path>
             </svg>
           </span>
           <span class="toggle-text">Hide Annotations</span>
@@ -385,8 +389,7 @@ class SectionNavigator {
           <button class="close-sidebar" id="closeSidebar">✕</button>
         </div>
         <div class="sidebar-content" id="sidebarContent">
-          <!-- Sections will be populated here -->
-        </div>
+          </div>
       </div>
     `;
     

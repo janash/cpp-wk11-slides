@@ -105,42 +105,29 @@ body {
     display: block;
 }
 
-.annotation-toggle {
-  background: #2d3748;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
+/* Initial state: open eye visible, closed eye hidden */
+.annotation-toggle .eye-open-icon { 
+    display: inline-block; 
+}
+.annotation-toggle .eye-closed-icon { 
+    display: none; 
 }
 
-.annotation-toggle:hover {
-  background: #4a5568;
-  transform: translateY(-1px);
+/* When annotations are hidden: open eye hidden, closed eye visible */
+.annotation-toggle.annotations-hidden .eye-open-icon { 
+    display: none; 
+}
+.annotation-toggle.annotations-hidden .eye-closed-icon { 
+    display: inline-block; 
 }
 
-.annotation-toggle:active {
-  transform: translateY(0);
+/* Ensure icons maintain proper size/color inside button */
+.toggle-icon svg {
+    width: 16px; /* Match desired size */
+    height: 16px;
+    flex-shrink: 0;
+    stroke: currentColor; /* Inherit color from button text */
 }
-
-.annotation-toggle.annotations-hidden {
-  background: #e53e3e;
-}
-
-.annotation-toggle.annotations-hidden:hover {
-  background: #c53030;
-}
-
-.toggle-icon {
-  display: inline-block;
-  margin-right: 6px;
-  font-size: 12px;
-}
-
 .highlight {
   background-color: rgba(255, 229, 100, 0.7); /* A pleasant yellow highlight */
   border-radius: 4px;
